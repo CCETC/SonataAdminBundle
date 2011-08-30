@@ -29,6 +29,13 @@ file that was distributed with this source code.
 
 {% block side_menu %}{{ admin.sidemenu(action).render|raw }}{% endblock %}
 
+{% block content %}
+    {% if admin.getEditDescription is defined %}
+        {{ admin.getEditDescription }}<br/>
+    {% endif %}
+{% endblock %}
+
+
 {% block form %}
 
     {% if admin.id(object) %}
@@ -64,9 +71,35 @@ file that was distributed with this source code.
                 {% endif %}
 
                 {% for field_name in form_group.fields %}
-                    {% if admin.formfielddescriptions[field_name] is defined %}
-                        {{ form_row(form[field_name])}}
-                    {% endif %}
+                        {% if admin.getFormLabels[field_name] is defined %}
+                            <br/><b style="font-size: 13px;">{{ admin.getFormLabels[field_name] }}</b>
+                        {% endif %}
+
+                        {% if admin.otherFields[field_name] is defined %}
+                            <div class="otherField">
+
+                        {% elseif admin.formFieldsToIndent[field_name] is defined %}
+                            <div class="indentField">
+
+                        {% elseif admin.fieldsWithTopMargins[field_name] is defined %}
+                            <div class="topMarginField">
+                        {% endif %}
+
+                            {% if admin.formfielddescriptions[field_name] is defined %}
+                                {{ form_row(form[field_name])}}
+                            {% endif %}
+
+                        {% if admin.otherFields[field_name] is defined
+                            or admin.fieldsWithTopMargins[field_name] is defined
+                            or admin.formFieldsToIndent[field_name] is defined %}
+                            </div>
+                        {% endif %}
+
+                        {% if admin.brAfterFields[field_name] is defined %}
+                            <br/>
+                        {% endif %}
+            
+                
                 {% endfor %}
 
                 {% if name %}
@@ -85,11 +118,9 @@ file that was distributed with this source code.
                 {% endif %}
             {% else %}
                 {% if admin.id(object) %}
-                    <input type="submit" name="btn_update_and_edit" value="{% trans from 'SonataAdminBundle' %}btn_update_and_edit_again{% endtrans %}"/>
-                    <input type="submit" name="btn_update_and_list" value="{% trans from 'SonataAdminBundle' %}btn_update_and_return_to_list{% endtrans %}"/>
+                <input type="submit" name="btn_update_and_list" value="Save"/> 
                 {% else %}
-                    <input type="submit" name="btn_create_and_edit" value="{% trans from 'SonataAdminBundle' %}btn_create_and_edit_again{% endtrans %}"/>
-                    <input type="submit" name="btn_create_and_create" value="{% trans from 'SonataAdminBundle' %}btn_create_and_create_a_new_one{% endtrans %}"/>
+                <input type="submit" name="btn_create_and_list" value="Create"/>
                 {% endif %}
             {% endif %}
         </form>

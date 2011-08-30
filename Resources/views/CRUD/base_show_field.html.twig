@@ -9,5 +9,19 @@ file that was distributed with this source code.
 
 #}
 
-<th>{% block name %}{{ field_description.name }}{% endblock %}</th>
-<td>{% block value %}{{ value }}{% endblock %}</td>
+    <th style="{% if field_description.options['labelStyles'] is defined %}{{ field_description.options['labelStyles']}}{% endif %}">
+        {% block name %}
+                {{  field_description.name }}
+        {% endblock %}
+    </th>
+    <td>
+    	{% block value %}
+            {% if field_description.type == 'boolean' %}
+                {% if value == '1' %} yes
+                {% elseif value == '0' %}no
+                {% endif %}
+            {% else %}
+                    {{ value }}    	
+            {% endif %}
+    	{% endblock %}
+	</td>

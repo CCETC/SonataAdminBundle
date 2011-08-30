@@ -21,6 +21,10 @@ file that was distributed with this source code.
             {% if admin.hasRoute('create') and admin.isGranted('CREATE')%}
                 <li class="sonata-action-element"><a href="{{ admin.generateUrl('create') }}">{% trans from 'SonataAdminBundle' %}link_action_create{% endtrans %}</a></li>
             {% endif %}
+
+            {% if admin.hasRoute('list') and admin.isGranted('LIST')%}
+                <li class="sonata-action-element"><a href="{{ admin.generateUrl('list') }}">{% trans from 'SonataAdminBundle' %}link_action_list{% endtrans %}</a></li>
+            {% endif %}
         </ul>
     </div>
 {% endblock %}
@@ -29,18 +33,25 @@ file that was distributed with this source code.
 
 {% block show %}
     <div class="sonata-ba-view">
-        {% for name, view_group in admin.showgroups %}
+        
+<h2>{{ object }}</h2>
+{% for name, view_group in admin.showgroups %}
             <table>
                 {% if name %}
                     <tr class="sonata-ba-view-title">
                         <td colspan="2">
-                            {{ name|trans({}, admin.translationdomain) }}
+                            <h3>{{ name|trans({}, admin.translationdomain) }}</h3>
                         </td>
                     </tr>
                 {% endif %}
 
                 {% for field_name in view_group.fields %}
+                    {% if admin.showfielddescriptions[field_name].options['parentField'] is defined %}
+                        <tr><th>{{ admin.showfielddescriptions[field_name].options['parentField'] }}</th><td></td></tr>
+                    {% endif %}
+
                     <tr class="sonata-ba-view-container">
+                        {# is this if necessary? #}
                         {% if admin.show[field_name] is defined %}
                             {{ admin.show[field_name]|render_view_element(object) }}
                         {% endif %}

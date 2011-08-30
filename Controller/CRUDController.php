@@ -145,10 +145,25 @@ class CRUDController extends Controller
         // set the theme for the current Admin Form
         $this->get('twig')->getExtension('form')->setTheme($formView, $this->admin->getFilterTheme());
 
+        
+        // check each hidden filter to see if it was requested, so we can show the hidden filters in the template
+        $showHiddenFilters = false;
+
+        foreach($this->admin->getHiddenFilters() as $filterName => $value)
+        {
+            if($this->getRequest()->get($filterName) && $this->getRequest()->get($filterName) != "")
+            {
+                $showHiddenFilters = true;
+            }
+        }
+        
         return $this->render($this->admin->getListTemplate(), array(
             'action'   => 'list',
             'form'     => $formView,
-            'datagrid' => $this->admin->getDatagrid()
+            'datagrid' => $this->admin->getDatagrid(),
+            'showHiddenFilters' => $showHiddenFilters,
+            'admin' => $this->admin,
+            'groups' => $this->get('sonata.admin.pool')->getDashboardGroups(),
         ));
     }
 
@@ -243,7 +258,9 @@ class CRUDController extends Controller
         return $this->render($this->admin->getEditTemplate(), array(
             'action'         => 'edit',
             'form'           => $view,
+            'admin' => $this->admin,
             'object'         => $object,
+            'groups' => $this->get('sonata.admin.pool')->getDashboardGroups(),      
         ));
     }
 
@@ -265,6 +282,10 @@ class CRUDController extends Controller
             $url = $this->admin->generateUrl('create');
         }
 
+        if ($this->get('request')->get('btn_create_and_list')) {
+            $url = $this->admin->generateUrl('list');
+        }
+        
         if (!$url) {
             $url = $this->admin->generateObjectUrl('edit', $object);
         }
@@ -365,6 +386,8 @@ class CRUDController extends Controller
             'action'        => 'create',
             'form'          => $view,
             'object'        => $object,
+            'admin' => $this->admin,
+            'groups' => $this->get('sonata.admin.pool')->getDashboardGroups()
         ));
     }
 
@@ -386,6 +409,38 @@ class CRUDController extends Controller
         }
 
         $this->admin->setSubject($object);
+        
+        // build view labels and parent fields
+        foreach($this->admin->getViewGroups() as $name => $viewGroup)
+        {
+            foreach($viewGroup['fields'] as $fieldName)
+            {
+                $desc = $this->admin->getShowFieldDescriptions();
+
+                if(isset($this->admin->viewLabels[$fieldName]))
+                {
+                    $desc[$fieldName]->setName($this->admin->viewLabels[$fieldName]);
+                }
+
+                if(isset($this->admin->viewChoiceParentFields[$fieldName]))
+                {
+                    $desc[$fieldName]->setOption('parentField', $this->admin->viewChoiceParentFields[$fieldName]);
+                }
+                else
+                {
+                    $desc[$fieldName]->setOption('parentField', '');
+                }
+
+                if(isset($this->admin->viewFieldsToIndent[$fieldName]))
+                {
+                    $desc[$fieldName]->setOption('labelStyles', 'text-align: right;');
+                }
+                else
+                {
+                    $desc[$fieldName]->setOption('labelStyles', '');
+                }
+            }
+        }
 
         // build the show list
         $elements = $this->admin->getShow();
@@ -394,6 +449,8 @@ class CRUDController extends Controller
             'action'         => 'show',
             'object'         => $object,
             'elements'       => $this->admin->getShow(),
+            'admin' => $this->admin,
+            'groups' => $this->get('sonata.admin.pool')->getDashboardGroups()            
         ));
     }
 }
