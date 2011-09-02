@@ -736,7 +736,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
 
         if($this->isGranted('DELETE'))
         {
-            $actions['delete'] = $this->trans('action_delete', array(), 'SonataAdminBundle');
+            $actions['delete'] = $this->trans('batch_delete', array(), 'SonataAdminBundle');
         }
 
         return $actions;
@@ -1628,53 +1628,47 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
      */
     public function buildBreadcrumbs($action, MenuItem $menu = null)
     {
-        if(isset($this->breadcrumbs[$action]))
-        {
+        if (isset($this->breadcrumbs[$action])) {
             return $this->breadcrumbs[$action];
         }
-
-        $menu = $menu ? : new Menu;
-
+        
+        $menu = $menu ?: new Menu;
+   
         $child = $menu->addChild(
-                        $this->trans(sprintf('breadcrumb.link_%s_list', $this->getClassnameLabel())), $this->generateUrl('list')
+            $this->trans(sprintf('breadcrumb.link_%s_list', $this->getClassnameLabel())),
+            $this->generateUrl('list')
         );
 
-        echo $this->trans('breadcrumb.link_step_list');
-
-
+        
         $childAdmin = $this->getCurrentChildAdmin();
 
-        if($childAdmin)
-        {
+     
+        
+        if ($childAdmin) {
             $id = $this->request->get($this->getIdParameter());
 
             $child = $child->addChild(
-                            (string) $this->getSubject(), $this->generateUrl('edit', array('id' => $id))
+                (string) $this->getSubject(),
+                $this->generateUrl('edit', array('id' => $id))
             );
 
             return $childAdmin->buildBreadcrumbs($action, $child);
-        }
-        elseif($this->isChild())
-        {
-            if($action != 'list')
-            {
+        } elseif ($this->isChild()) {
+            if ($action != 'list') {
                 $menu = $menu->addChild(
-                                $this->trans(sprintf('breadcrumb.link_%s_list', $this->getClassnameLabel())), $this->generateUrl('list')
+                    $this->trans(sprintf('breadcrumb.link_%s_list', $this->getClassnameLabel())),
+                    $this->generateUrl('list')
                 );
             }
 
             $breadcrumbs = $menu->getBreadcrumbsArray(
-                            $this->trans(sprintf('breadcrumb.link_%s_%s', $this->getClassnameLabel(), $action))
+                $this->trans(sprintf('breadcrumb.link_%s_%s', $this->getClassnameLabel(), $action))
             );
-        }
-        else if($action != 'list')
-        {
+        } else if ($action != 'list') {
             $breadcrumbs = $child->getBreadcrumbsArray(
-                            $this->trans(sprintf('breadcrumb.link_%s_%s', $this->getClassnameLabel(), $action))
+                $this->trans(sprintf('breadcrumb.link_%s_%s', $this->getClassnameLabel(), $action))
             );
-        }
-        else
-        {
+        } else {
             $breadcrumbs = $child->getBreadcrumbsArray();
         }
 

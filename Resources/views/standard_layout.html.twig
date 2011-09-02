@@ -143,10 +143,8 @@ file that was distributed with this source code.
                     {% endblock %}
                     </h1>
                 </div>
-            </div>
-            {% block page_description %}{% endblock %}
-            
-            {# flash notice defined in CRUDController after actions- 3 levels #}
+
+                {# flash notice defined in CRUDController after actions- 3 levels #}
                 {% for notice_level in ['success','error','notice'] %}
 
                    {% set session_var = 'sonata_flash_' ~ notice_level %}
@@ -158,6 +156,10 @@ file that was distributed with this source code.
 
                 {% endfor %}
 
+            </div>
+            {% block page_description %}{% endblock %}
+            
+            
             {% if _preview is not empty %}
                 <div class="span-24 last content clear">
                     <div class="sonata-ba-preview">{{ _preview|raw }}</div>
