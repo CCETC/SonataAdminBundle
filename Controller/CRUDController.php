@@ -139,7 +139,18 @@ class CRUDController extends Controller
             throw new AccessDeniedException();
         }
 
+        $filterValues = $this->admin->getDatagrid()->getValues();
+
+        foreach($this->admin->getFilterDefaults() as $field => $default)
+        {
+            if(!isset($filterValues[$field]['value']) || $filterValues[$field]['value'] == "")
+            {
+                $this->admin->getDatagrid()->setValue($field, $default);
+            }    
+        }
+       
         $datagrid = $this->admin->getDatagrid();
+        
         $formView = $datagrid->getForm()->createView();
 
         // set the theme for the current Admin Form
@@ -160,6 +171,9 @@ class CRUDController extends Controller
                 $showHiddenFilters = true;
             }
         }
+        
+        
+        
         
         return $this->render($this->admin->getListTemplate(), array(
             'action'   => 'list',

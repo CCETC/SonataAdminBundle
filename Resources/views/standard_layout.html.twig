@@ -86,10 +86,6 @@ file that was distributed with this source code.
                      <div class="logo">
                         <h2><a href="{{ url('sonata_admin_dashboard') }}">Green Jobs Green New York</a></h2>
                         <h3><a href="{{ url('sonata_admin_dashboard') }}">Data Tool</a></h3>
-                        {% if action is defined %}
-                            <a href="{{ url('sonata_admin_dashboard') }}" class="dashboardLink"><< Dashboard</a><br/>
-                        {% endif %}
-
                     </div>
                    <div id="headerMenu">
                         <a href="{{ url('sonata_admin_dashboard') }}">Dashboard</a>
@@ -133,8 +129,8 @@ file that was distributed with this source code.
                                     &gt;
                                 {% endif %}
                                 <a href="{{ uri }}">
-                                    {% if admin.classnameLabel == label %}
-                                        <img src="{{ asset('bundles/adminextension/images/' ~ admin.classname ~ '.png') }}" />
+                                    {% if admin.entityLabelPlural == label %}
+                                        <img src="{{ asset('images/entities/' ~ admin.classnamelabel ~ '.png') }}" />
                                     {%endif%}
                                     {{ label }}
                                 </a>

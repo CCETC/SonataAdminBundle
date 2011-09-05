@@ -54,7 +54,22 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
      * @var array
      */
     protected $hiddenFilters = array();
+    protected $filterDefaults = array();
     protected $editDescription;
+    protected $entityLabel;
+    protected $entityLabelPlural;
+    
+    public function getEntityLabel()
+    {
+        if(!isset($entityLabel)) return ucfirst($this->classnameLabel);
+        else return $this->entityLabel;
+    }
+
+    public function getEntityLabelPlural()
+    {
+        return $this->entityLabelPlural;
+    }
+
     
     public function getEntityDescription()
     {
@@ -71,6 +86,11 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
         return $this->hiddenFilters;
     }
 
+    public function getFilterDefaults()
+    {
+        return $this->filterDefaults;
+    }
+    
     public function getEditDescription()
     {
         return $this->editDescription;
@@ -1682,7 +1702,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
         );
 
         $child = $child->addChild(
-            $this->trans(sprintf('breadcrumb.link_%s_list', $this->getClassnameLabel())),
+            $this->getEntityLabelPlural(),
             array('uri' => $this->generateUrl('list'))
         );
 
@@ -1700,17 +1720,17 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
         } elseif ($this->isChild()) {
             if ($action != 'list') {
                 $menu = $menu->addChild(
-                    $this->trans(sprintf('breadcrumb.link_%s_list', $this->getClassnameLabel())),
+                    $this->getEntityLabelPlural(),
                     array('uri' => $this->generateUrl('list'))
                 );
             }
 
             $breadcrumbs = $menu->getBreadcrumbsArray(
-                $this->trans(sprintf('breadcrumb.link_%s_%s', $this->getClassnameLabel(), $action))
+                $this->trans(sprintf('action_%s', $action), array(), 'SonataAdminBundle')
             );
         } else if ($action != 'list') {
             $breadcrumbs = $child->getBreadcrumbsArray(
-                $this->trans(sprintf('breadcrumb.link_%s_%s', $this->getClassnameLabel(), $action))
+                $this->trans(sprintf('action_%s', $action), array(), 'SonataAdminBundle')
             );
         } else {
             $breadcrumbs = $child->getBreadcrumbsArray();

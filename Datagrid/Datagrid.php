@@ -166,4 +166,10 @@ class Datagrid implements DatagridInterface
 
         return $this->form;
     }
+    
+    public function setValue($key, $value)
+    {
+          $this->values[$key] = $value;
+    }
+
 }

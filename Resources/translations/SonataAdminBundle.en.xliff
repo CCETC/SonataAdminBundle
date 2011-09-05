@@ -62,6 +62,10 @@
                 <source>link_list</source>
                 <target>List</target>
             </trans-unit>
+            <trans-unit id="link_delete">
+                <source>link_delete</source>
+                <target>Delete</target>
+            </trans-unit>
             <trans-unit id="link_reset_filter">
                 <source>link_reset_filter</source>
                 <target>Reset</target>
@@ -184,7 +188,7 @@
             </trans-unit>
             <trans-unit id="link_breadcrumb_dashboard">
                 <source>breadcrumb.dashboard</source>
-                <target>&#8962;</target>
+                <target>Dashboard</target>
             </trans-unit>
         </body>
     </file>
