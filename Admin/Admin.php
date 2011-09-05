@@ -322,6 +322,12 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
      */
     protected $configurationPool;
     protected $menu;
+
+    /**
+     * @var \Knp\Menu\MenuFactoryInterface
+     */
+    protected $menuFactory;
+
     protected $loaded = array(
         'view_fields' => false,
         'view_groups' => false,
@@ -386,12 +392,12 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     }
 
     /**
-     * @param \Knp\Bundle\MenuBundle\MenuItem $menu
+     * @param \Knp\Menu\ItemInterface $menu
      * @param $action
      * @param null|Admin $childAdmin
      * @return void
      */
-    protected function configureSideMenu(MenuItem $menu, $action, Admin $childAdmin = null)
+    protected function configureSideMenu(MenuItemInterface $menu, $action, Admin $childAdmin = null)
     {
         
     }
@@ -754,9 +760,11 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     {
         $actions = array();
 
-        if($this->isGranted('DELETE'))
-        {
-            $actions['delete'] = $this->trans('batch_delete', array(), 'SonataAdminBundle');
+        if ($this->isGranted('DELETE')) {
+            $actions['delete'] = array(
+                'label' => $this->trans('action_delete', array(), 'SonataAdminBundle'),
+                'ask_confirmation' => true, // by default always true
+            );
         }
 
         return $actions;
@@ -1109,8 +1117,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
 
         $this->loaded['side_menu'] = true;
 
-        $factory = new MenuFactory;
-        $menu = $factory->createItem('SideMenu');
+        $menu = $this->menuFactory->createItem('root');
 
         $this->configureSideMenu($menu, $action, $childAdmin);
 
@@ -1653,12 +1660,12 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     }
 
     /**
-    * Generates the breadcrumbs array
-    *
-    * @param string $action
-    * @param \Knp\Menu\MenuItem|null $menu
-    * @return array
-    */
+     * Generates the breadcrumbs array
+     *
+     * @param string $action
+     * @param \Knp\Menu\MenuItem|null $menu
+     * @return array
+     */
     public function buildBreadcrumbs($action, MenuItemInterface $menu = null)
     {
         if (isset($this->breadcrumbs[$action])) {
@@ -2091,18 +2098,46 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
         return $this->formTheme;
     }
 
-    public function setFilterTheme($filterTheme)
+    /**
+     * @param array $filterTheme
+     * @return void
+     */
+    public function setFilterTheme(array $filterTheme)
     {
         $this->filterTheme = $filterTheme;
     }
 
+    /**
+     * @return array
+     */
     public function getFilterTheme()
     {
         return $this->filterTheme;
     }
 
+    /**
+     * @param AdminExtensionInterface $extension
+     * @return void
+     */
     public function addExtension(AdminExtensionInterface $extension)
     {
         $this->extensions[] = $extension;
+    }
+
+    /**
+     * @param \Knp\Menu\FactoryInterface $menuFactory
+     * @return void
+     */
+    public function setMenuFactory(MenuFactoryInterface $menuFactory)
+    {
+        $this->menuFactory = $menuFactory;
+    }
+
+    /**
+     * @return \Knp\Menu\FactoryInterface
+     */
+    public function getMenuFactory()
+    {
+        return $this->menuFactory;
     }
 }

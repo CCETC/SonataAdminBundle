@@ -21,7 +21,7 @@ file that was distributed with this source code.
     </div>
 {% endblock %}
 
-{% block side_menu %}{{ admin.sidemenu(action).render|raw }}{% endblock %}
+{% block side_menu %}{{ admin.sidemenu(action)|knp_menu_render('list') }}{% endblock %}
 
 {% block page_description %}
 	{% if admin.getEntityDescription is defined %}
@@ -127,8 +127,8 @@ file that was distributed with this source code.
 
                 <div class="sonata-ba-list-actions">
                     <select name="action">
-                        {% for action, label in batchactions %}
-                            <option value="{{ action }}">{{ label }}</option>
+                        {% for action, options in batchactions %}
+                            <option value="{{ action }}">{{ options.label }}</option>
                         {% endfor %}
                     </select>
                     <input type="submit" value="{% trans from 'SonataAdminBundle' %}btn_batch{% endtrans %}" />

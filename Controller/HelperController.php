@@ -25,6 +25,10 @@ class HelperController extends Controller
         return $this->container->get('sonata.admin.helper');
     }
 
+    /**
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function appendFormFieldElementAction()
     {
         $helper     = $this->getAdminHelper();
@@ -65,6 +69,10 @@ class HelperController extends Controller
         return new Response($extension->renderWidget($view));
     }
 
+    /**
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function retrieveFormFieldElementAction()
     {
         $helper     = $this->getAdminHelper();
@@ -104,6 +112,10 @@ class HelperController extends Controller
         return new Response($extension->renderWidget($view));
     }
 
+    /**
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function getShortObjectDescriptionAction()
     {
         $code       = $this->get('request')->query->get('code');
@@ -118,11 +130,11 @@ class HelperController extends Controller
         $object = $admin->getObject($objectId);
 
         if (!$object) {
-            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $objectId));
+            return new Response();
         }
 
         $description = 'no description available';
-        foreach (array('getTitle', 'getName', '__toString') as $method) {
+        foreach (array('getAdminTitle', 'getTitle', 'getName', '__toString') as $method) {
             if (method_exists($object, $method)) {
                 $description = $object->$method();
                 break;

@@ -164,7 +164,7 @@ class CRUDController extends Controller
         return $this->render($this->admin->getListTemplate(), array(
             'action'   => 'list',
             'form'     => $formView,
-            'datagrid' => $this->admin->getDatagrid(),
+            'datagrid' => $datagrid,
             'showHiddenFilters' => $showHiddenFilters,
             'admin' => $this->admin,
             'groups' => $this->get('sonata.admin.pool')->getDashboardGroups(),
@@ -174,7 +174,8 @@ class CRUDController extends Controller
     /**
      * execute a batch delete
      *
-     * @param array $idx
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @param $query
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function batchActionDelete($query)
@@ -190,6 +191,11 @@ class CRUDController extends Controller
         return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
     }
 
+    /**
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException|\Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @param $id
+     * @return \Symfony\Bundle\FrameworkBundle\Controller\Response|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function deleteAction($id)
     {
         if (false === $this->admin->isGranted('DELETE')) {
@@ -203,10 +209,17 @@ class CRUDController extends Controller
             throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
         }
 
-        $this->admin->delete($object);
-        $this->get('session')->setFlash('sonata_flash_success', 'flash_delete_success');
+        if ($this->getRequest()->getMethod() == 'DELETE') {
+            $this->admin->delete($object);
+            $this->get('session')->setFlash('sonata_flash_success', 'flash_delete_success');
 
-        return new RedirectResponse($this->admin->generateUrl('list'));
+            return new RedirectResponse($this->admin->generateUrl('list'));
+        }
+
+        return $this->render('SonataAdminBundle:CRUD:delete.html.twig', array(
+            'object' => $object,
+            'action' => 'delete'
+        ));
     }
 
     /**
@@ -309,9 +322,20 @@ class CRUDController extends Controller
            throw new \RuntimeException('invalid request type, POST expected');
         }
 
-        $action       = $this->get('request')->get('action');
-        $idx          = $this->get('request')->get('idx');
-        $all_elements = $this->get('request')->get('all_elements', false);
+        if ($data = json_decode($this->get('request')->get('data'), true)) {
+            $action = $data['action'];
+            $idx    = $data['idx'];
+            $all_elements = $data['all_elements'];
+        } else {
+            $action       = $this->get('request')->get('action');
+            $idx          = $this->get('request')->get('idx');
+            $all_elements = $this->get('request')->get('all_elements', false);
+        }
+
+        $batchActions = $this->admin->getBatchActions();
+        if (!array_key_exists($action, $batchActions)) {
+            throw new \RuntimeException(sprintf('The `%s` batch action is not defined', $action));
+        }
 
         if (count($idx) == 0 && !$all_elements) { // no item selected
             $this->get('session')->setFlash('sonata_flash_notice', 'flash_batch_empty');
@@ -319,8 +343,24 @@ class CRUDController extends Controller
             return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
         }
 
-        if (!array_key_exists($action, $this->admin->getBatchActions())) {
-            throw new \RuntimeException(sprintf('The `%s` batch action is not defined', $action));
+        $askConfirmation = isset($batchActions[$action]['ask_confirmation']) ? $batchActions[$action]['ask_confirmation'] : true;
+
+        if ($askConfirmation && $this->get('request')->get('confirmation') != 'ok') {
+            $data = json_encode(array(
+                'action' => $action,
+                'idx'    => $idx,
+                'all_elements' => $all_elements,
+            ));
+
+            $datagrid = $this->admin->getDatagrid();
+            $formView = $datagrid->getForm()->createView();
+
+            return $this->render('SonataAdminBundle:CRUD:batch_confirmation.html.twig', array(
+                'action'   => 'list',
+                'datagrid' => $datagrid,
+                'form'     => $formView,
+                'data'     => $data,
+            ));
         }
 
         // execute the action, batchActionXxxxx
@@ -341,6 +381,7 @@ class CRUDController extends Controller
         if (count($idx) > 0) {
             $this->admin->getModelManager()->addIdentifiersToQuery($this->admin->getClass(), $query, $idx);
         }
+
         return call_user_func(array($this, $final_action), $query);
     }
 
@@ -357,10 +398,10 @@ class CRUDController extends Controller
 
         $object = $this->admin->getNewInstance();
 
+        $this->admin->setSubject($object);
+
         $form = $this->admin->getForm();
         $form->setData($object);
-
-        $this->admin->setSubject($object);
 
         if ($this->get('request')->getMethod() == 'POST') {
             $form->bindRequest($this->get('request'));

@@ -27,7 +27,7 @@ file that was distributed with this source code.
     </div>
 {% endblock %}
 
-{% block side_menu %}{{ admin.sidemenu(action).render|raw }}{% endblock %}
+{% block side_menu %}{{ admin.sidemenu(action)|knp_menu_render('list') }}{% endblock %}
 
 {% block content %}
     {% if admin.getEditDescription is defined %}
@@ -118,7 +118,12 @@ file that was distributed with this source code.
                 {% endif %}
             {% else %}
                 {% if admin.id(object) %}
-                <input type="submit" name="btn_update_and_list" value="Save"/> 
+                     <input type="submit" name="btn_update_and_list" value="Save"/> 
+
+                    {% if admin.isGranted('DELETE') %}
+                        <a href="{{ admin.generateObjectUrl('delete', object) }}">{% trans from 'SonataAdminBundle' %}link_delete{% endtrans %}</a>
+                    {% endif %}
+
                 {% else %}
                 <input type="submit" name="btn_create_and_list" value="Create"/>
                 {% endif %}

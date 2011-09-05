@@ -18,7 +18,7 @@ use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Validator\ErrorElement;
 use Sonata\AdminBundle\Admin\AdminInterface;
 
-use Knp\Bundle\MenuBundle\MenuItem;
+use Knp\Menu\ItemInterface as MenuItemInterface;
 
 interface AdminExtensionInterface
 {
@@ -61,12 +61,12 @@ interface AdminExtensionInterface
     /**
      * @abstract
      * @param Admin $admin
-     * @param \Knp\Bundle\MenuBundle\MenuItem $menu
+     * @param \Knp\Menu\MenuItem $menu
      * @param string $action
      * @param null|Admin $childAdmin
      * @return void
      */
-    function configureSideMenu(Admin $admin, MenuItem $menu, $action, Admin $childAdmin = null);
+    function configureSideMenu(Admin $admin, MenuItemInterface $menu, $action, Admin $childAdmin = null);
 
     /**
      * @abstract

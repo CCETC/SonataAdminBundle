@@ -22,7 +22,7 @@ First, you need to create an Admin/PostAdmin.php file
     use Sonata\AdminBundle\Datagrid\ListMapper;
     use Sonata\AdminBundle\Show\ShowMapper;
 
-    use Knp\Bundle\MenuBundle\MenuItem;
+    use Knp\Menu\ItemInterface as MenuItemInterface;
 
     use Application\Sonata\NewsBundle\Entity\Comment;
 
@@ -99,7 +99,7 @@ First, you need to create an Admin/PostAdmin.php file
             $queryBuilder->setParameter('status', Comment::STATUS_MODERATE);
         }
 
-        protected function configureSideMenu(MenuItem $menu, $action, Admin $childAdmin = null)
+        protected function configureSideMenu(MenuItemInterface $menu, $action, Admin $childAdmin = null)
         {
             if (!$childAdmin && !in_array($action, array('edit'))) {
                 return;
@@ -111,12 +111,12 @@ First, you need to create an Admin/PostAdmin.php file
 
             $menu->addChild(
                 $this->trans('view_post'),
-                $admin->generateUrl('edit', array('id' => $id))
+                array('uri' => $admin->generateUrl('edit', array('id' => $id)))
             );
 
             $menu->addChild(
                 $this->trans('link_view_comment'),
-                $admin->generateUrl('sonata.news.admin.comment.list', array('id' => $id))
+                array('uri' => $admin->generateUrl('sonata.news.admin.comment.list', array('id' => $id)))
             );
         }
     }
@@ -167,7 +167,7 @@ You can specify which field you want displayed for each action (list, form and f
     use Sonata\AdminBundle\Datagrid\DatagridMapper;
     use Sonata\AdminBundle\Datagrid\ListMapper;
 
-    use Knp\Bundle\MenuBundle\MenuItem;
+    use Knp\Menu\MenuItem;
 
     use Application\Sonata\NewsBundle\Entity\Comment;
 
