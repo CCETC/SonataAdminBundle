@@ -23,8 +23,9 @@ file that was distributed with this source code.
             {% if field_description.type == 'boolean' %}
                 {% if value == '1' %} yes
                 {% elseif value == '0' %}no
+                {% else %}-
                 {% endif %}
-            {% else %}
+                        {% else %}
                     {{ value }}    	
             {% endif %}
     	{% endblock %}
