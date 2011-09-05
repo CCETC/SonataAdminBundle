@@ -149,9 +149,13 @@ class CRUDController extends Controller
         // check each hidden filter to see if it was requested, so we can show the hidden filters in the template
         $showHiddenFilters = false;
 
+        $filters = $this->getRequest()->get('filter');
+        
         foreach($this->admin->getHiddenFilters() as $filterName => $value)
         {
-            if($this->getRequest()->get($filterName) && $this->getRequest()->get($filterName) != "")
+            
+            if((isset($filters[$filterName]['value']) && $filters[$filterName]['value'] != "")
+                || (isset($filters[$filterName]['type']) && $filters[$filterName]['type'] != ""))
             {
                 $showHiddenFilters = true;
             }
@@ -410,41 +414,30 @@ class CRUDController extends Controller
 
         $this->admin->setSubject($object);
         
-        // build view labels and parent fields
-        foreach($this->admin->getViewGroups() as $name => $viewGroup)
-        {
-            foreach($viewGroup['fields'] as $fieldName)
-            {
-                $desc = $this->admin->getShowFieldDescriptions();
-
-                if(isset($this->admin->viewLabels[$fieldName]))
-                {
-                    $desc[$fieldName]->setName($this->admin->viewLabels[$fieldName]);
-                }
-
-                if(isset($this->admin->viewChoiceParentFields[$fieldName]))
-                {
-                    $desc[$fieldName]->setOption('parentField', $this->admin->viewChoiceParentFields[$fieldName]);
-                }
-                else
-                {
-                    $desc[$fieldName]->setOption('parentField', '');
-                }
-
-                if(isset($this->admin->viewFieldsToIndent[$fieldName]))
-                {
-                    $desc[$fieldName]->setOption('labelStyles', 'text-align: right;');
-                }
-                else
-                {
-                    $desc[$fieldName]->setOption('labelStyles', '');
-                }
-            }
-        }
-
         // build the show list
         $elements = $this->admin->getShow();
 
+        // build show labels and parent fields
+        foreach($this->admin->getShowGroups() as $name => $showGroup)
+        {
+            foreach($showGroup['fields'] as $fieldName)
+            {
+                $desc = $this->admin->getShowFieldDescriptions();
+
+                if(isset($this->admin->showChoiceParentFields[$fieldName]))
+                {
+                    $desc[$fieldName]->setOption('parentField', $this->admin->showChoiceParentFields[$fieldName]);
+                }
+               
+                if(isset($this->admin->showFieldsToIndent[$fieldName]))
+                {
+                    $desc[$fieldName]->setOption('labelStyles', 'text-align: right;');
+                }
+               
+            }
+        }
+
+        
         return $this->render($this->admin->getShowTemplate(), array(
             'action'         => 'show',
             'object'         => $object,

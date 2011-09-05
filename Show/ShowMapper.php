@@ -72,7 +72,7 @@ class ShowMapper
         } else {
             throw new \RuntimeException('invalid state');
         }
-
+        
         // add the field with the FormBuilder
         $this->showBuilder->addField($this->list, $type, $fieldDescription, $this->admin);
 

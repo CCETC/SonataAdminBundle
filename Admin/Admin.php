@@ -31,8 +31,10 @@ use Sonata\AdminBundle\Builder\ShowBuilderInterface;
 use Sonata\AdminBundle\Security\Handler\SecurityHandlerInterface;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Model\ModelManagerInterface;
-use Knp\Bundle\MenuBundle\Menu;
-use Knp\Bundle\MenuBundle\MenuItem;
+
+use Knp\Menu\FactoryInterface as MenuFactoryInterface;
+use Knp\Menu\ItemInterface as MenuItemInterface;
+use Knp\Menu\MenuItem;
 
 abstract class Admin implements AdminInterface, DomainObjectInterface
 {
@@ -52,7 +54,6 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
      * @var array
      */
     protected $hiddenFilters = array();
-    protected $viewGroups = array();
     protected $editDescription;
     
     public function getEntityDescription()
@@ -68,11 +69,6 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     public function getHiddenFilters()
     {
         return $this->hiddenFilters;
-    }
-
-    public function getViewGroups()
-    {
-        return $this->viewGroups;
     }
 
     public function getEditDescription()
@@ -1113,7 +1109,8 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
 
         $this->loaded['side_menu'] = true;
 
-        $menu = new Menu;
+        $factory = new MenuFactory;
+        $menu = $factory->createItem('SideMenu');
 
         $this->configureSideMenu($menu, $action, $childAdmin);
 
@@ -1656,36 +1653,40 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     }
 
     /**
-     * Generates the breadcrumbs array
-     *
-     * @param string $action
-     * @param \Knp\Bundle\MenuBundle\MenuItem|null $menu
-     * @return array
-     */
-    public function buildBreadcrumbs($action, MenuItem $menu = null)
+    * Generates the breadcrumbs array
+    *
+    * @param string $action
+    * @param \Knp\Menu\MenuItem|null $menu
+    * @return array
+    */
+    public function buildBreadcrumbs($action, MenuItemInterface $menu = null)
     {
         if (isset($this->breadcrumbs[$action])) {
             return $this->breadcrumbs[$action];
         }
-        
-        $menu = $menu ?: new Menu;
-   
+
+        if (!$menu) {
+            $menu = $this->menuFactory->createItem('root');
+        }
+
         $child = $menu->addChild(
-            $this->trans(sprintf('breadcrumb.link_%s_list', $this->getClassnameLabel())),
-            $this->generateUrl('list')
+            $this->trans('breadcrumb.dashboard', array(), 'SonataAdminBundle'),
+            array('uri' => $this->router->generate('sonata_admin_dashboard'))
         );
 
-        
+        $child = $child->addChild(
+            $this->trans(sprintf('breadcrumb.link_%s_list', $this->getClassnameLabel())),
+            array('uri' => $this->generateUrl('list'))
+        );
+
         $childAdmin = $this->getCurrentChildAdmin();
 
-     
-        
         if ($childAdmin) {
             $id = $this->request->get($this->getIdParameter());
 
             $child = $child->addChild(
                 (string) $this->getSubject(),
-                $this->generateUrl('edit', array('id' => $id))
+                array('uri' => $this->generateUrl('edit', array('id' => $id)))
             );
 
             return $childAdmin->buildBreadcrumbs($action, $child);
@@ -1693,7 +1694,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
             if ($action != 'list') {
                 $menu = $menu->addChild(
                     $this->trans(sprintf('breadcrumb.link_%s_list', $this->getClassnameLabel())),
-                    $this->generateUrl('list')
+                    array('uri' => $this->generateUrl('list'))
                 );
             }
 

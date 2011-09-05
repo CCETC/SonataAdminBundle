@@ -51,7 +51,6 @@ file that was distributed with this source code.
                     {% endif %}
 
                     <tr class="sonata-ba-view-container">
-                        {# is this if necessary? #}
                         {% if admin.show[field_name] is defined %}
                             {{ admin.show[field_name]|render_view_element(object) }}
                         {% endif %}

@@ -11,7 +11,11 @@ file that was distributed with this source code.
 
     <th style="{% if field_description.options['labelStyles'] is defined %}{{ field_description.options['labelStyles']}}{% endif %}">
         {% block name %}
-                {{  field_description.name }}
+                {% if field_description.options.label is defined %}
+                        {{ field_description.options.label }}
+                {% else %}
+                        {{  field_description.name }}
+                {% endif %}
         {% endblock %}
     </th>
     <td>
