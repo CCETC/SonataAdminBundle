@@ -270,11 +270,11 @@ class CRUDController extends Controller
         return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
     }
     
-     public function batchActionApprove(ProxyQuery $queryProxy)
+     public function batchActionApprove($query)
     {
         $em = $this->getDoctrine()->getEntityManager();
 
-        foreach($queryProxy->getQuery()->iterate() as $pos => $object)
+        foreach($query->getQuery()->iterate() as $pos => $object)
         {
             $object[0]->setApproved(true);
         }
@@ -287,11 +287,11 @@ class CRUDController extends Controller
         return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
     }
 
-    public function batchActionUnapprove(ProxyQuery $queryProxy)
+    public function batchActionUnapprove($query)
     {
         $em = $this->getDoctrine()->getEntityManager();
 
-        foreach($queryProxy->getQuery()->iterate() as $pos => $object)
+        foreach($query->getQuery()->iterate() as $pos => $object)
         {
             $object[0]->setApproved(false);
         }
