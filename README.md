@@ -1,137 +1,50 @@
-SonataAdminBundle - The missing Symfony2 Admin Generator
-========================================================
+CCETC/SonataAdminBundle
+============
 
-The documentation of the bundle is in ``Resources/doc``.
+This bundle is a forked version of the SonataAdminBundle.
+It contains many customizations to the sonata-project bundle.
+This bundle is used in all CCETC web applications.
 
-**Warning**: documentation files are not rendering correctly in Github (reStructuredText format)
-and some content might be broken or hidden, make sure to read raw files.
+# Features
+* approve/unapprove actions
+* show field labels and formatting (indenting, grouping boolean fields)
+* form field formatting (indenting, grouping boolean fields)
+* entity icons in breadcrumbs and on dashboard
+* hidden filters
 
-Quick example
--------------
+# Interface Changes
+* Fewer submit buttons on edit
+* several minor css changes (filter box on top, form and show styles_
+* simplified batch tools
+* simplified breadcrumbs
+* heading on show
 
-Defining an ``Admin`` class is pretty easy: simply define ``configure[Show|Form|List|Datagrid]Fields`` methods
+# Installation
+Install as a git submodule:
 
-``` php
-<?php
-namespace Sonata\NewsBundle\Admin;
+        git submodule add git://github.com/CCETC/SonataAdminBundle.git vendor/bundles/CCETC/SonataAdminBundle
 
-use Sonata\AdminBundle\Admin\Admin;
-use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\AdminBundle\Datagrid\DatagridMapper;
-use Sonata\AdminBundle\Datagrid\ListMapper;
-use Sonata\AdminBundle\Show\ShowMapper;
+Pull updates from the CCETC/SonataAdminBundle:
 
-class PostAdmin extends Admin
-{
-    public function configureShowFields(ShowMapper $showMapper)
-    {
-        $showMapper
-            ->add('author')
-            ->add('enabled')
-            ->add('title')
-            ->add('abstract')
-            ->add('content')
-            ->add('tags')
-        ;
-    }
+        git pull origin
 
-    public function configureFormFields(FormMapper $formMapper)
-    {
-        $formMapper
-            ->with('General')
-                ->add('enabled', null, array('required' => false))
-                ->add('author', 'sonata_type_model', array(), array('edit' => 'list'))
-                ->add('title')
-                ->add('abstract')
-                ->add('content')
-            ->end()
-            ->with('Tags')
-                ->add('tags', 'sonata_type_model', array('expanded' => true))
-            ->end()
-            ->with('Options', array('collapsed' => true))
-                ->add('commentsCloseAt')
-                ->add('commentsEnabled', null, array('required' => false))
-            ->end()
-        ;
-    }
+TODO: document installation
+- help route?
+- configuration
 
-    public function configureListFields(ListMapper $listMapper)
-    {
-        $listMapper
-            ->addIdentifier('title')
-            ->add('author')
-            ->add('enabled')
-            ->add('tags')
-            ->add('commentsEnabled')
-        ;
-    }
+## Dependencies
+CCETC/SonataAdminBundle requires the same dependencies as the sonata-admin/SonataAdminBundle (KnpMenu, Blueprint, Jquery).
+In addition, the CCETC bundle requires the CCETC fork of FOSUserBundle, and the CCETCErrorReportBundle.
 
-    public function configureDatagridFilters(DatagridMapper $datagridMapper)
-    {
-        $datagridMapper
-            ->add('title')
-            ->add('enabled')
-            ->add('tags', null, array('filter_field_options' => array('expanded' => true, 'multiple' => true)))
-    }
-}
-```
-Screenshots : http://www.dropbox.com/gallery/581816/2/BaseApplicationBundle/preview?h=59b2e8
-
-Of course, power users will be happy as an ``Admin`` class is very flexible as all dependencies are
-injected by the DIC.
-
-Features
---------
-
-  - Dashboard
-
-  - List
-
-    - Automatic sort
-    - Link to associated admin (Post => User)
-    - Custom templates
-    - Row Action : edit, view, ...
-    - Batch Action
-    - Clever row visualisation : boolean values are represented with 'check picture'
-    - Filter
-    - Pagination
-
-  - Edit/Create
-
-    - Inline edition
-    - Association management (create related model with + icon)
-    - Group fields
-    - Sortable option
-    - Modal window to select model (when the list can be important)
-    - Dynamic form on [one|many]-to-many association (add new element)
-
-  - Templating
-
-    - base templates (field, list, filter) can be overwritten
-    - layout templates can be defined into the Service Container
-
-  - Others
-
-    - Nested Admin, ie /news/post/5/comment/list : filter and create comments only for the post with id=5
-    - Contextual Breadcrumb
-    - persistent parameters across an Admin
-    - side menu option
-    - Translated into 12 languages : DE, EN, ES, FR, IT, JA, NL, PL, PT_BR, PT_PT, RU and UK.
-    - Built to be extended
-    - Explain command line utility
+# Development
+From any Symfony application with CCETC/SonataAdminBundle installed, you can make changes to the bundle and 
+push them to the GitHub repository.
 
 
-Usage examples
---------------
+Before pushing, add upstream remotes to your checked-out submodule and pull upstream changes from the sonata-project:
+        
+        git remote add upstream git://githb.com/sonata-project/SonataAdminBundle.git
+        git pull upstream master
 
- - https://github.com/sonata-project/SonataMediaBundle : a media manager bundle
- - https://github.com/sonata-project/SonataNewsBundle : a news/blog bundle
- - https://github.com/sonata-project/SonataPageBundle : a page (CMS like) bundle
- - https://github.com/sonata-project/SonataUserBundle (integration of FOSUserBundle and SonataAdminBundle)
-
-TODO
-----
-
-  - create the ODM version
-  - save filter criteria
-  - export list
+# New Features
+TODO: document use of new features
