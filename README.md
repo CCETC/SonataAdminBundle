@@ -29,12 +29,16 @@ Pull updates from the CCETC/SonataAdminBundle:
         git pull origin
 
 TODO: document installation
+
 - help route?
 - configuration
 
 ## Dependencies
 CCETC/SonataAdminBundle requires the same dependencies as the sonata-admin/SonataAdminBundle (KnpMenu, Blueprint, Jquery).
-In addition, the CCETC bundle requires the CCETC fork of FOSUserBundle, and the CCETCErrorReportBundle.
+
+CCETC specific dependencies are:
+* [CCETC fork of FOSUserBundle](https://github.com/CCETC/FOSUserBundle)
+* [CCETCErrorReportBundle] (https://github.com/CCETC/CCETCErrorReportBundle).
 
 # Development
 From any Symfony application with CCETC/SonataAdminBundle installed, you can make changes to the bundle and 
