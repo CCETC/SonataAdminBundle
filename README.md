@@ -37,8 +37,9 @@ TODO: document installation
 CCETC/SonataAdminBundle requires the same dependencies as the sonata-admin/SonataAdminBundle (KnpMenu, Blueprint, Jquery).
 
 CCETC specific dependencies are:
-* [CCETC fork of FOSUserBundle](https://github.com/CCETC/FOSUserBundle)
-* [CCETCErrorReportBundle] (https://github.com/CCETC/CCETCErrorReportBundle).
+
+- [CCETC fork of FOSUserBundle](https://github.com/CCETC/FOSUserBundle)
+- [CCETCErrorReportBundle] (https://github.com/CCETC/CCETCErrorReportBundle).
 
 # Development
 From any Symfony application with CCETC/SonataAdminBundle installed, you can make changes to the bundle and 
