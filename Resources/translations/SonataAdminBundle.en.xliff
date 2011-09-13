@@ -190,6 +190,14 @@
                 <source>breadcrumb.dashboard</source>
                 <target>Dashboard</target>
             </trans-unit>
+            <trans-unit id="btn_delete">
+                <source>btn_delete</source>
+                <target>Delete</target>
+            </trans-unit>
+            <trans-unit id="btn_execute_batch_action">
+                <source>btn_execute_batch_action</source>
+                <target>Yes</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

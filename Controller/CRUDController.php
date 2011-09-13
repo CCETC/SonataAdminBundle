@@ -414,6 +414,15 @@ class CRUDController extends Controller
             $idx          = $this->get('request')->get('idx');
             $all_elements = $this->get('request')->get('all_elements', false);
         }
+        
+        $itemList = array();
+        
+        foreach($idx as $id)
+        {
+            $object = $this->admin->getObject($id);
+            $itemList[] = $object->__toString();
+        }
+        
 
         $batchActions = $this->admin->getBatchActions();
         if (!array_key_exists($action, $batchActions)) {
@@ -443,6 +452,8 @@ class CRUDController extends Controller
                 'datagrid' => $datagrid,
                 'form'     => $formView,
                 'data'     => $data,
+                'batchAction' => $action,
+                'itemList' => $itemList
             ));
         }
 

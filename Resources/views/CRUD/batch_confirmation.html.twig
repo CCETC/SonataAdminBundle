@@ -30,9 +30,13 @@ file that was distributed with this source code.
 {% block content %}
     <div class="sonata-ba-delete">
 
-        <h1>{% trans from 'SonataAdminBundle' %}title_batch_confirmation{% endtrans %}</h1>
-
-        {% trans from 'SonataAdminBundle' %}message_batch_confirmation{% endtrans %}
+        Are you sure you want to {{ batchAction }} the selected items?
+        
+        <ul>
+        {% for item in itemList %}
+                <li>{{ item }}</li>
+        {% endfor %}
+        </ul>
 
         <form action="{{ admin.generateUrl('batch', admin.filterParameters) }}" method="POST" >
             <input type="hidden" name="confirmation" value="ok" />
@@ -43,6 +47,7 @@ file that was distributed with this source code.
             </div>
 
             <input type="submit" value="{% trans from 'SonataAdminBundle' %}btn_execute_batch_action{% endtrans %}" />
+            <a href="{{ admin.generateUrl('list') }}" class="button">Cancel</a>
         </form>
 
     </div>

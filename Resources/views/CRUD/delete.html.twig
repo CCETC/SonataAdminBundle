@@ -30,14 +30,14 @@ file that was distributed with this source code.
 {% block content %}
     <div class="sonata-ba-delete">
 
-        <h1>{% trans from 'SonataAdminBundle' %}title_delete{% endtrans %}</h1>
-
-        {% trans with {'%object%': object} from 'SonataAdminBundle' %}message_delete_confirmation{% endtrans %}
+        Are you sure want to delete the selected item?
+        <ul><li>{{ object }}</li></ul>
 
         <form method="POST" action="{{ admin.generateObjectUrl('delete', object) }}">
             <input type="hidden" value="DELETE" name="_method" />
 
             <input type="submit" value="{% trans from 'SonataAdminBundle' %}btn_delete{% endtrans %}" />
+            <a href="{{ admin.generateUrl('list') }}" class="button">Cancel</a>
         </form>
 
     </div>
