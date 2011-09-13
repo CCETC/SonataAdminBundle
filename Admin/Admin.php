@@ -1082,7 +1082,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
      */
     public function getObject($id)
     {
-        return $this->modelManager->findOne($this->getClass(), $id);
+        return $this->modelManager->find($this->getClass(), $id);
     }
 
     /**
@@ -1291,19 +1291,14 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
      */
     public function getSubject()
     {
-        if($this->subject === null && $this->request)
-        {
-
+        if ($this->subject === null && $this->request) {
             $id = $this->request->get($this->getIdParameter());
             if(!is_numeric($id))
             {
                 $this->subject = false;
             }
-            else
-            {
-                $this->subject = $this->getModelManager()->findOne(
-                                $this->getClass(), $id
-                );
+            else {
+                $this->subject = $this->getModelManager()->find($this->getClass(), $id);
             }
         }
 
