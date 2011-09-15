@@ -84,8 +84,7 @@ file that was distributed with this source code.
 
             <div class="span-24 last header">
                      <div class="logo">
-                        <h2><a href="{{ url('sonata_admin_dashboard') }}">Green Jobs Green New York</a></h2>
-                        <h3><a href="{{ url('sonata_admin_dashboard') }}">Data Tool</a></h3>
+                        <h2><a href="{{ url('sonata_admin_dashboard') }}">Get Your GreenBack</a></h2>
                     </div>
                    <div id="headerMenu">
                         <a href="{{ url('sonata_admin_dashboard') }}">Dashboard</a>
@@ -97,22 +96,6 @@ file that was distributed with this source code.
                         {% endif %}#}
                         <a class="last" href="{{ url('adminHelp') }}">Help</a>
                    </div>
-                    {% if groups is defined and action is defined %}
-                        {% for groupname, group in groups %}
-                                <div id="headerMenu">
-                                {% for item in group %}
-                                  {# {% if ((item.classNameLabel == 'Users' and  is_granted('ROLE_ADMIN')) or item.classNameLabel != 'Users') %}
-
-                                        <a
-                                        class="    
-                                        {% if loop.last %}last {% endif %}
-                                        "        
-                                        href="{{ item.generateUrl('list') }}">{{ item.classnameLabel }}</a>
-                                   {% endif %}#}
-                                {% endfor %}
-                                </div>
-                        {% endfor %}
-                     {% endif %} 
             </div>
 
             <div class="span-24 last content clear">
