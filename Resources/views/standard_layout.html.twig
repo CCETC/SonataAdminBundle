@@ -27,6 +27,9 @@ file that was distributed with this source code.
             <link rel="stylesheet" href="{{ asset('bundles/sonataadmin/css/colors.css') }}" type="text/css" media="all">
             <link rel="stylesheet" href="{{ asset('bundles/sonataadmin/css/customization.css') }}" type="text/css" media="all">
         
+            <link rel="stylesheet" href="{{ asset('bundles/fosuser/styles.css') }}" type="text/css" media="all">
+            
+
         {% endblock %}
 
         {% block javascripts %}
@@ -84,16 +87,16 @@ file that was distributed with this source code.
 
             <div class="span-24 last header">
                      <div class="logo">
-                        <h2><a href="{{ url('sonata_admin_dashboard') }}">Get Your GreenBack</a></h2>
+                        <h2><a href="{{ url('sonata_admin_dashboard') }}">Admin</a></h2>
                     </div>
                    <div id="headerMenu">
                         <a href="{{ url('sonata_admin_dashboard') }}">Dashboard</a>
-                       {# {% if is_granted('ROLE_USER') %}
+                        {% if is_granted('ROLE_USER') %}
                             Logged in as {{ app.user }}, <a href="{{ url('fos_user_security_logout') }}">Log out</a>
                         {% else %}
                             <a href="{{ url('fos_user_security_login') }}">Login</a>
                             <a href="{{ url('fos_user_registration_register') }}">Register</a>
-                        {% endif %}#}
+                        {% endif %}
                         <a class="last" href="{{ url('adminHelp') }}">Help</a>
                    </div>
             </div>

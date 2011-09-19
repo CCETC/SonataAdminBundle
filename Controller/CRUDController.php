@@ -138,7 +138,7 @@ class CRUDController extends Controller
         if (false === $this->admin->isGranted('LIST')) {
             throw new AccessDeniedException();
         }
-
+        
         $filterValues = $this->admin->getDatagrid()->getValues();
 
         foreach($this->admin->getFilterDefaults() as $field => $default)
