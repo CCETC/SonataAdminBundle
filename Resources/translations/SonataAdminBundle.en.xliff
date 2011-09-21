@@ -66,10 +66,6 @@
                 <source>link_list</source>
                 <target>List</target>
             </trans-unit>
-            <trans-unit id="link_delete">
-                <source>link_delete</source>
-                <target>Delete</target>
-            </trans-unit>
             <trans-unit id="link_reset_filter">
                 <source>link_reset_filter</source>
                 <target>Reset</target>
@@ -170,37 +166,9 @@
               <source>flash_delete_success</source>
               <target>Item has been deleted successfully.</target>
             </trans-unit>
-            <trans-unit id='label_type_contains'>
-              <source>label_type_contains</source>
-              <target>contains</target>
-            </trans-unit>
-            <trans-unit id='label_type_not_contains'>
-              <source>label_type_not_contains</source>
-              <target>does not contain</target>
-            </trans-unit>
-            <trans-unit id='label_type_equals'>
-              <source>label_type_equals</source>
-              <target>equals</target>
-            </trans-unit>
-            <trans-unit id='label_type_yes'>
-              <source>label_type_yes</source>
-              <target>is</target>
-            </trans-unit>
-            <trans-unit id='label_type_no'>
-              <source>label_type_no</source>
-              <target>is not</target>
-            </trans-unit>
             <trans-unit id="link_breadcrumb_dashboard">
                 <source>breadcrumb.dashboard</source>
                 <target>Dashboard</target>
-            </trans-unit>
-            <trans-unit id="btn_delete">
-                <source>btn_delete</source>
-                <target>Delete</target>
-            </trans-unit>
-            <trans-unit id="btn_execute_batch_action">
-                <source>btn_execute_batch_action</source>
-                <target>Yes</target>
             </trans-unit>
             <trans-unit id="title_delete">
                 <source>title_delete</source>
@@ -226,13 +194,13 @@
                 <source>btn_execute_batch_action</source>
                 <target>Yes, execute</target>
             </trans-unit>
-            <trans-unit id="label_type_yes">
+            <trans-unit id='label_type_yes'>
               <source>label_type_yes</source>
-              <target>yes</target>
+              <target>is</target>
             </trans-unit>
-            <trans-unit id="label_type_no">
+            <trans-unit id='label_type_no'>
               <source>label_type_no</source>
-              <target>no</target>
+              <target>is not</target>
             </trans-unit>
             <trans-unit id="label_type_contains">
               <source>label_type_contains</source>
