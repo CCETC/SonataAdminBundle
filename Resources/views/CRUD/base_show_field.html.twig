@@ -20,12 +20,12 @@ file that was distributed with this source code.
     </th>
     <td>
     	{% block value %}
-            {% if field_description.type == 'boolean' %}
+            {% if field_description.type == 'checkbox' %}
                 {% if value == '1' %} yes
                 {% elseif value == '0' %}no
                 {% else %}-
                 {% endif %}
-                        {% else %}
+            {% else %}
                     {{ value }}    	
             {% endif %}
     	{% endblock %}
