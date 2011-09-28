@@ -11,6 +11,7 @@ This bundle is used in all CCETC web applications.
 * form field formatting (indenting, grouping boolean fields)
 * entity icons in breadcrumbs and on dashboard
 * hidden filters
+* default filters
 
 ### Interface Changes
 * Fewer submit buttons on edit
@@ -24,14 +25,16 @@ Install as a git submodule:
 
         git submodule add git://github.com/CCETC/SonataAdminBundle.git vendor/bundles/CCETC/SonataAdminBundle
 
+# Updating
 Pull updates from the CCETC/SonataAdminBundle:
 
         git pull origin
 
-TODO: document installation
+Add upstream remote and pull updates from Sonata/SonataAdminBundle
 
-- help route?
-- configuration
+        git remote add upstream git://github.com/sonata-project/SonataadminBundle.git
+        git pull upstream master
+
 
 ### Dependencies
 CCETC/SonataAdminBundle requires the same dependencies as the sonata-admin/SonataAdminBundle (KnpMenu, Blueprint, Jquery).
