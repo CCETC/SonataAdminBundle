@@ -25,6 +25,16 @@ Install as a git submodule:
 
         git submodule add git://github.com/CCETC/SonataAdminBundle.git vendor/bundles/CCETC/SonataAdminBundle
 
+TODO: further document installation (add config parameters)
+
+### Dependencies
+CCETC/SonataAdminBundle requires the same dependencies as the sonata-admin/SonataAdminBundle (KnpMenu, Blueprint, Jquery).
+
+CCETC specific dependencies are:
+
+- [CCETC/FOSUserBundle](https://github.com/CCETC/FOSUserBundle)
+- [CCETCErrorReportBundle] (https://github.com/CCETC/CCETCErrorReportBundle)
+
 # Updating
 Pull updates from the CCETC/SonataAdminBundle:
 
@@ -35,14 +45,6 @@ Add upstream remote and pull updates from Sonata/SonataAdminBundle
         git remote add upstream git://github.com/sonata-project/SonataadminBundle.git
         git pull upstream master
 
-
-### Dependencies
-CCETC/SonataAdminBundle requires the same dependencies as the sonata-admin/SonataAdminBundle (KnpMenu, Blueprint, Jquery).
-
-CCETC specific dependencies are:
-
-- [CCETC/FOSUserBundle](https://github.com/CCETC/FOSUserBundle)
-- [CCETCErrorReportBundle] (https://github.com/CCETC/CCETCErrorReportBundle)
 
 # Development
 From any Symfony application with CCETC/SonataAdminBundle installed, you can make changes to the bundle and 
@@ -56,4 +58,6 @@ Before pushing, add upstream remotes to your checked-out submodule and pull upst
 
 # New Features
 TODO: document use of new features
-=======
+
+# Configuration
+TODO: document configuration
