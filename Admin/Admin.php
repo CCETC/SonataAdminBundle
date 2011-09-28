@@ -58,6 +58,12 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     protected $editDescription;
     protected $entityLabel;
     protected $entityLabelPlural;
+    protected $entityIconPath;
+    
+    public function getEntityIconPath()
+    {
+        return $this->entityIconPath;
+    }
     
     public function getEntityLabel()
     {

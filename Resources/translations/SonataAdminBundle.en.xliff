@@ -196,11 +196,11 @@
             </trans-unit>
             <trans-unit id='label_type_yes'>
               <source>label_type_yes</source>
-              <target>is</target>
+              <target>yes</target>
             </trans-unit>
             <trans-unit id='label_type_no'>
               <source>label_type_no</source>
-              <target>is not</target>
+              <target>no</target>
             </trans-unit>
             <trans-unit id="label_type_contains">
               <source>label_type_contains</source>

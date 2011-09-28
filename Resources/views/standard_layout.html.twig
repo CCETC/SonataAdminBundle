@@ -115,9 +115,9 @@ file that was distributed with this source code.
                                     &gt;
                                 {% endif %}
                                 <a href="{{ uri }}">
-                                    {% if admin.entityLabelPlural == label %}
-                                        <img src="{{ asset('images/entities/' ~ admin.classnamelabel ~ '.png') }}" />
-                                    {%endif%}
+                                    {% if admin.entityIconPath is defined and admin.entitylabelplural == label %}
+                                        <img src="{{ asset(admin.entityIconPath) }}" />
+                                    {% endif %}
                                     {{ label }}
                                 </a>
                             {% endfor %}
