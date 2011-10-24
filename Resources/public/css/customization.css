@@ -242,3 +242,7 @@ tr.leadEventHeading th {
 tr.oddEvenSpacing td {
     background: white !important;
 }
+
+select[multiple="multiple"] {
+    height: 300px;
+}
