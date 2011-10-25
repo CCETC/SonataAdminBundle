@@ -85,9 +85,11 @@ file that was distributed with this source code.
                             <div class="topMarginField">
                         {% endif %}
 
-                            {% if admin.formfielddescriptions[field_name] is defined %}
-                                {{ form_row(form[field_name])}}
-                            {% endif %}
+                        {% if admin.formfielddescriptions[field_name] is defined %}
+                            {{ admin.formfielddescriptions[field_name].options['preHook']|raw }}
+                            {{ form_row(form[field_name])}}
+                            {{ admin.formfielddescriptions[field_name].options['postHook']|raw }}
+                        {% endif %}
 
                         {% if admin.otherFields[field_name] is defined
                             or admin.fieldsWithTopMargins[field_name] is defined

@@ -334,9 +334,11 @@ class CRUDController extends Controller
         }
 
         $this->admin->setSubject($object);
-
+        
         $form = $this->admin->getForm();
         $form->setData($object);
+
+        $this->processFormFieldHooks($object);
 
         if ($this->get('request')->getMethod() == 'POST') {
             $form->bindRequest($this->get('request'));
@@ -373,6 +375,42 @@ class CRUDController extends Controller
         ));
     }
 
+    public function processFormFieldHooks($object)
+    {        
+        foreach($this->admin->getFormFieldDescriptions() as $desc)
+        {                
+            $preHook = "";
+            if(isset($this->admin->formFieldPreHooks[$desc->getName()]))
+            {
+                $hookTemplate = $this->admin->formFieldPreHooks[$desc->getName()];
+                
+                $preHook = $this->processHook($hookTemplate, $object);
+            }               
+            $desc->setOption('preHook', $preHook);
+            
+            $postHook = "";
+            if(isset($this->admin->formFieldPostHooks[$desc->getName()]))
+            {
+                $hookTemplate = $this->admin->formFieldPostHooks[$desc->getName()];
+                
+                $postHook = $this->processHook($hookTemplate, $object);
+            }               
+            $desc->setOption('postHook', $postHook);
+            
+        }
+    }
+    
+    protected function processHook($hookTemplate, $object)
+    {
+        $hook = $this->render($hookTemplate, array(
+            'object' => $object
+        ));
+        
+        return $hook->getContent();
+    }
+
+
+    
     /**
      * redirect the user depend on this choice
      *
@@ -505,7 +543,9 @@ class CRUDController extends Controller
 
         $form = $this->admin->getForm();
         $form->setData($object);
-
+        
+        $this->processFormFieldHooks($object);
+        
         if ($this->get('request')->getMethod() == 'POST') {
             $form->bindRequest($this->get('request'));
 
