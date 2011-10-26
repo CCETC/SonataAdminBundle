@@ -122,7 +122,7 @@ file that was distributed with this source code.
                                     &gt;
                                 {% endif %}
                                 <a href="{{ uri }}">
-                                    {% if admin.entityIconPath is defined and admin.entitylabelplural == label %}
+                                    {% if admin.entityIconPath is defined and admin.entityIconPath != "" and admin.entitylabelplural == label %}
                                         <img src="{{ asset(admin.entityIconPath) }}" />
                                     {% endif %}
                                     {{ label }}

@@ -28,7 +28,7 @@ file that was distributed with this source code.
                     <tr>
                         <td class="sonata-ba-list-label">
                          <a href="{{ admin.generateUrl('list')}}">
-                            {% if admin.entityIconPath is defined %}
+                            {% if admin.entityIconPath is defined and admin.entityIconPath != "" %}
                             <img src="{{ asset(admin.entityIconPath) }}" />
                             {% endif %}
                                {{ admin.label|trans({}, admin.translationdomain) }}</td>
