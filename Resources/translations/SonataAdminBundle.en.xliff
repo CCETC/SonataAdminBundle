@@ -104,7 +104,7 @@
             </trans-unit>
             <trans-unit id="no_result">
                 <source>no_result</source>
-                <target>No result</target>
+                <target>No items found</target>
             </trans-unit>
             <trans-unit id="confirm_msg">
                 <source>confirm_msg</source>
@@ -234,6 +234,17 @@
               <source>label_type_less_than</source>
               <target>&lt;</target>
             </trans-unit>
+            <trans-unit id="label_filters">
+              <source>label_filters</source>
+              <target>Filter Results</target>
+            </trans-unit>
+
+            <trans-unit id="delete_or">
+              <source>delete_or</source>
+              <target>or</target>
+            </trans-unit>
+
+
         </body>
     </file>
 </xliff>

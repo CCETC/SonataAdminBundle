@@ -109,10 +109,10 @@ class CRUDController extends Controller
     public function getBaseTemplate()
     {
         if ($this->isXmlHttpRequest()) {
-            return $this->container->getParameter('sonata.admin.templates.ajax');
+            return $this->admin->getTemplate('ajax');
         }
 
-        return $this->container->getParameter('sonata.admin.templates.layout');
+        return $this->admin->getTemplate('layout');
     }
 
     /**
@@ -125,6 +125,7 @@ class CRUDController extends Controller
     {
         $parameters['admin']         = isset($parameters['admin']) ? $parameters['admin'] : $this->admin;
         $parameters['base_template'] = isset($parameters['base_template']) ? $parameters['base_template'] : $this->getBaseTemplate();
+        $parameters['admin_pool']    = $this->get('sonata.admin.pool');
 
         return parent::render($view, $parameters);
     }
@@ -156,31 +157,11 @@ class CRUDController extends Controller
 
         // set the theme for the current Admin Form
         $this->get('twig')->getExtension('form')->setTheme($formView, $this->admin->getFilterTheme());
-
-        
-        // check each hidden filter to see if it was requested, so we can show the hidden filters in the template
-        $showHiddenFilters = false;
-
-        $filters = $this->getRequest()->get('filter');
-        
-        foreach($this->admin->getHiddenFilters() as $filterName => $value)
-        {
-            
-            if((isset($filters[$filterName]['value']) && $filters[$filterName]['value'] != "")
-                || (isset($filters[$filterName]['type']) && $filters[$filterName]['type'] != ""))
-            {
-                $showHiddenFilters = true;
-            }
-        }
-        
-        
-        
         
         return $this->render($this->admin->getListTemplate(), array(
             'action'   => 'list',
             'form'     => $formView,
             'datagrid' => $datagrid,
-            'showHiddenFilters' => $showHiddenFilters,
             'admin' => $this->admin,
             'groups' => $this->get('sonata.admin.pool')->getDashboardGroups(),
         ));
@@ -321,13 +302,15 @@ class CRUDController extends Controller
      * @param  $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editAction($id)
+    public function editAction($id = null)
     {
         if (false === $this->admin->isGranted('EDIT')) {
             throw new AccessDeniedException();
         }
 
-        $object = $this->admin->getObject($this->get('request')->get($this->admin->getIdParameter()));
+        $id = $this->get('request')->get($this->admin->getIdParameter());
+
+        $object = $this->admin->getObject($id);
 
         if (!$object) {
             throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
@@ -369,48 +352,12 @@ class CRUDController extends Controller
         return $this->render($this->admin->getEditTemplate(), array(
             'action'         => 'edit',
             'form'           => $view,
-            'admin' => $this->admin,
             'object'         => $object,
+            'admin' => $this->admin,
             'groups' => $this->get('sonata.admin.pool')->getDashboardGroups(),      
         ));
     }
 
-    public function processFormFieldHooks($object)
-    {        
-        foreach($this->admin->getFormFieldDescriptions() as $desc)
-        {                
-            $preHook = "";
-            if(isset($this->admin->formFieldPreHooks[$desc->getName()]))
-            {
-                $hookTemplate = $this->admin->formFieldPreHooks[$desc->getName()];
-                
-                $preHook = $this->processHook($hookTemplate, $object);
-            }               
-            $desc->setOption('preHook', $preHook);
-            
-            $postHook = "";
-            if(isset($this->admin->formFieldPostHooks[$desc->getName()]))
-            {
-                $hookTemplate = $this->admin->formFieldPostHooks[$desc->getName()];
-                
-                $postHook = $this->processHook($hookTemplate, $object);
-            }               
-            $desc->setOption('postHook', $postHook);
-            
-        }
-    }
-    
-    protected function processHook($hookTemplate, $object)
-    {
-        $hook = $this->render($hookTemplate, array(
-            'object' => $object
-        ));
-        
-        return $hook->getContent();
-    }
-
-
-    
     /**
      * redirect the user depend on this choice
      *
@@ -477,7 +424,7 @@ class CRUDController extends Controller
         }
 
         if (count($idx) == 0 && !$all_elements) { // no item selected
-            $this->get('session')->setFlash('sonata_flash_notice', 'flash_batch_empty');
+            $this->get('session')->setFlash('sonata_flash_info', 'flash_batch_empty');
 
             return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
         }
@@ -558,6 +505,7 @@ class CRUDController extends Controller
                         'objectId' => $this->admin->getNormalizedIdentifier($object)
                     ));
                 }
+
                 $this->get('session')->setFlash('sonata_flash_success','flash_create_success');
                 // redirect to edit mode
                 return $this->redirectTo($object);
@@ -584,13 +532,15 @@ class CRUDController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showAction($id)
+    public function showAction($id = null)
     {
         if (false === $this->admin->isGranted('SHOW')) {
             throw new AccessDeniedException();
         }
 
-        $object = $this->admin->getObject($this->get('request')->get($this->admin->getIdParameter()));
+        $id = $this->get('request')->get($this->admin->getIdParameter());
+
+        $object = $this->admin->getObject($id);
 
         if (!$object) {
             throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
@@ -629,5 +579,39 @@ class CRUDController extends Controller
             'admin' => $this->admin,
             'groups' => $this->get('sonata.admin.pool')->getDashboardGroups()            
         ));
+    }
+    
+    public function processFormFieldHooks($object)
+    {        
+        foreach($this->admin->getFormFieldDescriptions() as $desc)
+        {                
+            $preHook = "";
+            if(isset($this->admin->formFieldPreHooks[$desc->getName()]))
+            {
+                $hookTemplate = $this->admin->formFieldPreHooks[$desc->getName()];
+                
+                $preHook = $this->processHook($hookTemplate, $object);
+            }               
+            $desc->setOption('preHook', $preHook);
+            
+            $postHook = "";
+            if(isset($this->admin->formFieldPostHooks[$desc->getName()]))
+            {
+                $hookTemplate = $this->admin->formFieldPostHooks[$desc->getName()];
+                
+                $postHook = $this->processHook($hookTemplate, $object);
+            }               
+            $desc->setOption('postHook', $postHook);
+            
+        }
+    }
+    
+    protected function processHook($hookTemplate, $object)
+    {
+        $hook = $this->render($hookTemplate, array(
+            'object' => $object
+        ));
+        
+        return $hook->getContent();
     }
 }

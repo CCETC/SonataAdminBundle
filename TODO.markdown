@@ -45,10 +45,52 @@ CCETC/SonataAdminBundle - TODO
 
 //	- app name for title and header
 
+New Admin Transfer
+======================
+
+//	- edit/save/cancel interface
+	
+//	- login, heading
+	
+//	- List
+	
+//		- pagination
+	
+//		- hidden filters?
+	
+//			- turn off for now
+	
+//		- labels
+		
+//		- result count
+	
+//	- breadcrumbs
+
+//	- form headings
+	
+//	- don't hide filters if there are any?
+	
+
+
 2.0
 =========================================
 
-#	1.	lost features	
+Ideas
+	- use side bar
+
+
+#	1.	New ideas and features lost from new admin layout
+
+		- pre and post form and show hooks
+		
+			- replaces many customizations
+			
+		- hidden filters
+		
+	
+
+
+#	10.	lost features	
 
 	- lead events in base_view
 

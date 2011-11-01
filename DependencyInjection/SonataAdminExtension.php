@@ -48,12 +48,11 @@ class SonataAdminExtension extends Extension
     {
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('templates.xml');
-        $loader->load('doctrine_orm.xml');
-        $loader->load('doctrine_orm_filter_types.xml');
         $loader->load('twig.xml');
         $loader->load('core.xml');
         $loader->load('form_types.xml');
         $loader->load('validator.xml');
+        $loader->load('route.xml');
 
         $configuration = new Configuration();
         $processor = new Processor();
@@ -63,6 +62,7 @@ class SonataAdminExtension extends Extension
         $this->configSetupTemplates($config, $container);
 
         $pool = $container->getDefinition('sonata.admin.pool');
+        $pool->addMethodCall('setTemplates', array($config['templates']));
         $pool->addMethodCall('__hack__', $config);
 
         $container->setAlias('sonata.admin.security.handler', $config['security_handler']);

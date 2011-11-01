@@ -1,0 +1,59 @@
+tr.sonata-ba-list-field-header {
+    background-image: -moz-linear-gradient(-90deg, #F8F8F8, #E2E2E2);
+}
+
+
+div.container-fluid {
+}
+
+select[multiple="multiple"] {
+    height: 300px;
+}
+
+fieldset.filter_legend {
+    text-align: right;
+}
+
+
+legend.filter_legend {
+    float: right;
+}
+
+legend.filter_legend:hover {
+    cursor: pointer;
+}
+
+div.filter_container {
+    float: right;
+    clear: both;
+}
+
+div#headerMenu {
+    float: right;
+    color: white;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+div#headerMenu a {
+    border-right: 1px solid #666;
+    margin-right: 4px;
+    padding-right: 6px;
+}
+
+div#headerMenu a.last {
+    border: none;
+}
+
+
+table.filter-container-table {
+    border: none;
+}
+
+table th + th, table td + td {
+    border-left: none;
+}
+
+fieldset.filter_legend {
+    border: none;
+}

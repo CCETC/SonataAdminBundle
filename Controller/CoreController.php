@@ -15,22 +15,30 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response;
 
+
 class CoreController extends Controller
 {
+    /**
+     * @return string
+     */
     public function getBaseTemplate()
     {
         if ($this->get('request')->isXmlHttpRequest()) {
-            return $this->container->getParameter('sonata.admin.templates.ajax');
+            return $this->container->get('sonata.admin.pool')->getTemplate('ajax');
         }
 
-        return $this->container->getParameter('sonata.admin.templates.layout');
+        return $this->container->get('sonata.admin.pool')->getTemplate('layout');
     }
 
+    /**
+     * @return \Symfony\Bundle\FrameworkBundle\Controller\Response
+     */
     public function dashboardAction()
     {
         return $this->render('SonataAdminBundle:Core:dashboard.html.twig', array(
-            'groups' => $this->get('sonata.admin.pool')->getDashboardGroups(),
-            'base_template'  => $this->getBaseTemplate(),
+            'groups'          => $this->get('sonata.admin.pool')->getDashboardGroups(),
+            'base_template'   => $this->getBaseTemplate(),
+            'admin_pool'      => $this->container->get('sonata.admin.pool')
         ));
     }
 }

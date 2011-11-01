@@ -23,11 +23,19 @@ class Pool
 
     protected $adminClasses = array();
 
+    protected $templates    = array();
+
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
 
+    /**
+     * @return array
+     */
     public function getGroups()
     {
         $groups = $this->adminGroups;
@@ -41,14 +49,18 @@ class Pool
         return $groups;
     }
 
+    /**
+     * @return array
+     */
     public function getDashboardGroups()
     {
         $groups = $this->adminGroups;
 
         foreach ($this->adminGroups as $name => $adminGroup) {
-
-            foreach ($adminGroup['items'] as $key => $id) {
-                $groups[$name]['items'][$key] = $this->container->get($id);
+            if (isset($adminGroup['items'])) {
+                foreach ($adminGroup['items'] as $key => $id) {
+                    $groups[$name]['items'][$key] = $this->getInstance($id);
+                }
             }
 
             if (empty($groups[$name])) {
@@ -107,38 +119,92 @@ class Pool
         return $this->container->get($id);
     }
 
+    /**
+     * @return null|\Symfony\Component\DependencyInjection\ContainerInterface
+     */
     public function getContainer()
     {
         return $this->container;
     }
 
-    public function setAdminGroups($adminGroups)
+    /**
+     * @param array $adminGroups
+     * @return void
+     */
+    public function setAdminGroups(array $adminGroups)
     {
         $this->adminGroups = $adminGroups;
     }
 
+    /**
+     * @return array
+     */
     public function getAdminGroups()
     {
         return $this->adminGroups;
     }
 
-    public function setAdminServiceIds($adminServiceIds)
+    /**
+     * @param array $adminServiceIds
+     * @return void
+     */
+    public function setAdminServiceIds(array $adminServiceIds)
     {
         $this->adminServiceIds = $adminServiceIds;
     }
 
+    /**
+     * @return array
+     */
     public function getAdminServiceIds()
     {
         return $this->adminServiceIds;
     }
 
-    public function setAdminClasses($adminClasses)
+    /**
+     * @param array $adminClasses
+     * @return void
+     */
+    public function setAdminClasses(array $adminClasses)
     {
         $this->adminClasses = $adminClasses;
     }
 
+    /**
+     * @return array
+     */
     public function getAdminClasses()
     {
         return $this->adminClasses;
+    }
+
+    /**
+     * @param array $templates
+     * @return void
+     */
+    public function setTemplates(array $templates)
+    {
+        $this->templates = $templates;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTemplates()
+    {
+        return $this->templates;
+    }
+
+    /**
+     * @param $name
+     * @return null|string
+     */
+    public function getTemplate($name)
+    {
+        if (isset($this->templates[$name])) {
+            return $this->templates[$name];
+        }
+
+        return null;
     }
 }

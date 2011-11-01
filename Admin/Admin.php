@@ -28,6 +28,7 @@ use Sonata\AdminBundle\Builder\FormContractorInterface;
 use Sonata\AdminBundle\Builder\ListBuilderInterface;
 use Sonata\AdminBundle\Builder\DatagridBuilderInterface;
 use Sonata\AdminBundle\Builder\ShowBuilderInterface;
+use Sonata\AdminBundle\Builder\RouteBuilderInterface;
 use Sonata\AdminBundle\Security\Handler\SecurityHandlerInterface;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Model\ModelManagerInterface;
@@ -323,6 +324,11 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
      */
     protected $datagridBuilder;
     /**
+     * @var \Sonata\AdminBundle\Builder\RouteBuilderInterface
+     */
+    protected $routeBuilder;
+
+    /**
      * The datagrid instance
      *
      * @var \Sonata\AdminBundle\Datagrid\DatagridInterface
@@ -361,8 +367,12 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
         'routes' => false,
         'side_menu' => false,
     );
-    protected $formTheme = array('SonataAdminBundle:Form:form_admin_fields.html.twig');
-    protected $filterTheme = array('SonataAdminBundle:Form:filter_admin_fields.html.twig');
+
+    protected $formTheme = array();
+
+    protected $filterTheme = array();
+
+    protected $templates  = array();
 
     protected $extensions = array();
 
@@ -841,33 +851,21 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
 
         $this->loaded['routes'] = true;
 
-        $collection = new RouteCollection(
-                        $this->getBaseCodeRoute(),
-                        $this->getBaseRouteName(),
-                        $this->getBaseRoutePattern(),
-                        $this->getBaseControllerName()
+
+        $this->routes = new RouteCollection(
+            $this->getBaseCodeRoute(),
+            $this->getBaseRouteName(),
+            $this->getBaseRoutePattern(),
+            $this->getBaseControllerName()
         );
 
-        $collection->add('list');
-        $collection->add('create');
-        $collection->add('batch');
-        $collection->add('edit', $this->getRouterIdParameter() . '/edit');
-        $collection->add('delete', $this->getRouterIdParameter() . '/delete');
-        $collection->add('show', $this->getRouterIdParameter() . '/show');
+        $this->routeBuilder->build($this, $this->routes);
 
-        // add children urls
-        foreach($this->getChildren() as $children)
-        {
-            $collection->addCollection($children->getRoutes());
-        }
-
-        $this->configureRoutes($collection);
+        $this->configureRoutes($this->routes);
 
         foreach($this->extensions as $extension) {
-            $extension->configureRoutes($this, $collection);
+            $extension->configureRoutes($this, $this->routes);
         }
-
-        $this->routes = $collection;
     }
 
     /**
@@ -990,7 +988,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
      */
     public function getListTemplate()
     {
-        return 'SonataAdminBundle:CRUD:list.html.twig';
+        return $this->getTemplate('list');
     }
 
     /**
@@ -1000,7 +998,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
      */
     public function getEditTemplate()
     {
-        return 'SonataAdminBundle:CRUD:edit.html.twig';
+        return $this->getTemplate('edit');
     }
 
     /**
@@ -1010,7 +1008,37 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
      */
     public function getShowTemplate()
     {
-        return 'SonataAdminBundle:CRUD:show.html.twig';
+        return $this->getTemplate('show');
+    }
+
+    /**
+     * @param array $templates
+     * @return void
+     */
+    public function setTemplates(array $templates)
+    {
+        $this->templates = $templates;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTemplates()
+    {
+        return $this->templates;
+    }
+
+    /**
+     * @param $name
+     * @return null|string
+     */
+    public function getTemplate($name)
+    {
+        if (isset($this->templates[$name])) {
+            return $this->templates[$name];
+        }
+
+        return null;
     }
 
     /**
@@ -1674,6 +1702,17 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     }
 
     /**
+     * @param $name
+     * @return null|mixed
+     */
+    public function getPersistentParameter($name)
+    {
+        $parameters = $this->getPersistentParameters();
+
+        return isset($parameters[$name]) ? $parameters[$name] : null;
+    }
+
+    /**
      * @param string $action
      * @return array
      */
@@ -2175,5 +2214,21 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     public function getMenuFactory()
     {
         return $this->menuFactory;
+    }
+
+    /**
+     * @param \Sonata\AdminBundle\Builder\RouteBuilderInterface $routeBuilder
+     */
+    public function setRouteBuilder(RouteBuilderInterface $routeBuilder)
+    {
+        $this->routeBuilder = $routeBuilder;
+    }
+
+    /**
+     * @return \Sonata\AdminBundle\Builder\RouteBuilderInterface
+     */
+    public function getRouteBuilder()
+    {
+        return $this->routeBuilder;
     }
 }

@@ -12,6 +12,7 @@
 namespace Sonata\AdminBundle\Admin;
 
 use Sonata\AdminBundle\Admin\Pool;
+use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
 use Sonata\AdminBundle\Builder\FormContractorInterface;
 use Sonata\AdminBundle\Builder\ListBuilderInterface;
 use Sonata\AdminBundle\Builder\DatagridBuilderInterface;
@@ -137,4 +138,30 @@ interface AdminInterface
      * @return array
      */
     function getSecurityInformation();
+
+    /**
+     * @abstract
+     * @param \Sonata\AdminBundle\Admin\FieldDescriptionInterface $parentFieldDescription
+     * @return void
+     */
+    function setParentFieldDescription(FieldDescriptionInterface $parentFieldDescription);
+
+    /**
+     * translate a message id
+     *
+     * @param string $id
+     * @param array $parameters
+     * @param null $domain
+     * @param null $locale
+     * @return string the translated string
+     */
+    function trans($id, array $parameters = array(), $domain = null, $locale = null);
+
+    /**
+     * Return the parameter name used to represente the id in the url
+     *
+     * @abstract
+     * @return string
+     */
+    function getRouterIdParameter();
 }

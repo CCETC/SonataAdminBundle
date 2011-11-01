@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 /**
- * Add all dependencies to the Admin class, this avoid to write to many lines
+ * Add all dependencies to the Admin class, this avoid to write too many lines
  * in the configuration files.
  *
  * @author Thomas Rabaix <thomas.rabaix@sonata-project.org>
@@ -182,6 +182,10 @@ class AddDependencyCallsCompilerPass implements CompilerPassInterface
             }
         }
 
+        if (!$definition->hasMethodCall('setRouteBuilder')) {
+            $definition->addMethodCall('setRouteBuilder', array(new Reference('sonata.admin.route.path_info')));
+        }
+
         if (isset($service['label'])) {
             $label = $service['label'];
         } elseif (isset($attributes[0]['label'])) {
@@ -192,6 +196,10 @@ class AddDependencyCallsCompilerPass implements CompilerPassInterface
         $definition->addMethodCall('setLabel', array($label));
 
         $definition->addMethodCall('configure');
+
+        if (!$definition->hasMethodCall('setTemplates')) {
+            $definition->addMethodCall('setTemplates', array($settings['templates']));
+        }
 
         return $definition;
     }
