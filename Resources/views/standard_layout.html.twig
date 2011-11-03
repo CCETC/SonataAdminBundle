@@ -27,16 +27,6 @@ file that was distributed with this source code.
 
             <link rel="stylesheet" href="{{ asset('bundles/sonataadmin/bootstrap/bootstrap.min.css') }}" type="text/css" media="all" >
 
-            <style type="text/css">
-              body {
-                  padding-top: 60px;
-              }
-
-              fieldset legend {
-                  padding-left: 0px;
-              }
-            </style>
-
             <!-- base application asset -->
             <link rel="stylesheet" href="{{ asset('bundles/sonataadmin/css/layout.css') }}" type="text/css" media="all">
             <link rel="stylesheet" href="{{ asset('bundles/sonataadmin/css/colors.css') }}" type="text/css" media="all">
@@ -85,11 +75,14 @@ file that was distributed with this source code.
             {% endblock%}
         </title>
     </head>
-    <body>
+    <body class="{% if _side_menu is empty %}sonata-ba-no-side-menu{% endif %}">
+        {# initialize block value #}
+
         <div class="topbar" data-dropdown="dropdown" >
             <div class="topbar">
                 <div class="topbar-inner">
                     <div class="container-fluid">
+<<<<<<< HEAD
                         <a href="{{ url('home') }}" class="brand">{{ adminTitle }}</a>
                         {% if admin_pool is defined %}
                             <ul class="nav">
@@ -216,7 +209,11 @@ file that was distributed with this source code.
                     </div>
                 {% endif %}
 
-                {% block footer %}{% endblock %}
+                {% block footer %}
+                    <div style="float: right; clear: both">
+                        <span class="label"><a href="http://sonata-project.org" style="text-decoration: none; color: black">Sonata Project</a></span>
+                    </div>
+                {% endblock %}
             </div>
         </div>
     </body>
