@@ -19,7 +19,7 @@ file that was distributed with this source code.
         {% endblock %}
     </th>
     <td>
-    	{% block value %}
+    	{% block field %}
             {% if field_description.type == 'checkbox' %}
                 {% if value == '1' %} yes
                 {% elseif value == '0' %}no

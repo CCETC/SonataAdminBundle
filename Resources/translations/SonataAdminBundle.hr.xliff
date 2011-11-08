@@ -4,7 +4,7 @@
         <body>
             <trans-unit id="action_delete">
                 <source>action_delete</source>
-                <target>Usuń</target>
+                <target>Izbriši</target>
             </trans-unit>
             <trans-unit id="btn_batch">
                 <source>btn_batch</source>
@@ -12,47 +12,47 @@
             </trans-unit>
             <trans-unit id="btn_create">
                 <source>btn_create</source>
-                <target>Zapisz</target>
+                <target>Stvori</target>
             </trans-unit>
             <trans-unit id="btn_create_and_edit_again">
                 <source>btn_create_and_edit_again</source>
-                <target>Zapisz</target>
+                <target>Spremi</target>
             </trans-unit>
             <trans-unit id="btn_create_and_create_a_new_one">
                 <source>btn_create_and_create_a_new_one</source>
-                <target>Zapisz i dodaj kolejny</target>
+                <target>Spremi i nastavi stvaranje</target>
             </trans-unit>
             <trans-unit id="btn_filter">
                 <source>btn_filter</source>
-                <target>Filtruj</target>
+                <target>Filtriraj</target>
             </trans-unit>
             <trans-unit id="btn_update_and_edit_again">
                 <source>btn_update_and_edit_again</source>
-                <target>Zapisz zmiany</target>
+                <target>Spremi</target>
             </trans-unit>
             <trans-unit id="btn_update_and_return_to_list">
                 <source>btn_update_and_return_to_list</source>
-                <target>Zapisz zmiany i zamknij</target>
+                <target>Spremi i vrati na popis</target>
             </trans-unit>
             <trans-unit id="link_delete">
                 <source>link_delete</source>
-                <target>Usuń</target>
+                <target>Izbriši</target>
             </trans-unit>
             <trans-unit id="link_action_create">
                 <source>link_action_create</source>
-                <target>Dodaj nowy</target>
+                <target>Stvori</target>
             </trans-unit>
             <trans-unit id="link_action_list">
                 <source>link_action_list</source>
-                <target>Powrót do listy</target>
+                <target>Vrati na popis</target>
             </trans-unit>
             <trans-unit id="link_action_show">
                 <source>link_action_show</source>
-                <target>Pokaż</target>
+                <target>Prikaži</target>
             </trans-unit>
             <trans-unit id="link_action_edit">
                 <source>link_action_edit</source>
-                <target>Edytuj</target>
+                <target>Uredi</target>
             </trans-unit>
             <trans-unit id="link_add">
                 <source>link_add</source>
@@ -60,99 +60,99 @@
             </trans-unit>
             <trans-unit id="link_list">
                 <source>link_list</source>
-                <target>Zarządzaj</target>
+                <target>Popis</target>
             </trans-unit>
             <trans-unit id="link_reset_filter">
                 <source>link_reset_filter</source>
-                <target>Cofnij</target>
+                <target>Resetiraj filtre</target>
             </trans-unit>
             <trans-unit id="title_create">
                 <source>title_create</source>
-                <target>Stwórz</target>
+                <target>Stvaranje</target>
             </trans-unit>
             <trans-unit id="title_dashboard">
                 <source>title_dashboard</source>
-                <target>Pulpit</target>
+                <target>Nadzorna ploča</target>
             </trans-unit>
             <trans-unit id="title_edit">
                 <source>title_edit</source>
-                <target>Edytuj</target>
+                <target>Uređivanje</target>
             </trans-unit>
             <trans-unit id="title_list">
                 <source>title_list</source>
-                <target>Wylistuj</target>
+                <target>Popis</target>
             </trans-unit>
             <trans-unit id="link_next_pager">
                 <source>link_next_pager</source>
-                <target>Następna</target>
+                <target>Sljedeća</target>
             </trans-unit>
             <trans-unit id="link_previous_pager">
                 <source>link_previous_pager</source>
-                <target>Poprzednia</target>
+                <target>Prethodna</target>
             </trans-unit>
             <trans-unit id="Admin">
                 <source>Admin</source>
-                <target>Panel administracyjny</target>
+                <target>Administracija</target>
             </trans-unit>
             <trans-unit id="link_expand">
                 <source>link_expand</source>
-                <target>pokaż/ukryj</target>
+                <target>Proširi/skupi</target>
             </trans-unit>
             <trans-unit id="no_result">
                 <source>no_result</source>
-                <target>Brak wyników</target>
+                <target>Nema rezultata</target>
             </trans-unit>
             <trans-unit id="confirm_msg">
                 <source>confirm_msg</source>
-                <target>Czy jesteś pewien?</target>
+                <target>Jeste li sigurni?</target>
             </trans-unit>
             <trans-unit id="action_edit">
                 <source>action_edit</source>
-                <target>Edytuj</target>
+                <target>Uredi</target>
             </trans-unit>
             <trans-unit id="action_show">
                 <source>action_show</source>
-                <target>Pokaż</target>
+                <target>Prikaži</target>
             </trans-unit>
             <trans-unit id="all_elements">
                 <source>all_elements</source>
-                <target>Wszystkie</target>
+                <target>Svi elementi</target>
             </trans-unit>
             <trans-unit id='flash_batch_empty'>
               <source>flash_batch_empty</source>
-              <target>Akcja anulowana. Żadne elementy nie zostały zaznaczone.</target>
+              <target>Izvršavanje prekinuto. Nijedan element nije odabran.</target>
             </trans-unit>
             <trans-unit id='flash_create_success'>
               <source>flash_create_success</source>
-              <target>Element został pomyślnie dodany.</target>
+              <target>Element je uspješno stvoren.</target>
             </trans-unit>
             <trans-unit id='flash_create_error'>
               <source>flash_create_error</source>
-              <target>Pojawił się błąd przy tworzeniu nowego elementu.</target>
+              <target>Greška prilikom stvaranja elementa.</target>
             </trans-unit>
             <trans-unit id='flash_edit_success'>
               <source>flash_edit_success</source>
-              <target>Element został pomyślnie zaktualizowany.</target>
+              <target>Element je uspješno uređen.</target>
             </trans-unit>
             <trans-unit id='flash_edit_error'>
               <source>flash_edit_error</source>
-              <target>Pojawił się błąd przy aktualizowaniu elementu.</target>
+              <target>Greška prilikom uređivanja elementa.</target>
             </trans-unit>
             <trans-unit id='flash_batch_delete_success'>
               <source>flash_batch_delete_success</source>
-              <target>Wybrane elementy zostały pomyślnie usunięte.</target>
+              <target>Odabrani elementi su uspješno izbrisani.</target>
             </trans-unit>
             <trans-unit id='flash_batch_delete_error'>
               <source>flash_batch_delete_error</source>
-              <target>Pojawił się błąd przy usuwaniu wybranych elementów.</target>
+              <target>Greška prilikom brisanja odabranih elemenata.</target>
             </trans-unit>
             <trans-unit id='flash_delete_error'>
               <source>flash_delete_error</source>
-              <target>Pojawił się błąd przy usuwaniu elementu.</target>
+              <target>Greška prilikom brisanja elementa.</target>
             </trans-unit>
             <trans-unit id='flash_delete_success'>
               <source>flash_delete_success</source>
-              <target>Element został pomyślnie usunięty.</target>
+              <target>Element je uspješno izbrisan.</target>
             </trans-unit>
             <trans-unit id="link_breadcrumb_dashboard">
                 <source>breadcrumb.dashboard</source>
@@ -160,47 +160,47 @@
             </trans-unit>
             <trans-unit id="title_delete">
                 <source>title_delete</source>
-                <target>Potwierdzenie usuwania</target>
+                <target>Potvrda brisanja</target>
             </trans-unit>
             <trans-unit id="message_delete_confirmation">
                 <source>message_delete_confirmation</source>
-                <target>Jesteś pewien(na), że chcesz usunąć ten element??</target>
+                <target>Jeste li sigurni da želite izbrisati odabrani element?</target>
             </trans-unit>
             <trans-unit id="btn_delete">
                 <source>btn_delete</source>
-                <target>Tak, usuń</target>
+                <target>Da, izbriši</target>
             </trans-unit>
             <trans-unit id="title_batch_confirmation">
                 <source>title_batch_confirmation</source>
-                <target>Potwierdź wykonanie akcji</target>
+                <target>Potvrda grupne naredbe</target>
             </trans-unit>
             <trans-unit id="message_batch_confirmation">
                 <source>message_batch_confirmation</source>
-                <target>Jesteś pewny(na), że chcesz potwierdzić tą akcję i wykonać ją dla wszystkich zaznaczonych elementów?</target>
+                <target>Jeste li sigurni da želite ovu naredbu izvršiti nad svim odabranim elementima?</target>
             </trans-unit>
             <trans-unit id="btn_execute_batch_action">
                 <source>btn_execute_batch_action</source>
-                <target>Tak, wykonaj</target>
+                <target>Da, izvrši</target>
             </trans-unit>
             <trans-unit id="label_type_yes">
               <source>label_type_yes</source>
-              <target>tak</target>
+              <target>da</target>
             </trans-unit>
             <trans-unit id="label_type_no">
               <source>label_type_no</source>
-              <target>nie</target>
+              <target>ne</target>
             </trans-unit>
             <trans-unit id="label_type_contains">
               <source>label_type_contains</source>
-              <target>zawiera</target>
+              <target>sadrži</target>
             </trans-unit>
             <trans-unit id="label_type_not_contains">
               <source>label_type_not_contains</source>
-              <target>nie zawiera</target>
+              <target>ne sadrži</target>
             </trans-unit>
             <trans-unit id="label_type_equals">
               <source>label_type_equals</source>
-              <target>jest równe</target>
+              <target>jednako</target>
             </trans-unit>
             <trans-unit id="label_type_equal">
               <source>label_type_equal</source>
@@ -224,13 +224,15 @@
             </trans-unit>
             <trans-unit id="label_filters">
               <source>label_filters</source>
-              <target>Filtry</target>
+              <target>Filtri</target>
             </trans-unit>
 
             <trans-unit id="delete_or">
               <source>delete_or</source>
-              <target>albo</target>
+              <target>ili</target>
             </trans-unit>
+
+
         </body>
     </file>
 </xliff>
