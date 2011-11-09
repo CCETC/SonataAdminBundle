@@ -16,6 +16,7 @@ file that was distributed with this source code.
 {% set _side_menu    = block('side_menu') %}
 {% set _content      = block('content') %}
 {% set _title        = block('title') %}
+{% set _breadcrumb   = block('breadcrumb') %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -94,8 +95,8 @@ file that was distributed with this source code.
                                 {% endfor %}
                             </ul>
                         {% endif %}
+                        <p class="pull-right" id="headerMenu">
                         {% block user_block %}
-                            <div id="headerMenu">
                                 {% if is_granted('ROLE_USER') %}
                                     Logged in as {{ app.user }} <a href="{{ url('fos_user_profile_show') }}">(edit)</a> <a href="{{ url('fos_user_security_logout') }}">Log out</a>
                                 {% else %}
@@ -103,17 +104,17 @@ file that was distributed with this source code.
                                     <a href="{{ url('fos_user_registration_register') }}">Register</a>
                                 {% endif %}
                                 <a class="last" href="{{ url('adminHelp') }}">Help</a>
-                           </div>
                         {% endblock %}
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="container-fluid">
-            <div style="">
+            {% if _breadcrumb is not empty or action is defined %}
                 <ul class="breadcrumb">
-                    {% block breadcrumb %}
+                    {% if _breadcrumb is empty %}
                         {% if action is defined %}
                             {% for label, uri in admin.breadcrumbs(action) %}
                                 <li>
@@ -134,10 +135,11 @@ file that was distributed with this source code.
                                 </li>
                             {% endfor %}
                         {% endif %}
-                    {% endblock %}
+                    {% else %}
+                        {{ _breadcrumb|raw }}
+                    {% endif %}
                 </ul>
-
-            </div>
+            {% endif %}
 
             <div style="float: right">
                 {%block actions %}{% endblock %}

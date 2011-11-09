@@ -28,20 +28,20 @@ div.filter_container {
     clear: both;
 }
 
-div#headerMenu {
+#headerMenu {
     float: right;
     color: white;
     font-size: 12px;
     margin-top: 5px;
 }
 
-div#headerMenu a {
+#headerMenu a {
     border-right: 1px solid #666;
     margin-right: 4px;
     padding-right: 6px;
 }
 
-div#headerMenu a.last {
+#headerMenu a.last {
     border: none;
 }
 
