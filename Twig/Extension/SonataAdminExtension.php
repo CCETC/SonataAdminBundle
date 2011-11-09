@@ -92,13 +92,14 @@ class SonataAdminExtension extends \Twig_Extension
     public function renderListElement($object, FieldDescriptionInterface $fieldDescription, $params = array())
     {
         $template = $this->getTemplate($fieldDescription, 'SonataAdminBundle:CRUD:base_list_field.html.twig');
-
-        return $this->output($fieldDescription, $template, array_merge($params, array(
+        
+        /*return $this->output($fieldDescription, $template, array_merge($params, array(
             'admin'  => $fieldDescription->getAdmin(),
             'object' => $object,
             'value'  => $this->getValueFromFieldDescription($object, $fieldDescription),
             'field_description' => $fieldDescription
-        )));
+        )));*/
+        return '<td>'.$fieldDescription->getTemplate().'</td>';
     }
 
     /**

@@ -243,6 +243,10 @@
               <source>delete_or</source>
               <target>or</target>
             </trans-unit>
+            <trans-unit id="_action">
+              <source>_action</source>
+              <target>Actions</target>
+            </trans-unit>
 
 
         </body>

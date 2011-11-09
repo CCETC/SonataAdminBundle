@@ -77,12 +77,13 @@ file that was distributed with this source code.
                             </tr>
                         {% endfor %}
                     </tbody>
-                {% endblock table_body %}
+                {% endblock %}
 
                 {% block table_footer %}
                     {% if admin.datagrid.pager.haveToPaginate() %}
                         <tr>
                             <td colspan="{{ admin.list.elements|length }}" class="pager">
+
                                 <div class="pagination">
                                   <ul>
 
@@ -120,6 +121,9 @@ file that was distributed with this source code.
                        $('#list_batch_checkbox').click(function(){
                            $(this).closest('table').find("td input[type='checkbox']").attr('checked', $(this).is(':checked'));
                        });
+                       $('.delete_link').click(function(e){
+                          if (!confirm('{% trans from 'SonataAdminBundle' %}confirm_msg{% endtrans %}')) e.preventDefault();
+                    });
                     });
                 </script>
 
@@ -129,7 +133,7 @@ file that was distributed with this source code.
                             <option value="{{ action }}">{{ options.label }}</option>
                         {% endfor %}
                     </select>
-                    <input type="submit" value="{% trans from 'SonataAdminBundle' %}btn_batch{% endtrans %}" />
+                    <input class="btn primary" type="submit" value="{% trans from 'SonataAdminBundle' %}btn_batch{% endtrans %}" />
                 </div>
             {% endif %}
         </form>
@@ -153,8 +157,8 @@ file that was distributed with this source code.
                                 <table>
                                     {% for filter in admin.datagrid.filters %}
                                         <tr id="filter_{{ filter.name }}_row">
-                                            <td class="filter-title">{{ filter.label }}</td>
-                                            <td class="filter-type" style="display: none;">{{ form_widget(form.getChild(filter.name).getChild('type')) }}</td>
+                                            <td class="filter-title">{{ admin.trans(filter.label) }}</td>
+                                            <td style="display: none;" class="filter-type">{{ form_widget(form.getChild(filter.name).getChild('type')) }}</td>
                                             <td class="filter-value">{{ form_widget(form.getChild(filter.name).getChild('value')) }}</td>
                                         </tr>
                                     {% endfor %}
@@ -174,3 +178,4 @@ file that was distributed with this source code.
         </form>
     {% endif %}
 {% endblock %}
+

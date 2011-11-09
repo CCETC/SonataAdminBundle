@@ -18,17 +18,21 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Acl\Model\DomainObjectInterface;
+
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
+
 use Sonata\AdminBundle\Admin\Pool;
 use Sonata\AdminBundle\Validator\ErrorElement;
+
 use Sonata\AdminBundle\Builder\FormContractorInterface;
 use Sonata\AdminBundle\Builder\ListBuilderInterface;
 use Sonata\AdminBundle\Builder\DatagridBuilderInterface;
 use Sonata\AdminBundle\Builder\ShowBuilderInterface;
 use Sonata\AdminBundle\Builder\RouteBuilderInterface;
+
 use Sonata\AdminBundle\Security\Handler\SecurityHandlerInterface;
 use Sonata\AdminBundle\Route\RouteCollection;
 use Sonata\AdminBundle\Model\ModelManagerInterface;
@@ -606,7 +610,9 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
         if($this->hasRequest())
         {
             $parameters = array_merge(
-                    $this->getModelManager()->getDefaultSortValues($this->getClass()), $this->datagridValues, $this->request->query->get('filter', array())
+                $this->getModelManager()->getDefaultSortValues($this->getClass()),
+                $this->datagridValues,
+                $this->request->query->get('filter', array())
             );
 
             // always force the parent value
@@ -705,24 +711,24 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
      */
     public function getBaseRoutePattern()
     {
-        if(!$this->baseRoutePattern)
-        {
+        if (!$this->baseRoutePattern) {
             preg_match('@([A-Za-z0-9]*)\\\([A-Za-z0-9]*)Bundle\\\(Entity|Document|Model)\\\(.*)@', $this->getClass(), $matches);
 
-            if(!$matches)
-            {
+            if (!$matches) {
                 throw new \RuntimeException(sprintf('Please define a default `baseRoutePattern` value for the admin class `%s`', get_class($this)));
             }
 
-            if($this->isChild())
-            { // the admin class is a child, prefix it with the parent route name
-                $this->baseRoutePattern = sprintf('%s/{id}/%s', $this->getParent()->getBaseRoutePattern(), $this->urlize($matches[4], '-')
+            if ($this->isChild()) { // the admin class is a child, prefix it with the parent route name
+                $this->baseRoutePattern = sprintf('%s/{id}/%s',
+                    $this->getParent()->getBaseRoutePattern(),
+                    $this->urlize($matches[4], '-')
                 );
-            }
-            else
-            {
+            } else {
 
-                $this->baseRoutePattern = sprintf('/%s/%s/%s', $this->urlize($matches[1], '-'), $this->urlize($matches[2], '-'), $this->urlize($matches[4], '-')
+                $this->baseRoutePattern = sprintf('/%s/%s/%s',
+                    $this->urlize($matches[1], '-'),
+                    $this->urlize($matches[2], '-'),
+                    $this->urlize($matches[4], '-')
                 );
             }
         }

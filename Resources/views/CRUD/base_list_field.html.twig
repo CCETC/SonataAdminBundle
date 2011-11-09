@@ -8,9 +8,9 @@ For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 
 #}
-
-<td class="sonata-ba-list-field sonata-ba-list-field-{{ field_description.type }}" objectId="{{ admin.id(object) }}">
-    {% if field_description.options.identifier is defined and admin.isGranted(['EDIT', 'SHOW']) %}
+<td>
+    <td class="sonata-ba-list-field sonata-ba-list-field-{{ field_description.type }}" objectId="{{ admin.id(object) }}">
+        {% if field_description.options.identifier is defined and admin.isGranted(['EDIT', 'SHOW']) %}
 
         {% if admin.hasroute('edit') and admin.isGranted('EDIT') %}
             <a href="{{ admin.generateObjectUrl('edit', object) }}">

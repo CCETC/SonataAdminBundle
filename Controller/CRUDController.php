@@ -141,7 +141,7 @@ class CRUDController extends Controller
             throw new AccessDeniedException();
         }
         
-        $filterValues = $this->admin->getDatagrid()->getValues();
+        /*$filterValues = $this->admin->getDatagrid()->getValues();
 
         foreach($this->admin->getFilterDefaults() as $field => $default)
         {
@@ -149,7 +149,7 @@ class CRUDController extends Controller
             {
                 $this->admin->getDatagrid()->setValue($field, $default);
             }    
-        }
+        }*/
        
         $datagrid = $this->admin->getDatagrid();
         
@@ -162,8 +162,6 @@ class CRUDController extends Controller
             'action'   => 'list',
             'form'     => $formView,
             'datagrid' => $datagrid,
-            'admin' => $this->admin,
-            'groups' => $this->get('sonata.admin.pool')->getDashboardGroups(),
         ));
     }
 
@@ -353,8 +351,6 @@ class CRUDController extends Controller
             'action'         => 'edit',
             'form'           => $view,
             'object'         => $object,
-            'admin' => $this->admin,
-            'groups' => $this->get('sonata.admin.pool')->getDashboardGroups(),      
         ));
     }
 
@@ -522,8 +518,6 @@ class CRUDController extends Controller
             'action'        => 'create',
             'form'          => $view,
             'object'        => $object,
-            'admin' => $this->admin,
-            'groups' => $this->get('sonata.admin.pool')->getDashboardGroups()
         ));
     }
 
@@ -576,8 +570,6 @@ class CRUDController extends Controller
             'action'         => 'show',
             'object'         => $object,
             'elements'       => $this->admin->getShow(),
-            'admin' => $this->admin,
-            'groups' => $this->get('sonata.admin.pool')->getDashboardGroups()            
         ));
     }
     
