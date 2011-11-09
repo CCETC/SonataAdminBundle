@@ -7,7 +7,8 @@ $(document).ready(function() {
 
 tinyMCE.init({
         // General options
-        mode : "textareas",
+        mode : "specific_textareas",
+        editor_selector : "tinymce",
         theme : "advanced",
         plugins : ",advimage,iespell,inlinepopups,insertdatetime,paste",
 
