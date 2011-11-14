@@ -112,41 +112,9 @@ file that was distributed with this source code.
         </div>
 
         <div class="container-fluid">
-            {% if _breadcrumb is not empty or action is defined %}
-                <ul class="breadcrumb">
-                    {% if _breadcrumb is empty %}
-                        {% if action is defined %}
-                            {% for label, uri in admin.breadcrumbs(action) %}
-                                <li>
-                                    {% if not loop.last  %}
-                                        <a href="{{ uri }}">
-                                        {% if admin.entityIconPath is defined and admin.entityIconPath != "" and admin.entitylabelplural == label %}
-                                            <img src="{{ asset(admin.entityIconPath) }}" />
-                                        {% endif %}
-                                        {{ label }}</a>
-                                        <span class="divider">/</span>
-                                    {% else %}
-                                        <li class="active">
-                                        {% if admin.entityIconPath is defined and admin.entityIconPath != "" and admin.entitylabelplural == label %}
-                                            <img src="{{ asset(admin.entityIconPath) }}" />
-                                        {% endif %}
-                                        {{ label }}</li>
-                                    {% endif %}
-                                </li>
-                            {% endfor %}
-                        {% endif %}
-                    {% else %}
-                        {{ _breadcrumb|raw }}
-                    {% endif %}
-                </ul>
-            {% endif %}
-
             <div style="float: right">
                 {%block actions %}{% endblock %}
             </div>
-            {% block page_description %}{% endblock %}
-            
-            
 
             {% if _side_menu is not empty %}
                 <div class="sidebar">
@@ -168,17 +136,20 @@ file that was distributed with this source code.
                 {% endblock %}
 
                 <div class="page-header">
-                    <h1>
+                    <h3>
                         {% if action is defined %}
                             {% for label, uri in admin.breadcrumbs(action) %}
-                                {% if loop.last  %}
+                                {% if not loop.last %}
+                                    <a href="{{ uri }}">{{ label }}</a> / 
+                                {% elseif loop.last  %}
                                     {{ label }}
+                                    {% if object is defined and object.__toString is defined and object.__toString %}<small>{{ object }}</small>{% endif %}
                                 {% endif %}
                             {% endfor %}
                         {% else %}
                             {{ adminTitle }}
                         {% endif %}
-                    </h1>
+                    </h3>
                 </div>
 
                 {% if _preview is not empty %}

@@ -368,6 +368,10 @@ class CRUDController extends Controller
             $url = $this->admin->generateUrl('list');
         }
 
+        if ($this->get('request')->get('btn_update')) {
+            $url = $this->admin->generateObjectUrl('show', $object);
+        }
+
         if ($this->get('request')->get('btn_create_and_create')) {
             $url = $this->admin->generateUrl('create');
         }
@@ -375,6 +379,10 @@ class CRUDController extends Controller
         if ($this->get('request')->get('btn_create_and_list')) {
             $url = $this->admin->generateUrl('list');
         }
+
+        if ($this->get('request')->get('btn_create')) {
+            $url = $this->admin->generateObjectUrl('show', $object);
+        }        
         
         if (!$url) {
             $url = $this->admin->generateObjectUrl('edit', $object);
@@ -545,31 +553,12 @@ class CRUDController extends Controller
         // build the show list
         $elements = $this->admin->getShow();
 
-        // build show labels and parent fields
-        foreach($this->admin->getShowGroups() as $name => $showGroup)
-        {
-            foreach($showGroup['fields'] as $fieldName)
-            {
-                $desc = $this->admin->getShowFieldDescriptions();
-
-                if(isset($this->admin->showChoiceParentFields[$fieldName]))
-                {
-                    $desc[$fieldName]->setOption('parentField', $this->admin->showChoiceParentFields[$fieldName]);
-                }
-               
-                if(isset($this->admin->showFieldsToIndent[$fieldName]))
-                {
-                    $desc[$fieldName]->setOption('labelStyles', 'text-align: right;');
-                }
-               
-            }
-        }
-
+        $this->processShowFieldHooks($object);
         
         return $this->render($this->admin->getShowTemplate(), array(
             'action'         => 'show',
             'object'         => $object,
-            'elements'       => $this->admin->getShow(),
+            'elements'       => $elements,
         ));
     }
     
@@ -598,12 +587,44 @@ class CRUDController extends Controller
         }
     }
     
-    protected function processHook($hookTemplate, $object)
+    public function processShowFieldHooks($object)
+    {     
+        $descriptions = $this->admin->getShowFieldDescriptions();
+
+        
+        foreach($this->admin->getShowGroups() as $name => $showGroup)
+        {                
+            foreach($showGroup['fields'] as $fieldName)
+            {
+                $desc = $descriptions[$fieldName];
+                
+                $preHook = "";
+                if(isset($this->admin->showFieldPreHooks[$desc->getName()]))
+                {
+                    $hookTemplate = $this->admin->showFieldPreHooks[$desc->getName()];
+
+                    $preHook = $this->processHook($hookTemplate, $object);
+                }               
+                $desc->setOption('preHook', $preHook);
+
+                $postHook = "";
+                if(isset($this->admin->showFieldPreHooks[$desc->getName()]))
+                {
+                    $hookTemplate = $this->admin->showFieldPostHooks[$desc->getName()];
+
+                    $postHook = $this->processHook($hookTemplate, $object);
+                }               
+                $desc->setOption('postHook', $postHook);
+            }
+        }
+    }
+    
+    protected function processHook($hookTemplate, $object = null)
     {
         $hook = $this->render($hookTemplate, array(
             'object' => $object
         ));
         
         return $hook->getContent();
-    }
+    }    
 }

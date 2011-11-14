@@ -32,6 +32,10 @@ file that was distributed with this source code.
 {% block side_menu %}{{ knp_menu_render(admin.sidemenu(action), {}, 'list') }}{% endblock %}
 
 {% block show %}
+    {% if admin.showPreHook is defined %}
+        {% include admin.showPreHook %}
+    {% endif %}
+
     <div class="sonata-ba-view">
         {% for name, view_group in admin.showgroups %}
             {% if name and admin.showgroups|length > 1 %}
@@ -40,14 +44,21 @@ file that was distributed with this source code.
 
             <table>
                 {% for field_name in view_group.fields %}
+                    <tr><th>{{ admin.showfielddescriptions[field_name].options['preHook']|raw }}</th><td></td></tr>
                     <tr class="sonata-ba-view-container">
                         {% if admin.show[field_name] is defined %}
                             {{ admin.show[field_name]|render_view_element(object) }}
                         {% endif %}
                     </tr>
+                    <tr><th>{{ admin.showfielddescriptions[field_name].options['postHook']|raw }}</th><td></td></tr>
                 {% endfor %}
             </table>
         {% endfor %}
     </div>
+
+    {% if admin.showPostHook is defined %}
+        {% include admin.showPostHook %}
+    {% endif %}
+
 {% endblock %}
 

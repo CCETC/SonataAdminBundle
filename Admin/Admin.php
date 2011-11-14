@@ -45,11 +45,6 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
 {
 
     /**
-     * A short description of the entity
-     * @var string
-     */
-    protected $entityDescription;
-    /**
      * Values in this array are displayed preceding the form element that matches the key
      * @var associative array
      */
@@ -59,8 +54,8 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
      * @var array
      */
     protected $hiddenFilters = array();
+    
     protected $filterDefaults = array();
-    protected $editDescription;
     protected $entityLabel;
     protected $entityLabelPlural;
     protected $entityIconPath;
@@ -81,12 +76,6 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
         return $this->entityLabelPlural;
     }
 
-    
-    public function getEntityDescription()
-    {
-        return $this->entityDescription;
-    }
-
     public function getFormLabels()
     {
         return $this->formLabels;
@@ -102,10 +91,19 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
         return $this->filterDefaults;
     }
     
-    public function getEditDescription()
-    {
-        return $this->editDescription;
-    }
+    protected $formFieldPreHooks;
+    protected $formFieldPostHooks;
+
+    protected $showFieldPreHooks;
+    protected $showFieldPostHooks;
+
+    protected $showPreHook;
+    protected $showPostHook;
+    protected $listPreHook;
+    protected $listPostHook;
+    protected $formPreHook;
+    protected $formPostHook;
+       
     
     /**
      * The class name managed by the admin class
