@@ -57,5 +57,18 @@ Before pushing, add upstream remotes to your checked-out submodule and pull upst
 # Pre/Post Template Hooks
 You can include templates before or after any form or show field, before or after the form contents in base_edit.html.twig, the show table in base_show.html.twig or the list table in base_list.html.twig.
 
+### Field Hooks
+The Admin class has four arrays, $formFieldPreHooks/$formFieldPostHooks and $showFieldPreHooks/$showFieldPostHooks.
+
+        public $formFieldPreHooks = array(
+                'name' => 'MyBundle:myEntity:_myTemplate.html.twig'
+        );
+        
+### Page Hooks
+The edit, list, and show templates all include pre/post template hooks before and after the main content of the page.
+The three variables used ar $formPreHook, $showPreHook, and $listPreHook.
+
+        public $formPreHook = 'MyBundle:myEntity:_myTemplate.html.twig';
+
 # Configuration
 TODO: document configuration
