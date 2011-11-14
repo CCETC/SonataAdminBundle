@@ -34,7 +34,7 @@ file that was distributed with this source code.
 
 
 {% block form %}
-    {% if admin.formPreHook is defined %}
+    {% if admin.formPreHook is defined and admin.formPreHook != "" %}
         {% include admin.formPreHook %}
     {% endif %}
     
@@ -81,7 +81,7 @@ file that was distributed with this source code.
 
             {{ form_rest(form) }}
 
-            {% if admin.formPostHook is defined %}
+            {% if admin.formPostHook is defined and admin.formPostHook != "" %}
                 {% include admin.formPostHook %}
             {% endif %}
             

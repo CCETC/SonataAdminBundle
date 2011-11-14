@@ -1,9 +1,14 @@
 
+
 $(document).ready(function() {
-    
-});
+    $('a#hiddenFiltersToggle').live("click", function(e){
+        e.preventDefault();
 
+        $('div.hiddenFilters').show();
+        $(this).hide();
 
+    }); 
+}); 
 
 tinyMCE.init({
         // General options

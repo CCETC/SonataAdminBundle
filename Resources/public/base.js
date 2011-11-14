@@ -1,7 +1,6 @@
 jQuery(document).ready(function() {
     Admin.add_pretty_errors(document);
     Admin.add_collapsed_toggle();
-    Admin.add_filters(document);
 });
 
 var Admin = {
@@ -105,12 +104,6 @@ var Admin = {
         }
 
         return targetElement;
-    },
-
-    add_filters: function(subject) {
-        //jQuery('div.filter_container', subject).hide();
-        jQuery('fieldset.filter_legend', subject).click(function(event) {
-           jQuery('div.filter_container', jQuery(event.target).parent()).toggle();
-        });
     }
+
 }

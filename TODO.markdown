@@ -25,57 +25,34 @@ ToDocument
 	
 	- use of pre/post hooks
 	
-	
 
 
 1.1
 =========================================
 
-
-	- Lead Events
-	
-		- use preFormHook
-		
-			-> may need to modify to include object
-
-
-	- Other fields
-	
-		-> use preFieldHook AND postFieldHook
-		
-		
-	- Form fields to indent
-
-		-> use preFieldHook AND postFieldHook
-
-	- edit description
-	
-		- formPreHook
-		
-	- entity description
-	
-		- listPreHook!		
-		
-	- extra form Labels (for groups)
-	
-		- use preFormFieldHooks
-		
-	- parent fields/labels on show
-	
-		- use preShowFieldHooks
-		
-
-#	1.	New ideas and features lost from new admin layout
+//	1.	New ideas and features lost from new admin layout
 
 //		- pre and post form and show hooks
 						
-		- hidden filters
-	
-		- default filters
-	
-		- how to handle many filtesr? 
+//		- hidden filters
 		
-			- put filters in side bar?
+//			- use array
+			
+//			- Controller: check if any are set, and mark it
+			
+//			- View: display afterwards, include link
+			
+//			- js
+
+//			- clear hidden filters on less filters click
+	
+//		- default filters
+	
+//		- improve filter layout
+		
+//			- use whole width
+		
+//		- fix click event to hide/show filters
 
 
 #	10.	Misc

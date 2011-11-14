@@ -32,7 +32,7 @@ file that was distributed with this source code.
 {% block side_menu %}{{ knp_menu_render(admin.sidemenu(action), {}, 'list') }}{% endblock %}
 
 {% block show %}
-    {% if admin.showPreHook is defined %}
+    {% if admin.showPreHook is defined and admin.showPreHook != "" %}
         {% include admin.showPreHook %}
     {% endif %}
 
@@ -56,7 +56,7 @@ file that was distributed with this source code.
         {% endfor %}
     </div>
 
-    {% if admin.showPostHook is defined %}
+    {% if admin.showPostHook is defined and admin.showPostHook != "" %}
         {% include admin.showPostHook %}
     {% endif %}
 

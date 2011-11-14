@@ -141,15 +141,25 @@ class CRUDController extends Controller
             throw new AccessDeniedException();
         }
         
-        /*$filterValues = $this->admin->getDatagrid()->getValues();
-
+        $filterValues = $this->admin->getDatagrid()->getValues();
+        
         foreach($this->admin->getFilterDefaults() as $field => $default)
         {
             if(!isset($filterValues[$field]['value']) || $filterValues[$field]['value'] == "")
             {
-                $this->admin->getDatagrid()->setValue($field, $default);
+                $this->admin->getDatagrid()->setValue($field, "", $default);
             }    
-        }*/
+        }
+        // check each hidden filter to see if it was requested, so we can show the hidden filters in the template
+        $showHiddenFilters = false;
+
+        foreach($this->admin->getHiddenFilters() as $filterName => $value)
+        {
+            if(array_key_exists($filterName, $filterValues) && $filterValues[$filterName]['value'] != "")
+            {
+                $showHiddenFilters = true;
+            }
+        }
        
         $datagrid = $this->admin->getDatagrid();
         
@@ -162,6 +172,7 @@ class CRUDController extends Controller
             'action'   => 'list',
             'form'     => $formView,
             'datagrid' => $datagrid,
+            'showHiddenFilters' => $showHiddenFilters
         ));
     }
 

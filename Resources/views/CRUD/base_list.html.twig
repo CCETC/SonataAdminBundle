@@ -24,7 +24,7 @@ file that was distributed with this source code.
 {% block side_menu %}{{ knp_menu_render(admin.sidemenu(action), {}, 'list') }}{% endblock %}
 
 {% block list_table %}
-    {% if admin.listPreHook is defined %}
+    {% if admin.listPreHook is defined and admin.listPreHook != "" %}
         {% include admin.listPreHook %}
     {% endif %}
 
@@ -129,7 +129,7 @@ file that was distributed with this source code.
         </p>
     {% endif %}
         
-    {% if admin.listPostHook is defined %}
+    {% if admin.listPostHook is defined and admin.listPostHook != "" %}
         {% include admin.listPostHook %}
     {% endif %}
         
@@ -141,28 +141,41 @@ file that was distributed with this source code.
             <fieldset class="filter_legend">
                 <legend class="filter_legend">{% trans from 'SonataAdminBundle' %}label_filters{% endtrans %}</legend>
 
-                <div class="filter_container">
-                    <table class="filter-container-table">
-                        <tr>
-                            <td>
-                                <table>
-                                    {% for filter in admin.datagrid.filters %}
-                                        <tr id="filter_{{ filter.name }}_row">
-                                            <td class="filter-title">{{ admin.trans(filter.label) }}</td>
-                                            <td style="display: none;" class="filter-type">{{ form_widget(form.getChild(filter.name).getChild('type')) }}</td>
-                                            <td class="filter-value">{{ form_widget(form.getChild(filter.name).getChild('value')) }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
+                <div class="filter_container form-stacked">
+                    {% for filter in admin.datagrid.filters %}
+                        {% if admin.hiddenFilters[filter.name] is not defined %}
+                            <div class="clearfix filter-container">
+                                {{ admin.trans(filter.label) }}
+                                <span style="display: none;" class="filter-type">{{ form_widget(form.getChild(filter.name).getChild('type')) }}</span>
+                                <div class="input">
+                                   {{ form_widget(form.getChild(filter.name).getChild('value')) }}
+                                </div>
+                            </div><!-- /clearfix -->
+                        {% endif %}
+                    {% endfor %}
+                    <div class="hiddenFilters" style="{% if not showHiddenFilters %}display: none;{% endif %}">
+                        {% for filter in admin.datagrid.filters %}
+                            {% if admin.hiddenFilters[filter.name] is defined %}
+                                <div class="clearfix filter-container">
+                                    {{ admin.trans(filter.label) }}
+                                    <span style="display: none;" class="filter-type">{{ form_widget(form.getChild(filter.name).getChild('type')) }}</span>
+                                    <div class="input">
+                                       {{ form_widget(form.getChild(filter.name).getChild('value')) }}
+                                    </div>
+                                </div><!-- /clearfix -->
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                            
                     {{ form_rest(form) }}
 
+                    <div style="clear: both">&nbsp;</div>    
                     <input type="submit" class="btn primary" value="{% trans from 'SonataAdminBundle' %}btn_filter{% endtrans %}" />
 
                     <a class="btn" href="{{ admin.generateUrl('list') }}">{% trans from 'SonataAdminBundle' %}link_reset_filter{% endtrans %}</a>
-
+                    {% if admin.hiddenFilters|length != 0 and not showHiddenFilters %}
+                            <a id="hiddenFiltersToggle" class="btn" href="#">more filters</a>
+                    {% endif %}
                 </div>
             </fieldset>
 

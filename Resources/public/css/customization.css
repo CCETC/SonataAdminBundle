@@ -11,21 +11,18 @@ select[multiple="multiple"] {
 }
 
 fieldset.filter_legend {
-    text-align: right;
 }
 
 
 legend.filter_legend {
-    float: right;
 }
 
 legend.filter_legend:hover {
-    cursor: pointer;
 }
 
-div.filter_container {
-    float: right;
-    clear: both;
+div.filter-container {
+    float: left;
+    margin: 4px 6px;
 }
 
 #headerMenu {

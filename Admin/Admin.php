@@ -91,18 +91,18 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
         return $this->filterDefaults;
     }
     
-    protected $formFieldPreHooks;
-    protected $formFieldPostHooks;
+    public $formFieldPreHooks;
+    public $formFieldPostHooks;
 
-    protected $showFieldPreHooks;
-    protected $showFieldPostHooks;
+    public $showFieldPreHooks;
+    public $showFieldPostHooks;
 
-    protected $showPreHook;
-    protected $showPostHook;
-    protected $listPreHook;
-    protected $listPostHook;
-    protected $formPreHook;
-    protected $formPostHook;
+    public $showPreHook;
+    public $showPostHook;
+    public $listPreHook;
+    public $listPostHook;
+    public $formPreHook;
+    public $formPostHook;
        
     
     /**
