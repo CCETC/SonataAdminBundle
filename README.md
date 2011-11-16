@@ -7,18 +7,16 @@ This bundle is used in all CCETC web applications.
 
 ### Features
 * approve/unapprove actions
-* show field labels and formatting (indenting, grouping boolean fields)
-* form field formatting (indenting, grouping boolean fields)
 * entity icons in breadcrumbs and on dashboard
 * hidden filters
 * default filters
+* pre/post template hooks for form/show fields and list/form/show templates
 
 ### Interface Changes
 * Fewer submit buttons on edit
-* several minor css changes (filter box on top, form and show styles_
+* several minor css changes
 * simplified batch tools
 * simplified breadcrumbs
-* heading on show
 
 # Installation
 Install as a git submodule:
@@ -56,8 +54,21 @@ Before pushing, add upstream remotes to your checked-out submodule and pull upst
         git remote add upstream git://githb.com/sonata-project/SonataAdminBundle.git
         git pull upstream master
 
-# New Features
-TODO: document use of new features
+# Pre/Post Template Hooks
+You can include templates before or after any form or show field, before or after the form contents in base_edit.html.twig, the show table in base_show.html.twig or the list table in base_list.html.twig.
+
+### Field Hooks
+The Admin class has four arrays, $formFieldPreHooks/$formFieldPostHooks and $showFieldPreHooks/$showFieldPostHooks.
+
+        public $formFieldPreHooks = array(
+                'name' => 'MyBundle:myEntity:_myTemplate.html.twig'
+        );
+        
+### Page Hooks
+The edit, list, and show templates all include pre/post template hooks before and after the main content of the page.
+The three variables used ar $formPreHook, $showPreHook, and $listPreHook.
+
+        public $formPreHook = 'MyBundle:myEntity:_myTemplate.html.twig';
 
 # Configuration
 TODO: document configuration
