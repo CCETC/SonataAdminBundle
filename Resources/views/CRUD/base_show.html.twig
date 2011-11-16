@@ -44,13 +44,13 @@ file that was distributed with this source code.
 
             <table>
                 {% for field_name in view_group.fields %}
-                    <tr><th>{{ admin.showfielddescriptions[field_name].options['preHook']|raw }}</th><td></td></tr>
+                    {{ admin.showfielddescriptions[field_name].options['preHook']|raw }}
                     <tr class="sonata-ba-view-container">
                         {% if admin.show[field_name] is defined %}
                             {{ admin.show[field_name]|render_view_element(object) }}
                         {% endif %}
                     </tr>
-                    <tr><th>{{ admin.showfielddescriptions[field_name].options['postHook']|raw }}</th><td></td></tr>
+                    {{ admin.showfielddescriptions[field_name].options['postHook']|raw }}
                 {% endfor %}
             </table>
         {% endfor %}

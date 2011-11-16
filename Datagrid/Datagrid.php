@@ -81,6 +81,13 @@ class Datagrid implements DatagridInterface
         return $this->results;
     }
 
+    public function getAllResults()
+    {
+        $this->buildPager();
+        
+        return $this->pager->getAllResults();
+    }
+    
     /**
      * @return void
      */

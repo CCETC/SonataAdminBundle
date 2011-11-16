@@ -18,9 +18,13 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sonata\AdminBundle\Exception\ModelManagerException;
+use Sonata\AdminBundle\Summary\Summary;
+use Sonata\AdminBundle\Spreadsheet\Spreadsheet;
+use Sonata\AdminBundle\Spreadsheet\SpreadsheetMapper;
 
 class CRUDController extends Controller
 {
+
     /**
      * The related Admin class
      *
@@ -40,10 +44,13 @@ class CRUDController extends Controller
         // fake content-type so browser does not show the download popup when this
         // response is rendered through an iframe (used by the jquery.form.js plugin)
         //  => don't know yet if it is the best solution
-        if ($this->get('request')->get('_xml_http_request')
-           && strpos($this->get('request')->headers->get('Content-Type'), 'multipart/form-data') === 0) {
+        if($this->get('request')->get('_xml_http_request')
+                && strpos($this->get('request')->headers->get('Content-Type'), 'multipart/form-data') === 0)
+        {
             $headers['Content-Type'] = 'text/plain';
-        } else {
+        }
+        else
+        {
             $headers['Content-Type'] = 'application/json';
         }
 
@@ -81,19 +88,22 @@ class CRUDController extends Controller
     {
         $adminCode = $this->container->get('request')->get('_sonata_admin');
 
-        if (!$adminCode) {
+        if(!$adminCode)
+        {
             throw new \RuntimeException(sprintf('There is no `_sonata_admin` defined for the controller `%s` and the current route `%s`', get_class($this), $this->container->get('request')->get('_route')));
         }
 
         $this->admin = $this->container->get('sonata.admin.pool')->getAdminByAdminCode($adminCode);
 
-        if (!$this->admin) {
+        if(!$this->admin)
+        {
             throw new \RuntimeException(sprintf('Unable to find the admin class related to the current controller (%s)', get_class($this)));
         }
 
         $rootAdmin = $this->admin;
 
-        if ($this->admin->isChild()) {
+        if($this->admin->isChild())
+        {
             $this->admin->setCurrentChild(true);
             $rootAdmin = $rootAdmin->getParent();
         }
@@ -108,7 +118,8 @@ class CRUDController extends Controller
      */
     public function getBaseTemplate()
     {
-        if ($this->isXmlHttpRequest()) {
+        if($this->isXmlHttpRequest())
+        {
             return $this->admin->getTemplate('ajax');
         }
 
@@ -123,9 +134,9 @@ class CRUDController extends Controller
      */
     public function render($view, array $parameters = array(), Response $response = null)
     {
-        $parameters['admin']         = isset($parameters['admin']) ? $parameters['admin'] : $this->admin;
+        $parameters['admin'] = isset($parameters['admin']) ? $parameters['admin'] : $this->admin;
         $parameters['base_template'] = isset($parameters['base_template']) ? $parameters['base_template'] : $this->getBaseTemplate();
-        $parameters['admin_pool']    = $this->get('sonata.admin.pool');
+        $parameters['admin_pool'] = $this->get('sonata.admin.pool');
 
         return parent::render($view, $parameters);
     }
@@ -137,43 +148,93 @@ class CRUDController extends Controller
      */
     public function listAction()
     {
-        if (false === $this->admin->isGranted('LIST')) {
+        if(false === $this->admin->isGranted('LIST'))
+        {
             throw new AccessDeniedException();
         }
-        
+
         $filterValues = $this->admin->getDatagrid()->getValues();
-        
+
         foreach($this->admin->getFilterDefaults() as $field => $default)
         {
             if(!isset($filterValues[$field]['value']) || $filterValues[$field]['value'] == "")
             {
                 $this->admin->getDatagrid()->setValue($field, "", $default);
-            }    
+            }
         }
         // check each hidden filter to see if it was requested, so we can show the hidden filters in the template
         $showHiddenFilters = false;
 
-        foreach($this->admin->getHiddenFilters() as $filterName => $value)
+        foreach($this->admin->getHiddenFilters() as $filterName => $$method)
         {
             if(array_key_exists($filterName, $filterValues) && $filterValues[$filterName]['value'] != "")
             {
                 $showHiddenFilters = true;
             }
         }
-       
+
         $datagrid = $this->admin->getDatagrid();
-        
+
         $formView = $datagrid->getForm()->createView();
 
         // set the theme for the current Admin Form
         $this->get('twig')->getExtension('form')->setTheme($formView, $this->admin->getFilterTheme());
-        
+
+
+
+        if($this->getRequest()->get('yField') && $this->getRequest()->get('xField'))
+        {
+            if(!$this->getRequest()->get('sumBy')
+                    || $this->getRequest()->get('sumBy') && $this->getRequest()->get('sumBy') == "total_items")
+            {
+                $sumField = null;
+                $sum = 'count';
+            }
+            else
+            {
+                $sum = 'sum';
+                $sumField = $this->getRequest()->get('sumBy');
+            }
+
+            $summary = new Summary($this->admin, $this->getRequest()->get('yField'), $this->getRequest()->get('xField'), $sum, $sumField);
+
+            $summary->buildSummaryDataFromElementSet($datagrid->getAllResults());
+        }
+        else if(isset($this->admin->summaryXFields))
+        {
+            reset($this->admin->summaryYFields);
+            reset($this->admin->summaryYFields);
+
+            $summary = new Summary($this->admin, key($this->admin->summaryYFields), key($this->admin->summaryXFields), 'count');
+
+            $allResults = $datagrid->getAllResults();
+            
+            $summary->buildSummaryDataFromElementSet($allResults);
+        }
+        else
+        {
+            $summary = null;
+        }
+
+        if($this->getRequest()->get('downloadListSpreadsheet'))
+        {
+            if(!isset($allResults)) $allResults = $datagrid->getAllResults();
+            
+            $spreadsheet = new Spreadsheet($this->admin);
+            $filename = $spreadsheet->buildAndSaveListSpreadsheet($allResults);
+
+            return $this->redirect($this->getRequest()->getBasePath().'/'.$filename);
+        }
+
+
+
         return $this->render($this->admin->getListTemplate(), array(
-            'action'   => 'list',
-            'form'     => $formView,
-            'datagrid' => $datagrid,
-            'showHiddenFilters' => $showHiddenFilters
-        ));
+                    'action' => 'list',
+                    'form' => $formView,
+                    'datagrid' => $datagrid,
+                    'showHiddenFilters' => $showHiddenFilters,
+                    'summary' => $summary
+                ));
     }
 
     /**
@@ -185,15 +246,19 @@ class CRUDController extends Controller
      */
     public function batchActionDelete($query)
     {
-        if (false === $this->admin->isGranted('DELETE')) {
+        if(false === $this->admin->isGranted('DELETE'))
+        {
             throw new AccessDeniedException();
         }
 
         $modelManager = $this->admin->getModelManager();
-        try {
+        try
+        {
             $modelManager->batchDelete($this->admin->getClass(), $query);
             $this->get('session')->setFlash('sonata_flash_success', 'flash_batch_delete_success');
-        } catch ( ModelManagerException $e ) {
+        }
+        catch(ModelManagerException $e)
+        {
             $this->get('session')->setFlash('sonata_flash_error', 'flash_batch_delete_error');
         }
 
@@ -207,22 +272,28 @@ class CRUDController extends Controller
      */
     public function deleteAction($id)
     {
-        if (false === $this->admin->isGranted('DELETE')) {
+        if(false === $this->admin->isGranted('DELETE'))
+        {
             throw new AccessDeniedException();
         }
 
         $id = $this->get('request')->get($this->admin->getIdParameter());
         $object = $this->admin->getObject($id);
 
-        if (!$object) {
+        if(!$object)
+        {
             throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
         }
 
-        if ($this->getRequest()->getMethod() == 'DELETE') {
-            try {
+        if($this->getRequest()->getMethod() == 'DELETE')
+        {
+            try
+            {
                 $this->admin->delete($object);
                 $this->get('session')->setFlash('sonata_flash_success', 'flash_delete_success');
-            } catch ( ModelManagerException $e ) {
+            }
+            catch(ModelManagerException $e)
+            {
                 $this->get('session')->setFlash('sonata_flash_error', 'flash_delete_error');
             }
 
@@ -230,11 +301,11 @@ class CRUDController extends Controller
         }
 
         return $this->render('SonataAdminBundle:CRUD:delete.html.twig', array(
-            'object' => $object,
-            'action' => 'delete'
-        ));
+                    'object' => $object,
+                    'action' => 'delete'
+                ));
     }
-    
+
     public function approveAction($id)
     {
         $em = $this->getDoctrine()->getEntityManager();
@@ -268,8 +339,8 @@ class CRUDController extends Controller
 
         return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
     }
-    
-     public function batchActionApprove($query)
+
+    public function batchActionApprove($query)
     {
         $em = $this->getDoctrine()->getEntityManager();
 
@@ -303,7 +374,6 @@ class CRUDController extends Controller
         return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
     }
 
-
     /**
      * return the Response object associated to the edit action
      *
@@ -313,7 +383,8 @@ class CRUDController extends Controller
      */
     public function editAction($id = null)
     {
-        if (false === $this->admin->isGranted('EDIT')) {
+        if(false === $this->admin->isGranted('EDIT'))
+        {
             throw new AccessDeniedException();
         }
 
@@ -321,29 +392,33 @@ class CRUDController extends Controller
 
         $object = $this->admin->getObject($id);
 
-        if (!$object) {
+        if(!$object)
+        {
             throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
         }
 
         $this->admin->setSubject($object);
-        
+
         $form = $this->admin->getForm();
         $form->setData($object);
 
         $this->processFormFieldHooks($object);
 
-        if ($this->get('request')->getMethod() == 'POST') {
+        if($this->get('request')->getMethod() == 'POST')
+        {
             $form->bindRequest($this->get('request'));
 
-            if ($form->isValid()) {
+            if($form->isValid())
+            {
                 $this->admin->update($object);
                 $this->get('session')->setFlash('sonata_flash_success', 'flash_edit_success');
 
-                if ($this->isXmlHttpRequest()) {
+                if($this->isXmlHttpRequest())
+                {
                     return $this->renderJson(array(
-                        'result'    => 'ok',
-                        'objectId'  => $this->admin->getNormalizedIdentifier($object)
-                    ));
+                                'result' => 'ok',
+                                'objectId' => $this->admin->getNormalizedIdentifier($object)
+                            ));
                 }
 
                 // redirect to edit mode
@@ -359,10 +434,10 @@ class CRUDController extends Controller
         $this->get('twig')->getExtension('form')->setTheme($view, $this->admin->getFormTheme());
 
         return $this->render($this->admin->getEditTemplate(), array(
-            'action'         => 'edit',
-            'form'           => $view,
-            'object'         => $object,
-        ));
+                    'action' => 'edit',
+                    'form' => $view,
+                    'object' => $object,
+                ));
     }
 
     /**
@@ -375,27 +450,33 @@ class CRUDController extends Controller
     {
         $url = false;
 
-        if ($this->get('request')->get('btn_update_and_list')) {
+        if($this->get('request')->get('btn_update_and_list'))
+        {
             $url = $this->admin->generateUrl('list');
         }
 
-        if ($this->get('request')->get('btn_update')) {
+        if($this->get('request')->get('btn_update'))
+        {
             $url = $this->admin->generateObjectUrl('show', $object);
         }
 
-        if ($this->get('request')->get('btn_create_and_create')) {
+        if($this->get('request')->get('btn_create_and_create'))
+        {
             $url = $this->admin->generateUrl('create');
         }
 
-        if ($this->get('request')->get('btn_create_and_list')) {
+        if($this->get('request')->get('btn_create_and_list'))
+        {
             $url = $this->admin->generateUrl('list');
         }
 
-        if ($this->get('request')->get('btn_create')) {
+        if($this->get('request')->get('btn_create'))
+        {
             $url = $this->admin->generateObjectUrl('show', $object);
-        }        
-        
-        if (!$url) {
+        }
+
+        if(!$url)
+        {
             $url = $this->admin->generateObjectUrl('edit', $object);
         }
 
@@ -410,35 +491,41 @@ class CRUDController extends Controller
      */
     public function batchAction()
     {
-        if ($this->get('request')->getMethod() != 'POST') {
-           throw new \RuntimeException('invalid request type, POST expected');
+        if($this->get('request')->getMethod() != 'POST')
+        {
+            throw new \RuntimeException('invalid request type, POST expected');
         }
 
-        if ($data = json_decode($this->get('request')->get('data'), true)) {
+        if($data = json_decode($this->get('request')->get('data'), true))
+        {
             $action = $data['action'];
-            $idx    = $data['idx'];
+            $idx = $data['idx'];
             $all_elements = $data['all_elements'];
-        } else {
-            $action       = $this->get('request')->get('action');
-            $idx          = $this->get('request')->get('idx');
+        }
+        else
+        {
+            $action = $this->get('request')->get('action');
+            $idx = $this->get('request')->get('idx');
             $all_elements = $this->get('request')->get('all_elements', false);
         }
-        
+
         $itemList = array();
-        
+
         foreach($idx as $id)
         {
             $object = $this->admin->getObject($id);
             $itemList[] = $object->__toString();
         }
-        
+
 
         $batchActions = $this->admin->getBatchActions();
-        if (!array_key_exists($action, $batchActions)) {
+        if(!array_key_exists($action, $batchActions))
+        {
             throw new \RuntimeException(sprintf('The `%s` batch action is not defined', $action));
         }
 
-        if (count($idx) == 0 && !$all_elements) { // no item selected
+        if(count($idx) == 0 && !$all_elements)
+        { // no item selected
             $this->get('session')->setFlash('sonata_flash_info', 'flash_batch_empty');
 
             return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
@@ -446,31 +533,33 @@ class CRUDController extends Controller
 
         $askConfirmation = isset($batchActions[$action]['ask_confirmation']) ? $batchActions[$action]['ask_confirmation'] : true;
 
-        if ($askConfirmation && $this->get('request')->get('confirmation') != 'ok') {
+        if($askConfirmation && $this->get('request')->get('confirmation') != 'ok')
+        {
             $data = json_encode(array(
                 'action' => $action,
-                'idx'    => $idx,
+                'idx' => $idx,
                 'all_elements' => $all_elements,
-            ));
+                    ));
 
             $datagrid = $this->admin->getDatagrid();
             $formView = $datagrid->getForm()->createView();
 
             return $this->render('SonataAdminBundle:CRUD:batch_confirmation.html.twig', array(
-                'action'   => 'list',
-                'datagrid' => $datagrid,
-                'form'     => $formView,
-                'data'     => $data,
-                'batchAction' => $action,
-                'itemList' => $itemList
-            ));
+                        'action' => 'list',
+                        'datagrid' => $datagrid,
+                        'form' => $formView,
+                        'data' => $data,
+                        'batchAction' => $action,
+                        'itemList' => $itemList
+                    ));
         }
 
         // execute the action, batchActionXxxxx
         $action = \Sonata\AdminBundle\Admin\BaseFieldDescription::camelize($action);
 
         $final_action = sprintf('batchAction%s', ucfirst($action));
-        if (!method_exists($this, $final_action)) {
+        if(!method_exists($this, $final_action))
+        {
             throw new \RuntimeException(sprintf('A `%s::%s` method must be created', get_class($this), $final_action));
         }
 
@@ -481,7 +570,8 @@ class CRUDController extends Controller
         $query->setFirstResult(null);
         $query->setMaxResults(null);
 
-        if (count($idx) > 0) {
+        if(count($idx) > 0)
+        {
             $this->admin->getModelManager()->addIdentifiersToQuery($this->admin->getClass(), $query, $idx);
         }
 
@@ -495,7 +585,8 @@ class CRUDController extends Controller
      */
     public function createAction()
     {
-        if (false === $this->admin->isGranted('CREATE')) {
+        if(false === $this->admin->isGranted('CREATE'))
+        {
             throw new AccessDeniedException();
         }
 
@@ -505,23 +596,26 @@ class CRUDController extends Controller
 
         $form = $this->admin->getForm();
         $form->setData($object);
-        
+
         $this->processFormFieldHooks($object);
-        
-        if ($this->get('request')->getMethod() == 'POST') {
+
+        if($this->get('request')->getMethod() == 'POST')
+        {
             $form->bindRequest($this->get('request'));
 
-            if ($form->isValid()) {
+            if($form->isValid())
+            {
                 $this->admin->create($object);
 
-                if ($this->isXmlHttpRequest()) {
+                if($this->isXmlHttpRequest())
+                {
                     return $this->renderJson(array(
-                        'result' => 'ok',
-                        'objectId' => $this->admin->getNormalizedIdentifier($object)
-                    ));
+                                'result' => 'ok',
+                                'objectId' => $this->admin->getNormalizedIdentifier($object)
+                            ));
                 }
 
-                $this->get('session')->setFlash('sonata_flash_success','flash_create_success');
+                $this->get('session')->setFlash('sonata_flash_success', 'flash_create_success');
                 // redirect to edit mode
                 return $this->redirectTo($object);
             }
@@ -534,10 +628,10 @@ class CRUDController extends Controller
         $this->get('twig')->getExtension('form')->setTheme($view, $this->admin->getFormTheme());
 
         return $this->render($this->admin->getEditTemplate(), array(
-            'action'        => 'create',
-            'form'          => $view,
-            'object'        => $object,
-        ));
+                    'action' => 'create',
+                    'form' => $view,
+                    'object' => $object,
+                ));
     }
 
     /**
@@ -547,7 +641,8 @@ class CRUDController extends Controller
      */
     public function showAction($id = null)
     {
-        if (false === $this->admin->isGranted('SHOW')) {
+        if(false === $this->admin->isGranted('SHOW'))
+        {
             throw new AccessDeniedException();
         }
 
@@ -555,67 +650,67 @@ class CRUDController extends Controller
 
         $object = $this->admin->getObject($id);
 
-        if (!$object) {
+        if(!$object)
+        {
             throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
         }
 
         $this->admin->setSubject($object);
-        
+
         // build the show list
         $elements = $this->admin->getShow();
 
         $this->processShowFieldHooks($object);
-        
+
         return $this->render($this->admin->getShowTemplate(), array(
-            'action'         => 'show',
-            'object'         => $object,
-            'elements'       => $elements,
-        ));
+                    'action' => 'show',
+                    'object' => $object,
+                    'elements' => $elements,
+                ));
     }
-    
+
     public function processFormFieldHooks($object)
-    {        
+    {
         foreach($this->admin->getFormFieldDescriptions() as $desc)
-        {                
+        {
             $preHook = "";
             if(isset($this->admin->formFieldPreHooks[$desc->getName()]))
             {
                 $hookTemplate = $this->admin->formFieldPreHooks[$desc->getName()];
-                
+
                 $preHook = $this->processHook($hookTemplate, $object);
-            }               
+            }
             $desc->setOption('preHook', $preHook);
-            
+
             $postHook = "";
             if(isset($this->admin->formFieldPostHooks[$desc->getName()]))
             {
                 $hookTemplate = $this->admin->formFieldPostHooks[$desc->getName()];
-                
+
                 $postHook = $this->processHook($hookTemplate, $object);
-            }               
+            }
             $desc->setOption('postHook', $postHook);
-            
         }
     }
-    
+
     public function processShowFieldHooks($object)
-    {     
+    {
         $descriptions = $this->admin->getShowFieldDescriptions();
 
-        
+
         foreach($this->admin->getShowGroups() as $name => $showGroup)
-        {                
+        {
             foreach($showGroup['fields'] as $fieldName)
             {
                 $desc = $descriptions[$fieldName];
-                
+
                 $preHook = "";
                 if(isset($this->admin->showFieldPreHooks[$desc->getName()]))
                 {
                     $hookTemplate = $this->admin->showFieldPreHooks[$desc->getName()];
 
                     $preHook = $this->processHook($hookTemplate, $object);
-                }               
+                }
                 $desc->setOption('preHook', $preHook);
 
                 $postHook = "";
@@ -624,18 +719,19 @@ class CRUDController extends Controller
                     $hookTemplate = $this->admin->showFieldPostHooks[$desc->getName()];
 
                     $postHook = $this->processHook($hookTemplate, $object);
-                }               
+                }
                 $desc->setOption('postHook', $postHook);
             }
         }
     }
-    
+
     protected function processHook($hookTemplate, $object = null)
     {
         $hook = $this->render($hookTemplate, array(
             'object' => $object
-        ));
-        
+                ));
+
         return $hook->getContent();
-    }    
+    }
+
 }

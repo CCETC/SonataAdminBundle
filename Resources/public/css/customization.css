@@ -20,7 +20,9 @@ legend.filter_legend {
 legend.filter_legend:hover {
 }
 
-div.filter-container {
+div.filter-container,
+div.summary-field-container
+{
     float: left;
     margin: 4px 6px;
 }

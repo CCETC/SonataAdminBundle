@@ -15,18 +15,26 @@ Issues
 Ideas
 =========================================
 
-	- always wrap showFieldHooks in table cells
-	
-	- always wrap formFieldHooks in appropriate div
-	
+	a.	hooks
 
-ToDocument
-==========================================
+		- always wrap showFieldHooks in table cells
+		
+		- always wrap formFieldHooks in appropriate div
+
+	b.	summary
 	
-	- use of pre/post hooks
-	
+		- may be to slow if we are retrieving all objects every time
+		
+			- could move to separate page...
 
 
+		- summary units
+
+
+	c.	excel downloads
+	
+		- write cron to clear directory every day
+	
 1.1
 =========================================
 
@@ -54,6 +62,86 @@ ToDocument
 		
 //		- fix click event to hide/show filters
 
+
+	2.	Report Summary
+	
+//		a. table
+	
+//			- build data
+	
+//			- style better
+		
+//			- sort?
+
+//			- fix resource table
+		
+//		b. customization
+		
+//			- drop down for gb, bb, s, sf
+
+//			- more intuitive form
+
+//			- current values
+			
+//			- default values
+		
+//		c. admin configuration
+		
+//			- available fields for each
+			
+//			- labels
+		
+//			- field types
+			
+//				- date
+				
+//				- boolean
+				
+		
+		d.	clean list interface
+			
+		e.	clean up code
+		
+			- problems with code:
+				
+				- hard to generate spreadsheet from method results
+			
+					- make method that builds array
+					
+					
+				- have to send fields to get method names
+			
+			
+			- changes to make:
+			
+//				- change breakByFields to xFields and groupByFields to yFields
+
+				- general cleanup
+				
+					- variable/method names
+					
+					- more methods
+				
+				
+			
+		f.	excel export
+
+
+//	3.	excel exporting
+	
+//		- move admin arrays to admin class, use methods
+			
+//			- include field labels
+	
+//		- add button to list
+
+//		- clean up list action
+		
+	
+//	4.	Printing?
+
+//		- looks okay
+		
 
 #	10.	Misc
 	

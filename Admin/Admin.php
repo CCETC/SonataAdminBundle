@@ -23,6 +23,8 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
+use Sonata\AdminBundle\Summary\SummaryMapper;
+use Sonata\AdminBundle\Spreadsheet\SpreadsheetMapper;
 
 use Sonata\AdminBundle\Admin\Pool;
 use Sonata\AdminBundle\Validator\ErrorElement;
@@ -104,6 +106,11 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     public $formPreHook;
     public $formPostHook;
        
+    public $summaryYFields;
+    public $summaryXFields;
+    public $summarySumFields;
+    
+    public $spreadsheetFields;
     
     /**
      * The class name managed by the admin class
@@ -400,6 +407,15 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     {
         
     }
+    
+    protected function configureSummaryFields(SummaryMapper $summary)
+    {
+        
+    }
+    protected function configureSpreadsheetFields(SpreadsheetMapper $spreadsheetMapper)
+    {
+        
+    }
 
     /**
      * @param \Sonata\AdminBundle\Datagrid\DatagridMapper $filter
@@ -575,6 +591,12 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
 
         $mapper = new ListMapper($this->getListBuilder(), $this->list, $this);
 
+        $summaryMapper = new SummaryMapper($this);
+        $this->configureSummaryFields($summaryMapper);
+        
+        $spreadsheetMapper = new SpreadsheetMapper($this);
+        $this->configureSpreadsheetFields($spreadsheetMapper);
+        
         if (count($this->getBatchActions()) > 0) {
             $fieldDescription = $this->getModelManager()->getNewFieldDescriptionInstance($this->getClass(), 'batch', array(
                 'label'    => 'batch',

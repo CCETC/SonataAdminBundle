@@ -28,120 +28,199 @@ file that was distributed with this source code.
         {% include admin.listPreHook %}
     {% endif %}
 
-    {% set batchactions = admin.batchactions %}
-    {% if admin.datagrid.results|length > 0 %}
-        <form action="{{ admin.generateUrl('batch', admin.filterParameters) }}" method="POST" >
-            <table class="zebra-striped">
-                {% block table_header %}
-                    <thead>
-                        <tr class="sonata-ba-list-field-header">
-                            {% for field_description in admin.list.elements %}
-                                {% if field_description.getOption('code') == '_batch' and batchactions|length > 0%}
-                                    <th class="sonata-ba-list-field-header sonata-ba-list-field-header-batch">
-                                      <input type="checkbox" id="list_batch_checkbox" />
-                                    </th>
-                                {% else %}
-                                    {% set sortable = false %}
-                                    {% if field_description.options.sortable is defined and field_description.options.sortable%}
-                                        {% set sortable             = true %}
-                                        {% set current              = admin.datagrid.values._sort_by == field_description.options.sortable %}
-                                        {% set sort_parameters      = admin.modelmanager.sortparameters(field_description, admin.datagrid) %}
-                                        {% set sort_active_class    = current ? 'sonata-ba-list-field-order-active' : '' %}
-                                        {% set sort_by              = current ? admin.datagrid.values._sort_order : field_description.options._sort_order %}
-                                    {% endif %}
+    {% if admin.summaryYFields is defined and admin.summaryYFields|length > 0 %}
+        <ul class="tabs" id="chickens">
+            <li class="active"><a href="#list-container">List</a></li>
+            <li class=""><a href="#summarize-container">Summary</a></li>
+        </ul>
+        <script>
+            $(function () {
+                $('.tabs#chickens').tabs()
+            })
+        </script>
 
-                                    {% spaceless %}
-                                        <th class="sonata-ba-list-field-header-{{ field_description.type}} {% if sortable %} sonata-ba-list-field-header-order-{{ sort_by|lower }} {{ sort_active_class }}{% endif %}">
-                                            {% if sortable %}<a href="{{ admin.generateUrl('list', sort_parameters) }}">{% endif %}
-                                            {{ admin.trans(field_description.label) }}
-                                            {% if sortable %}</a>{% endif %}
-                                        </th>
-                                    {% endspaceless %}
-                                {% endif %}
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                {% endblock %}
+    {% endif %}
+        
+    <div class="tab-content">
+        <div id="list-container" class="tab-pane active">
+            {% set batchactions = admin.batchactions %}
+            {% if admin.datagrid.results|length > 0 %}
+                <form action="{{ admin.generateUrl('batch', admin.filterParameters) }}" method="POST" >
+                    <table class="zebra-striped">
+                        {% block table_header %}
+                            <thead>
+                                <tr class="sonata-ba-list-field-header">
+                                    {% for field_description in admin.list.elements %}
+                                        {% if field_description.getOption('code') == '_batch' and batchactions|length > 0%}
+                                            <th class="sonata-ba-list-field-header sonata-ba-list-field-header-batch">
+                                              <input type="checkbox" id="list_batch_checkbox" />
+                                            </th>
+                                        {% else %}
+                                            {% set sortable = false %}
+                                            {% if field_description.options.sortable is defined and field_description.options.sortable%}
+                                                {% set sortable             = true %}
+                                                {% set current              = admin.datagrid.values._sort_by == field_description.options.sortable %}
+                                                {% set sort_parameters      = admin.modelmanager.sortparameters(field_description, admin.datagrid) %}
+                                                {% set sort_active_class    = current ? 'sonata-ba-list-field-order-active' : '' %}
+                                                {% set sort_by              = current ? admin.datagrid.values._sort_order : field_description.options._sort_order %}
+                                            {% endif %}
 
-                {% block table_body %}
-                    <tbody>
-                        {% for object in admin.datagrid.results %}
-                            <tr>
-                                {% for field_description in admin.list.elements %}
-                                    {{ object|render_list_element(field_description) }}
+                                            {% spaceless %}
+                                                <th class="sonata-ba-list-field-header-{{ field_description.type}} {% if sortable %} sonata-ba-list-field-header-order-{{ sort_by|lower }} {{ sort_active_class }}{% endif %}">
+                                                    {% if sortable %}<a href="{{ admin.generateUrl('list', sort_parameters) }}">{% endif %}
+                                                    {{ admin.trans(field_description.label) }}
+                                                    {% if sortable %}</a>{% endif %}
+                                                </th>
+                                            {% endspaceless %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                        {% endblock %}
+
+                        {% block table_body %}
+                            <tbody>
+                                {% for object in admin.datagrid.results %}
+                                    <tr>
+                                        {% for field_description in admin.list.elements %}
+                                            {{ object|render_list_element(field_description) }}
+                                        {% endfor %}
+                                    </tr>
                                 {% endfor %}
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                {% endblock %}
+                            </tbody>
+                        {% endblock %}
 
-                {% block table_footer %}
-                {% endblock %}
-            </table>
+                        {% block table_footer %}
+                        {% endblock %}
+                    </table>
 
-            {% if admin.datagrid.pager.haveToPaginate() %}
-
+                    {% if admin.datagrid.pager.haveToPaginate() %}
                         <div class="pagination">
                           <ul>
                               <li class="disabled"><a href="#">{{ admin.datagrid.pager.nbresults }} Results</a></li>
-                              {% if admin.datagrid.pager.page != admin.datagrid.pager.previouspage %}
-                                  <li class="prev"><a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(admin.datagrid, admin.datagrid.pager.previouspage)) }}">{% trans from 'SonataAdminBundle' %}link_previous_pager{% endtrans %}</a></li>
-                              {% endif %}
-
-                              {# Set the number of pages to display in the pager #}
-                              {% for page in admin.datagrid.pager.getLinks(5) %}
-                                  {% if page == admin.datagrid.pager.page %}
-                                        <li class="active"><a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(admin.datagrid, page)) }}">{{ page }}</a></li>
-                                  {% else %}
-                                      <li><a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(admin.datagrid, page)) }}">{{ page }}</a></li>
+                                  {% if admin.datagrid.pager.page != admin.datagrid.pager.previouspage %}
+                                      <li class="prev"><a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(admin.datagrid, admin.datagrid.pager.previouspage)) }}">{% trans from 'SonataAdminBundle' %}link_previous_pager{% endtrans %}</a></li>
                                   {% endif %}
-                              {% endfor %}
+                                  {# Set the number of pages to display in the pager #}
+                                  {% for page in admin.datagrid.pager.getLinks(5) %}
+                                      {% if page == admin.datagrid.pager.page %}
+                                            <li class="active"><a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(admin.datagrid, page)) }}">{{ page }}</a></li>
+                                      {% else %}
+                                          <li><a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(admin.datagrid, page)) }}">{{ page }}</a></li>
+                                      {% endif %}
+                                  {% endfor %}
 
-                              {% if admin.datagrid.pager.page != admin.datagrid.pager.nextpage %}
-                                  <li class="next"><a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(admin.datagrid, admin.datagrid.pager.nextpage)) }}">{% trans from 'SonataAdminBundle' %}link_next_pager{% endtrans %}</a></li>
-                              {% endif %}
+                                  {% if admin.datagrid.pager.page != admin.datagrid.pager.nextpage %}
+                                      <li class="next"><a href="{{ admin.generateUrl('list', admin.modelmanager.paginationparameters(admin.datagrid, admin.datagrid.pager.nextpage)) }}">{% trans from 'SonataAdminBundle' %}link_next_pager{% endtrans %}</a></li>
+                                  {% endif %}
                           </ul>
                         </div>
-            {% endif %}
-              
-            {% if batchactions|length > 0%}
-                <script type="text/javascript">
-                    jQuery(document).ready(function($){
-                       $('#list_batch_checkbox').click(function(){
-                           $(this).closest('table').find("td input[type='checkbox']").attr('checked', $(this).is(':checked'));
-                       });
-                    });
-                </script>
+                    {%endif %}
 
-                <div class="actions sonata-ba-list-actions">
-                    <select name="action">
-                        {% for action, options in batchactions %}
-                            <option value="{{ action }}">{{ options.label }}</option>
-                        {% endfor %}
-                    </select>
-                    <input class="btn primary" type="submit" value="{% trans from 'SonataAdminBundle' %}btn_batch{% endtrans %}" />
-                </div>
+                    {% if batchactions|length > 0%}
+                        <script type="text/javascript">
+                            jQuery(document).ready(function($){
+                               $('#list_batch_checkbox').click(function(){
+                                   $(this).closest('table').find("td input[type='checkbox']").attr('checked', $(this).is(':checked'));
+                               });
+                            });
+                        </script>
+
+                        <div class="actions sonata-ba-list-actions">
+                            <select name="action">
+                                {% for action, options in batchactions %}
+                                    <option value="{{ action }}">{{ options.label }}</option>
+                                {% endfor %}
+                            </select>
+                            <input class="btn primary" type="submit" value="{% trans from 'SonataAdminBundle' %}btn_batch{% endtrans %}" />
+                        </div>
+                    {% endif %}
+                </form>
+                {% if admin.spreadsheetFields is defined and admin.spreadsheetFields|length > 0 %}
+                    <a href="{{ admin.generateUrl('list', admin.modelmanager.datagridparameters(admin.datagrid, {'downloadListSpreadsheet' : true}) ) }}" class="success btn small">Download Spreadsheet</a>
+                {% endif %}
+
+            {% else %}
+                <p class="notice">
+                  {% trans from 'SonataAdminBundle' %}no_result{% endtrans %}
+                </p>
             {% endif %}
-        </form>
-    {% else %}
-        <p class="notice">
-          {% trans from 'SonataAdminBundle' %}no_result{% endtrans %}
-        </p>
-    {% endif %}
+
+            {% if admin.listPostHook is defined and admin.listPostHook != "" %}
+                {% include admin.listPostHook %}
+            {% endif %}
+        </div>
         
-    {% if admin.listPostHook is defined and admin.listPostHook != "" %}
-        {% include admin.listPostHook %}
-    {% endif %}
-        
+        {% if admin.summaryYFields is defined and admin.summaryYFields|length > 0 %}
+            <div id="summarize-container" class="tab-pane">
+                {% if summary.summaries is defined %}
+                    <script src="{{  asset('bundles/sonataadmin/js/jquery.tablesorter.min.js') }}"></script>
+                    <script>
+                        $(function() {
+                            $("table#summary-table").tablesorter();
+                        });
+                    </script>
+
+                    <table id="summary-table">
+                        <thead>
+                            <tr class="sonata-ba-list-field-header">
+                                <th><a href="#">{{ admin.summaryYFields[summary.yField].label }}</a></th>
+                                {% for xField, values in summary.xSummaries %}
+                                    <th><a href="#">{{ xField|capitalize }}</a></th>
+                                {% endfor %}
+                                <th class="">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for yField, xFields in summary.summaries %}
+                                <tr>
+                                    <td><b>{{ yField|capitalize }}</b></td>
+
+                                    {% for xField, values in summary.xSummaries %}
+                                        <td>
+                                            {% if xFields[xField] is defined %}
+                                                {{ xFields[xField] }}
+                                            {% else %}
+                                                0
+                                            {% endif %}
+                                        </td>
+                                    {% endfor %}
+                                    <td class="">
+                                        <b>
+                                        {% if summary.ySummaries[yField] is defined %}
+                                            {{ summary.ySummaries[yField] }}
+                                        {% else %}
+                                            0
+                                        {% endif %}
+                                        </b>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="sonata-ba-list-field-header">
+                                <td><b>Total</b></td>
+                                {% for xField, value in summary.xSummaries %}
+                                    <td><b>{{ value }}</b></td>
+                                {% endfor %}
+                                <td><b>{{ summary.grandTotal }}</b></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+    </div>
 {% endblock %}
 
 {% block list_filters %}
     {% if admin.datagrid.filters %}
         <form class="sonata-filter-form" action="{{ admin.generateUrl('list') }}" method="GET">
             <fieldset class="filter_legend">
-                <legend class="filter_legend">{% trans from 'SonataAdminBundle' %}label_filters{% endtrans %}</legend>
-
                 <div class="filter_container form-stacked">
+                    <h4>Filters</h4>
                     {% for filter in admin.datagrid.filters %}
                         {% if admin.hiddenFilters[filter.name] is not defined %}
                             <div class="clearfix filter-container">
@@ -168,9 +247,54 @@ file that was distributed with this source code.
                     </div>
                             
                     {{ form_rest(form) }}
+                    <div style="clear: both">&nbsp;</div>
 
-                    <div style="clear: both">&nbsp;</div>    
-                    <input type="submit" class="btn primary" value="{% trans from 'SonataAdminBundle' %}btn_filter{% endtrans %}" />
+                    {% if admin.summaryYFields is defined and admin.summaryYFields|length > 0 %}
+                        <h4>Summary Options</h4>
+                        <div class="clearfix summary-field-container">
+                            <label>Group by</label>
+                            <div class="input">
+                                <select name="yField">
+                                    {% for field, values in admin.summaryYFields %}
+                                        <option value="{{ field }}" {% if summary.yField is defined and summary.yField == field %}selected="selected"{% endif %}>
+                                            {{ values.label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="clearfix summary-field-container">
+                            <label>and by</label>
+                            <div class="input">
+                                <select name="xField">
+                                    {% for field, values in admin.summaryXFields %}
+                                        <option value="{{ field }}" {% if summary.xField is defined and summary.xField == field %}selected="selected"{% endif %}>
+                                            {{ values.label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        {% if admin.summarySumFields is defined and admin.summarySumFields|length > 0 %}
+                            <div class="clearfix summary-field-container">
+                                <label>Summarize by</label>
+                                <div class="input">
+                                    <select name="sumBy">
+                                        <option value="total_items" {% if summary.sumBy is defined and summary.sumBy == 'count' %}selected="selected"{% endif %}>total items</option>
+                                        {% for field, values in admin.summarySumFields %}
+                                            <option value="{{ field }}" {% if summary.sumField is defined and summary.sumField == field %}selected="selected"{% endif %}>
+                                                {{ values.label }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        <div style="clear: both;">&nbsp;</div>
+                        {% endif %}
+                    
+                    <input type="submit" class="btn primary" value="Update" />
 
                     <a class="btn" href="{{ admin.generateUrl('list') }}">{% trans from 'SonataAdminBundle' %}link_reset_filter{% endtrans %}</a>
                     {% if admin.hiddenFilters|length != 0 and not showHiddenFilters %}
@@ -181,5 +305,6 @@ file that was distributed with this source code.
 
         </form>
     {% endif %}
+
 {% endblock %}
 
