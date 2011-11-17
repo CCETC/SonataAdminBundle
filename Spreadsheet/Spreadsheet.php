@@ -49,7 +49,7 @@ class Spreadsheet {
 
         
         $objWriter = new \PHPExcel_Writer_Excel5($objPHPExcel);
-        $filename = 'downloads/'.str_replace(' ', '_', $this->admin->getEntityLabelPlural()).rand(500,999).'.xls';
+        $filename = 'downloads/'.str_replace(' ', '_', $this->admin->getEntityLabelPlural()).'_List_'.rand(500,999).'.xls';
         $objWriter->save($filename);
         
         return $filename;
@@ -73,6 +73,41 @@ class Spreadsheet {
             return (string) $element->$methodName();        
         }
     }
+    
+    
+    public function buildAndSaveSummarySpreadsheet($summary)
+    {
+        $objPHPExcel = new \PHPExcel();
+        $objPHPExcel->getProperties()->setCreator($this->admin->getEntityLabelPlural());
+        $objPHPExcel->getProperties()->setLastModifiedBy($this->admin->getEntityLabelPlural());
+        $objPHPExcel->getProperties()->setTitle($this->admin->getEntityLabelPlural());
+        $objPHPExcel->getProperties()->setSubject($this->admin->getEntityLabelPlural());
+        $objPHPExcel->getProperties()->setDescription($this->admin->getEntityLabelPlural());
+
+        $objPHPExcel->setActiveSheetIndex(0);            
+
+        $y = 1;
+        foreach($summary->getTable() as $columns)
+        {
+            $x = 0;
+            foreach($columns as $column)
+            {
+                $value = $column;
+                
+                $objPHPExcel->getActiveSheet()->SetCellValue($this::num2alpha($x) . $y, $value);
+                $x++;
+            }
+
+            $y++;
+        }
+
+        
+        $objWriter = new \PHPExcel_Writer_Excel5($objPHPExcel);
+        $filename = 'downloads/'.str_replace(' ', '_', $this->admin->getEntityLabelPlural()).'_Summary_'.rand(500,999).'.xls';
+        $objWriter->save($filename);
+        
+        return $filename;
+    }    
     
     /*
      * get the alpa representation of an integer, 2 => B, 27 => AA

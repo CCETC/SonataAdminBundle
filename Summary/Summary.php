@@ -106,7 +106,7 @@ class Summary {
         {
             $yFieldValue = $this->getFieldValue($e, $this->admin->summaryYFields, $this->yField);
             $xFieldValue = $this->getFieldValue($e, $this->admin->summaryXFields, $this->xField);
-            if($this->sumBy == 'sum') $sumFieldKey = $this->getKey($e, $this->admin->summarySumFields, $this->sumField);
+            if($this->sumBy == 'sum') $sumFieldKey = $this->getFieldValue($e, $this->admin->summarySumFields, $this->sumField);
                 
             $this->initializeArrayKeys($yFieldValue, $xFieldValue);
             
@@ -181,6 +181,60 @@ class Summary {
         }
     }
     
+    /**
+     * Get an associative array that represents the table values for the summary table
+     */
+    public function getTable()
+    {
+        $table = array();
+        
+        // generate header
+        $header = array();
+        
+        // add a label for the yFields
+        $header[] = $this->admin->summaryYFields[$this->yField]['label'];
+
+        foreach($this->xSummaries as $xField => $values)
+        {
+            $header[] = ucfirst($xField);
+        }
+        $header[] = 'Total';
+        
+        $table[] = $header;
+        
+        // add body
+        foreach($this->summaries as $yField => $xFields)
+        {
+            $bodyRow = array();
+            // add a label for the $yField
+            $bodyRow[] = ucfirst($yField);
+            
+            foreach($this->xSummaries as $xField => $values)
+            {
+                if(isset($xFields[$xField])) $bodyRow[] = $xFields[$xField];
+                else $bodyRow[] = 0;
+            }
+            
+            if(isset($ySummaries[$yField])) $bodyRow[] = $ySummaries[$yField];
+            else $bodyRow[] = 0;
+
+            $table[] = $bodyRow;
+        }
+        
+        // add footer
+        $footer = array('Total');
+        
+        foreach($this->xSummaries as $xField => $value)
+        {
+            $footer[] = $value;
+        }
+        $footer[] = $this->grandTotal;
+        
+        $table[] = $footer;
+        
+        return $table;
+    }
+    
     public function getSummaries()
     {
         return $this->summaries;
@@ -219,6 +273,20 @@ class Summary {
     public function getSumBy()
     {
         return $this->sumBy;
+    }
+    
+    public function getParameters($additions)
+    {
+        $parameters = array('xField' => $this->xField, 'yField' => $this->yField);
+        if(isset($this->sumField)) $parameters['sumBy'] = $this->sumField;
+        else $parameters['sumBy'] = $this->sumBy;
+        
+        foreach($additions as $k => $v)
+        {
+            $parameters[$k] = $v;
+        }
+        
+        return $parameters;
     }
 }
 

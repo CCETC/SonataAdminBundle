@@ -8,6 +8,7 @@ Issues
 		
 		- see Features Resources
 		
+		- link to view instead of edit
 		
 	- TH / TD spacing on show
 
@@ -29,11 +30,24 @@ Ideas
 
 
 		- summary units
+		
+			- default "items"
+
+				- use plural entity if available...
+				
+					- worth doing
+			
+			- require noun for custom fields
+			
+		- use guesser
 
 
 	c.	excel downloads
 	
 		- write cron to clear directory every day
+
+		- use guesser
+
 	
 1.1
 =========================================
@@ -100,31 +114,32 @@ Ideas
 		
 		d.	clean list interface
 			
-		e.	clean up code
+//		e.	clean up code
 		
-			- problems with code:
+//			- problems with code:
 				
-				- hard to generate spreadsheet from method results
+//				- hard to generate spreadsheet from method results
 			
-					- make method that builds array
-					
-					
-				- have to send fields to get method names
+//					- make method that builds array
+	
+//				- have to send fields to get method names
 			
 			
-			- changes to make:
+//			- changes to make:
 			
 //				- change breakByFields to xFields and groupByFields to yFields
 
-				- general cleanup
+//				- general cleanup
 				
-					- variable/method names
+//					- variable/method names
 					
-					- more methods
+//					- more methods
 				
 				
 			
-		f.	excel export
+//		f.	excel export
+		
+//			- get summary option values
 
 
 //	3.	excel exporting
@@ -143,15 +158,14 @@ Ideas
 //		- looks okay
 		
 
-#	10.	Misc
+//	10.	Misc
 	
 //		- M2M plus button
 		
-		- relation links to view instead of edit
+//		- relation links to view instead of edit
 		
 //			- list
 			
-			- show
 		
 //		- better breadcrumbs
 		

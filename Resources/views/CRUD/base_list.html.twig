@@ -127,6 +127,9 @@ file that was distributed with this source code.
                         </script>
 
                         <div class="actions sonata-ba-list-actions">
+                            {% if admin.spreadsheetFields is defined and admin.spreadsheetFields|length > 0 %}
+                                <a style="margin-right: 25px;" href="{{ admin.generateUrl('list', admin.modelmanager.datagridparameters(admin.datagrid, {'downloadListSpreadsheet' : true}) ) }}" class="success btn small">Download Spreadsheet</a>
+                            {% endif %}
                             <select name="action">
                                 {% for action, options in batchactions %}
                                     <option value="{{ action }}">{{ options.label }}</option>
@@ -136,9 +139,6 @@ file that was distributed with this source code.
                         </div>
                     {% endif %}
                 </form>
-                {% if admin.spreadsheetFields is defined and admin.spreadsheetFields|length > 0 %}
-                    <a href="{{ admin.generateUrl('list', admin.modelmanager.datagridparameters(admin.datagrid, {'downloadListSpreadsheet' : true}) ) }}" class="success btn small">Download Spreadsheet</a>
-                {% endif %}
 
             {% else %}
                 <p class="notice">
@@ -162,53 +162,43 @@ file that was distributed with this source code.
                     </script>
 
                     <table id="summary-table">
-                        <thead>
-                            <tr class="sonata-ba-list-field-header">
-                                <th><a href="#">{{ admin.summaryYFields[summary.yField].label }}</a></th>
-                                {% for xField, values in summary.xSummaries %}
-                                    <th><a href="#">{{ xField|capitalize }}</a></th>
-                                {% endfor %}
-                                <th class="">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for yField, xFields in summary.summaries %}
+                        {% for row in summary.table %}
+                            {% if loop.first %}
+                                <thead>
+                                    <tr class="sonata-ba-list-field-header">
+                                        {% for value in row %}
+                                            <th><a href="#">{{ value }}</a></th>
+                                        {% endfor %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                            {% elseif loop.last %}
+                                </tbody>
+                                <tfoot>
+                                    <tr class="sonata-ba-list-field-header">
+                                        {% for value in row %}
+                                            <th>{{ value }}</th>
+                                        {% endfor %}
+                                    </tr>
+                                </tfoot>
+                            {% else %}
                                 <tr>
-                                    <td><b>{{ yField|capitalize }}</b></td>
-
-                                    {% for xField, values in summary.xSummaries %}
+                                    {% for value in row %}
                                         <td>
-                                            {% if xFields[xField] is defined %}
-                                                {{ xFields[xField] }}
-                                            {% else %}
-                                                0
-                                            {% endif %}
+                                            {% if loop.first %}<b>{% endif %}
+                                                {{ value }}
+                                            {% if loop.first %}</b>{% endif %}
                                         </td>
                                     {% endfor %}
-                                    <td class="">
-                                        <b>
-                                        {% if summary.ySummaries[yField] is defined %}
-                                            {{ summary.ySummaries[yField] }}
-                                        {% else %}
-                                            0
-                                        {% endif %}
-                                        </b>
-                                    </td>
                                 </tr>
-                            {% endfor %}
-                        </tbody>
-                        <tfoot>
-                            <tr class="sonata-ba-list-field-header">
-                                <td><b>Total</b></td>
-                                {% for xField, value in summary.xSummaries %}
-                                    <td><b>{{ value }}</b></td>
-                                {% endfor %}
-                                <td><b>{{ summary.grandTotal }}</b></td>
-                            </tr>
-                        </tfoot>
+                            {% endif %}
+                        {% endfor %}    
                     </table>
                 {% endif %}
-
+                    
+                <div class="actions">
+                    <a href="{{ admin.generateUrl('list', admin.modelmanager.datagridparameters(admin.datagrid, summary.getParameters({'downloadSummarySpreadsheet' : true })) ) }}" class="success btn small">Download Spreadsheet</a>
+                </div>
             </div>
 
         {% endif %}
@@ -280,7 +270,7 @@ file that was distributed with this source code.
                                 <label>Summarize by</label>
                                 <div class="input">
                                     <select name="sumBy">
-                                        <option value="total_items" {% if summary.sumBy is defined and summary.sumBy == 'count' %}selected="selected"{% endif %}>total items</option>
+                                        <option value="count" {% if summary.sumBy is defined and summary.sumBy == 'count' %}selected="selected"{% endif %}>total items</option>
                                         {% for field, values in admin.summarySumFields %}
                                             <option value="{{ field }}" {% if summary.sumField is defined and summary.sumField == field %}selected="selected"{% endif %}>
                                                 {{ values.label }}

@@ -185,7 +185,7 @@ class CRUDController extends Controller
         if($this->getRequest()->get('yField') && $this->getRequest()->get('xField'))
         {
             if(!$this->getRequest()->get('sumBy')
-                    || $this->getRequest()->get('sumBy') && $this->getRequest()->get('sumBy') == "total_items")
+                    || $this->getRequest()->get('sumBy') && $this->getRequest()->get('sumBy') == "count")
             {
                 $sumField = null;
                 $sum = 'count';
@@ -225,7 +225,15 @@ class CRUDController extends Controller
 
             return $this->redirect($this->getRequest()->getBasePath().'/'.$filename);
         }
+        else if($this->getRequest()->get('downloadSummarySpreadsheet'))
+        {
+            if(!isset($summary)) break;
+            
+            $spreadsheet = new Spreadsheet($this->admin);
+            $filename = $spreadsheet->buildAndSaveSummarySpreadsheet($summary);
 
+            return $this->redirect($this->getRequest()->getBasePath().'/'.$filename);
+        }
 
 
         return $this->render($this->admin->getListTemplate(), array(
