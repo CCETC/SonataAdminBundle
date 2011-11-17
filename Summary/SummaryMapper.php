@@ -12,19 +12,19 @@ class SummaryMapper {
     }
 
     
-   public function addYfield($fieldName, $options = array())
+   public function addYField($fieldName, $options = array())
    {
        $this->admin->summaryYFields[$fieldName] = $this->getField($fieldName, $options);
        return $this;
    }
    
-   public function addXfield($fieldName, $options = array())
+   public function addXField($fieldName, $options = array())
    {
        $this->admin->summaryXFields[$fieldName] = $this->getField($fieldName, $options);
        return $this;
    }
    
-   public function addSum($fieldName, $options = array())
+   public function addSumField($fieldName, $options = array())
    {
        $this->admin->summarySumFields[$fieldName] = $this->getField($fieldName, $options);
        return $this;
@@ -39,7 +39,7 @@ class SummaryMapper {
 
        if(isset($options['type'])) $field['type'] = $options['type'];
        else $field['type'] = 'string';
-
+       
        return $field;       
    }
 }
