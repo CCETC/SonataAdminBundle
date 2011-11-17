@@ -75,6 +75,8 @@ The three variables used ar $formPreHook, $showPreHook, and $listPreHook.
 # Summary Reports
 You can include a table of field summary statistics on the list template by defining a few fields to summarize by:
 
+    use Sonata\AdminBundle\Summary\SummaryMapper;
+
     protected function configureSummaryFields(SummaryMapper $summaryMapper)
     {
         $summaryMapper
@@ -86,11 +88,27 @@ You can include a table of field summary statistics on the list template by defi
     }
 
 ### Options
-   type: boolean|date|(string)
-   label: (default is uppercase fieldname)
+*type: boolean|date|(string)
+*label: (default is uppercase fieldname)
 
 ### Sum Fields
 By default, the total number of items for each group is summarized.  You can sum values of specific fields by adding "SumFields" using the addSumFields method.  This is entirely optional. 
+
+# Spreadsheet Exporting
+You can include buttons on the List template to download a xls spreadsheet of all elements that match the current filters.
+        
+    use Sonata\AdminBundle\Spreadsheet\SpreadsheetMapper;
+
+    protected function configureSpreadsheetFields(SpreadsheetMapper $spreadsheetMapper)
+    {
+        $spreadsheetMapper
+            ->add('title')
+            ->add('category')
+            ->add('approved', array('type' => 'boolean'))
+            ->add('stepCount', array('label' => 'Step Count'))
+        ;
+    }
+
 
 # Configuration
 TODO: document configuration
