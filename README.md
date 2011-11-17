@@ -23,7 +23,7 @@ This bundle is used in all CCETC web applications.
 # Installation
 Install as a git submodule:
 
-        git submodule add git://github.com/CCETC/SonataAdminBundle.git vendor/bundles/CCETC/SonataAdminBundle
+        git submodule add git://github.com/CCETC/SonataAdminBundle.git vendor/bundles/Sonata/AdminBundle
 
 In config.yml, specific the application name and admin e-mail twice:
 
