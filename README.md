@@ -11,6 +11,8 @@ This bundle is used in all CCETC web applications.
 * hidden filters
 * default filters
 * pre/post template hooks for form/show fields and list/form/show templates
+* custom field summary reports
+* excel exporting for lists and summary reports
 
 ### Interface Changes
 * Fewer submit buttons on edit
@@ -69,6 +71,26 @@ The edit, list, and show templates all include pre/post template hooks before an
 The three variables used ar $formPreHook, $showPreHook, and $listPreHook.
 
         public $formPreHook = 'MyBundle:myEntity:_myTemplate.html.twig';
+
+# Summary Reports
+You can include a table of field summary statistics on the list template by defining a few fields to summarize by:
+
+    protected function configureSummaryFields(SummaryMapper $summaryMapper)
+    {
+        $summaryMapper
+            ->addXField('title')
+            ->addYField('category')
+            ->addYField('approved', array('type' => 'boolean'))
+            ->addSumField('stepCount', array('label' => 'Step Count'))
+        ;
+    }
+
+### Options
+   type: boolean|date|(string)
+   label: (default is uppercase fieldname)
+
+### Sum Fields
+By default, the total number of items for each group is summarized.  You can sum values of specific fields by adding "SumFields" using the addSumFields method.  This is entirely optional. 
 
 # Configuration
 TODO: document configuration
