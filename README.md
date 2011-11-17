@@ -26,6 +26,7 @@ Install as a git submodule:
         git submodule add git://github.com/CCETC/SonataAdminBundle.git vendor/bundles/CCETC/SonataAdminBundle
 
 In config.yml, specific the application name and admin e-mail twice:
+
         services
             adminSettings:
               class: Sonata\AdminBundle\Resources\config\Settings
