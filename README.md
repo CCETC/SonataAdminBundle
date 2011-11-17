@@ -47,6 +47,17 @@ CCETC specific dependencies are:
 - [CCETCErrorReportBundle] (https://github.com/CCETC/CCETCErrorReportBundle)
 - [CCETC/SonataDoctrineORMAdminBundle] (https://github.com/CCETC/SonataDoctrineORMAdminBundle)
 
+Other dependencies:
+
+- if using Spreadsheets: [PHPExcel](http://phpexcel.codeplex.com/) installed into vendors and added to autoload.php:
+
+        $loader->registerPrefixes(array(
+            'Twig_Extensions_' => __DIR__.'/../vendor/twig-extensions/lib',
+            'Twig_'            => __DIR__.'/../vendor/twig/lib',
+            'PHPExcel'         => __DIR__.'/../vendor/PHPExcel',
+        ));
+
+
 # Updating
 Pull updates from the CCETC/SonataAdminBundle:
 
