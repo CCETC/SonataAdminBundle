@@ -25,15 +25,26 @@ Install as a git submodule:
 
         git submodule add git://github.com/CCETC/SonataAdminBundle.git vendor/bundles/CCETC/SonataAdminBundle
 
-TODO: further document installation (add config parameters)
+In config.yml, specific the application name and admin e-mail twice:
+        services
+            adminSettings:
+              class: Sonata\AdminBundle\Resources\config\Settings
+              arguments: [Get Your GreenBack - Tompkins!, haggertypat@gmail.com]
+        
+        twig:
+            globals:
+              adminTitle: "Get Your GreenBack - Tompkins!"
+              adminEmail: "haggertypat@gmail.com"
+        
 
 ### Dependencies
-CCETC/SonataAdminBundle requires the same dependencies as the sonata-admin/SonataAdminBundle (KnpMenu, Blueprint, Jquery).
+CCETC/SonataAdminBundle requires the same dependencies as the sonata-admin/SonataAdminBundle (KnpMenu, JQuery).
 
 CCETC specific dependencies are:
 
 - [CCETC/FOSUserBundle](https://github.com/CCETC/FOSUserBundle)
 - [CCETCErrorReportBundle] (https://github.com/CCETC/CCETCErrorReportBundle)
+- [CCETC/SonataDoctrineORMAdminBundle] (https://github.com/CCETC/SonataDoctrineORMAdminBundle)
 
 # Updating
 Pull updates from the CCETC/SonataAdminBundle:
