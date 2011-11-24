@@ -83,16 +83,24 @@ file that was distributed with this source code.
                         <a href="{{ url('home') }}" class="brand">{{ adminTitle }}</a>
                         {% if admin_pool is defined %}
                             <ul class="nav">
-                                {% for group in admin_pool.dashboardgroups %}
-                                    <li class="dropdown">
-                                        <a href="#" class="dropdown-toggle">{{ group.label|trans({}, 'SonataAdminBundle') }}</a>
-                                        <ul class="dropdown-menu">
-                                            {% for admin in group.items %}
-                                                <li><a href="{{ admin.generateUrl('list')}}">{{ admin.label|trans({}, admin.translationdomain) }}</a></li>
-                                            {% endfor %}
-                                        </ul>
-                                    </li>
-                                {% endfor %}
+                                {% if expandedMenu is defined and expandedMenu %}
+                                    {% for group in admin_pool.dashboardgroups %}
+                                        {% for admin in group.items %}
+                                            <li><a href="{{ admin.generateUrl('list')}}">{{ admin.label|trans({}, admin.translationdomain) }}</a></li>
+                                        {% endfor %}
+                                    {% endfor %}
+                                {% else %}
+                                    {% for group in admin_pool.dashboardgroups %}
+                                        <li class="dropdown">
+                                            <a href="#" class="dropdown-toggle">{{ group.label|trans({}, 'SonataAdminBundle') }}</a>
+                                            <ul class="dropdown-menu">
+                                                {% for admin in group.items %}
+                                                    <li><a href="{{ admin.generateUrl('list')}}">{{ admin.label|trans({}, admin.translationdomain) }}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    {% endfor %}
+                                {% endif %}
                             </ul>
                         {% endif %}
                         <p class="pull-right" id="headerMenu">
@@ -140,14 +148,22 @@ file that was distributed with this source code.
                         {% if action is defined %}
                             {% for label, uri in admin.breadcrumbs(action) %}
                                 {% if not loop.last %}
-                                    <a href="{{ uri }}">{{ label }}</a> / 
+                                    <a href="{{ uri }}">
+                                        {% if admin.entityIconPath is defined and admin.entityIconPath != "" and admin.entitylabelplural == label %}
+                                            <img src="{{ asset(admin.entityIconPath) }}" />
+                                        {% endif %}
+                                        {{ label }}
+                                    </a> / 
                                 {% elseif loop.last  %}
+                                    {% if admin.entityIconPath is defined and admin.entityIconPath != "" and admin.entitylabelplural == label %}
+                                        <img src="{{ asset(admin.entityIconPath) }}" />
+                                    {% endif %}
                                     {{ label }}
                                     {% if object is defined and object.__toString is defined and object.__toString %}<small>{{ object }}</small>{% endif %}
                                 {% endif %}
                             {% endfor %}
                         {% else %}
-                            {{ adminTitle }}
+                            {% block page_header %}Dashboard{% endblock %}
                         {% endif %}
                     </h3>
                 </div>

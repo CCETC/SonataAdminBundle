@@ -24,9 +24,6 @@ file that was distributed with this source code.
 {% block side_menu %}{{ knp_menu_render(admin.sidemenu(action), {}, 'list') }}{% endblock %}
 
 {% block list_table %}
-    {% if admin.listPreHook is defined and admin.listPreHook != "" %}
-        {% include admin.listPreHook %}
-    {% endif %}
 
     {% if admin.summaryYFields is defined and admin.summaryYFields|length > 0 %}
         <ul class="tabs" id="chickens">
@@ -141,7 +138,7 @@ file that was distributed with this source code.
                 </form>
 
             {% else %}
-                <p class="notice">
+                <p class="notice alert-message block-message">
                   {% trans from 'SonataAdminBundle' %}no_result{% endtrans %}
                 </p>
             {% endif %}
@@ -206,6 +203,9 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block list_filters %}
+    {% if admin.listPreHook is defined and admin.listPreHook != "" %}
+        {% include admin.listPreHook %}
+    {% endif %}
     {% if admin.datagrid.filters %}
         <form class="sonata-filter-form" action="{{ admin.generateUrl('list') }}" method="GET">
             <fieldset class="filter_legend">
@@ -213,9 +213,9 @@ file that was distributed with this source code.
                     <h4>Filters</h4>
                     {% for filter in admin.datagrid.filters %}
                         {% if admin.hiddenFilters[filter.name] is not defined %}
-                            <div class="clearfix filter-container">
+                            <div class="clearfix filter-input-container">
                                 {{ admin.trans(filter.label) }}
-                                <span style="display: none;" class="filter-type">{{ form_widget(form.getChild(filter.name).getChild('type')) }}</span>
+                                <div style="display: none;" class="filter-type input">{{ form_widget(form.getChild(filter.name).getChild('type')) }}</div>
                                 <div class="input">
                                    {{ form_widget(form.getChild(filter.name).getChild('value')) }}
                                 </div>
@@ -225,7 +225,7 @@ file that was distributed with this source code.
                     <div class="hiddenFilters" style="{% if not showHiddenFilters %}display: none;{% endif %}">
                         {% for filter in admin.datagrid.filters %}
                             {% if admin.hiddenFilters[filter.name] is defined %}
-                                <div class="clearfix filter-container">
+                                <div class="clearfix filter-input-container">
                                     {{ admin.trans(filter.label) }}
                                     <span style="display: none;" class="filter-type">{{ form_widget(form.getChild(filter.name).getChild('type')) }}</span>
                                     <div class="input">
@@ -288,7 +288,7 @@ file that was distributed with this source code.
 
                     <a class="btn" href="{{ admin.generateUrl('list') }}">{% trans from 'SonataAdminBundle' %}link_reset_filter{% endtrans %}</a>
                     {% if admin.hiddenFilters|length != 0 and not showHiddenFilters %}
-                            <a id="hiddenFiltersToggle" class="btn" href="#">more filters</a>
+                            <a id="hiddenFiltersToggle" class="btn" href="#">More Filters</a>
                     {% endif %}
                 </div>
             </fieldset>

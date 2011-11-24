@@ -168,7 +168,10 @@ class Summary {
         
         if($fields[$fieldName]['type'] == 'date')
         {
-            return $element->$methodName()->format('F j, Y');
+            if($element->$methodName())
+                return $element->$methodName()->format('F j, Y');
+            else
+                return '';
         }
         else if($fields[$fieldName]['type'] == 'boolean')
         {
