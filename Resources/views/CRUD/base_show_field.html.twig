@@ -12,32 +12,23 @@ file that was distributed with this source code.
 
     <td class="show-heading">
         {% block name %}<b>
-{#            {% if field_description.options.label is defined %}
+            {% if field_description.options.label is defined %}
                     {{ field_description.options.label }}
-            {% else %}#}
+            {% else %}
                     {{  field_description.name }}
-{#            {% endif %}#}</b>
+            {% endif %}</b>
         {% endblock %}
     </td>
     <td>
     	{% block field %}
-{#        {% if field_description.hasAssociationAdmin and field_description.associationadmin.hasRoute('show') and field_description.associationadmin.isGranted('SHOW') %}
-            <a href="{{ field_description.associationadmin.generateObjectUrl('show', value) }}">{{ value|render_relation_element(field_description) }}</a>
-
-#}
-{#            {% if field_description.hasAssociationAdmin %} #}
-                {#<a href="{{ field_description.associationAdmin.generateUrl('view',  {'id': object.Lead.id }) }}">#}
-{#                <a href="#"> 
-                        {{ value }}
-                </a>
-            {% elseif field_description.type == 'checkbox' %}
+            {% if field_description.type == 'checkbox' %}
                 {% if value == '1' %} yes
                 {% elseif value == '0' %}no
                 {% else %}-
                 {% endif %}
-            {% else %} #}
+            {% else %} 
                     {{ value }}    	
-{#            {% endif %} #}
+            {% endif %}
     	{% endblock %}
 	</td>
         

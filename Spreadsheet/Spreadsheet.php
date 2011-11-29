@@ -14,10 +14,11 @@ class Spreadsheet {
     
     public function buildAndSaveListSpreadsheet($objects)
     {
-        $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_apc;
-        $cacheSettings = array('cacheTime' => 600);
-        \PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
-        
+        // cache the spreadsheet, because they get big fast and cause fatal memory errors
+        // the cache_to_discISAM method is slowest but most effective, and the only we could get to work
+        $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_discISAM;
+        \PHPExcel_Settings::setCacheStorageMethod($cacheMethod);
+
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->getProperties()->setCreator($this->admin->getEntityLabelPlural());
         $objPHPExcel->getProperties()->setLastModifiedBy($this->admin->getEntityLabelPlural());
@@ -61,29 +62,32 @@ class Spreadsheet {
     
     protected function getFieldValue($element, $keys, $fieldName)
     {
-        $methodName = 'get'.ucfirst($fieldName);
-        
         if($keys['type'] == 'date')
         {
-            if($element->$methodName())
-                return $element->$methodName()->format('F j, Y');
+            if($element[$fieldName])
+                return $element[$fieldName]->format('F j, Y');
             else
                 return '';
         }
         else if($keys['type'] == 'boolean')
         {
-            if($element->$methodName() == '1') return 'yes';
+            if($element[$fieldName] == '1') return 'yes';
             else return 'no';
         }
         else
         {
-            return (string) $element->$methodName();        
+            return (string) $element[$fieldName];        
         }
     }
     
     
     public function buildAndSaveSummarySpreadsheet($summary)
     {
+         // cache the spreadsheet, because they get big fast and cause fatal memory errors
+        // the cache_to_discISAM method is slowest but most effective, and the only we could get to work
+        $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_discISAM;
+        \PHPExcel_Settings::setCacheStorageMethod($cacheMethod);
+        
         $objPHPExcel = new \PHPExcel();
         $objPHPExcel->getProperties()->setCreator($this->admin->getEntityLabelPlural());
         $objPHPExcel->getProperties()->setLastModifiedBy($this->admin->getEntityLabelPlural());

@@ -81,11 +81,11 @@ class Datagrid implements DatagridInterface
         return $this->results;
     }
 
-    public function getAllResults()
+    public function getAllResultsAsArray()
     {
         $this->buildPager();
         
-        return $this->pager->getAllResults();
+        return $this->pager->getAllResultsAsArray();
     }
     
     /**

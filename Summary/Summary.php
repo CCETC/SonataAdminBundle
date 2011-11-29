@@ -104,8 +104,9 @@ class Summary {
         
         foreach($elements as $e)
         {
-            $yFieldValue = $this->getFieldValue($e, $this->admin->summaryYFields, $this->yField);
-            $xFieldValue = $this->getFieldValue($e, $this->admin->summaryXFields, $this->xField);
+            $yFieldValue = trim($this->getFieldValue($e, $this->admin->summaryYFields, $this->yField));
+            $xFieldValue = trim($this->getFieldValue($e, $this->admin->summaryXFields, $this->xField));
+            
             if($this->sumBy == 'sum') $sumFieldKey = $this->getFieldValue($e, $this->admin->summarySumFields, $this->sumField);
                 
             $this->initializeArrayKeys($yFieldValue, $xFieldValue);
@@ -124,6 +125,7 @@ class Summary {
             $this->ySummaries[$yFieldValue] = $this->ySummaries[$yFieldValue] + $value;
             $this->grandTotal = $this->grandTotal + $value;
         }
+        
     }
     
     /**
@@ -164,23 +166,21 @@ class Summary {
      */
     protected function getFieldValue($element, $fields, $fieldName)
     {
-        $methodName = 'get'.ucfirst($fieldName);
-        
         if($fields[$fieldName]['type'] == 'date')
         {
-            if($element->$methodName())
-                return $element->$methodName()->format('F j, Y');
+            if($element[$fieldName])
+                return $element[$fieldName]->format('F j, Y');
             else
                 return '';
         }
         else if($fields[$fieldName]['type'] == 'boolean')
         {
-            if($element->$methodName() == '1') return 'yes';
+            if($element[$fieldName] == '1') return 'yes';
             else return 'no';
         }
         else
         {
-            return (string) $element->$methodName();        
+            return (string) $element[$fieldName];        
         }
     }
     
@@ -199,7 +199,9 @@ class Summary {
 
         foreach($this->xSummaries as $xField => $values)
         {
-            $header[] = ucfirst($xField);
+            if(trim($xField) == "") $xLabel = "-";
+            else $xLabel = $xField;
+            $header[] = $xLabel;
         }
         $header[] = 'Total';
         
@@ -210,7 +212,10 @@ class Summary {
         {
             $bodyRow = array();
             // add a label for the $yField
-            $bodyRow[] = ucfirst($yField);
+            if(trim($yField) == "") $yLabel = "-";
+            else $yLabel = $yField;
+            
+            $bodyRow[] = $yLabel;
             
             foreach($this->xSummaries as $xField => $values)
             {
@@ -218,7 +223,7 @@ class Summary {
                 else $bodyRow[] = 0;
             }
             
-            if(isset($ySummaries[$yField])) $bodyRow[] = $ySummaries[$yField];
+            if(isset($this->ySummaries[$yField])) $bodyRow[] = $this->ySummaries[$yField];
             else $bodyRow[] = 0;
 
             $table[] = $bodyRow;

@@ -160,15 +160,13 @@ class CRUDController extends Controller
                 $showHiddenFilters = true;
             }
         }
-
+        
         $datagrid = $this->admin->getDatagrid();
 
         $formView = $datagrid->getForm()->createView();
 
         // set the theme for the current Admin Form
         $this->get('twig')->getExtension('form')->setTheme($formView, $this->admin->getFilterTheme());
-
-
 
         if($this->getRequest()->get('yField') && $this->getRequest()->get('xField')) {
             if(!$this->getRequest()->get('sumBy')
@@ -181,33 +179,33 @@ class CRUDController extends Controller
             }
 
             $summary = new Summary($this->admin, $this->getRequest()->get('yField'), $this->getRequest()->get('xField'), $sum, $sumField);
-
-            $summary->buildSummaryDataFromElementSet($datagrid->getAllResults());
+ 
+            $allResults = $datagrid->getAllResultsAsArray();
+            $summary->buildSummaryDataFromElementSet($allResults);
         } else if(isset($this->admin->summaryXFields)) {
             reset($this->admin->summaryYFields);
             reset($this->admin->summaryYFields);
 
             $summary = new Summary($this->admin, key($this->admin->summaryYFields), key($this->admin->summaryXFields), 'count');
-
-            $allResults = $datagrid->getAllResults();
-
+            $allResults = $datagrid->getAllResultsAsArray();
             $summary->buildSummaryDataFromElementSet($allResults);
         } else {
             $summary = null;
         }
 
         if($this->getRequest()->get('downloadListSpreadsheet')) {
-            if(!isset($allResults))
-                $allResults = $datagrid->getAllResults();
-
+            if(!isset($allResults)) {
+                $allResults = $datagrid->getAllResultsAsArray();
+            }
+                
             $spreadsheet = new Spreadsheet($this->admin);
             $filename = $spreadsheet->buildAndSaveListSpreadsheet($allResults);
 
             return $this->redirect($this->getRequest()->getBasePath() . '/' . $filename);
-        }
-        else if($this->getRequest()->get('downloadSummarySpreadsheet')) {
-            if(!isset($summary))
+        } else if($this->getRequest()->get('downloadSummarySpreadsheet')) {
+            if(!isset($summary)) {
                 break;
+            }
 
             $spreadsheet = new Spreadsheet($this->admin);
             $filename = $spreadsheet->buildAndSaveSummarySpreadsheet($summary);
@@ -609,9 +607,9 @@ class CRUDController extends Controller
         // build the show list
         $elements = $this->admin->getShow();
 
- //       $this->processShowFieldHooks($object);
+        $this->processShowFieldHooks($object);
 
-  //      $this->processShowFieldClasses();
+        $this->processShowFieldClasses();
        
         return $this->render($this->admin->getShowTemplate(), array(
                     'action' => 'show',
