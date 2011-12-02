@@ -168,32 +168,49 @@ class CRUDController extends Controller
         // set the theme for the current Admin Form
         $this->get('twig')->getExtension('form')->setTheme($formView, $this->admin->getFilterTheme());
 
-        
-        if(!$this->isXmlHttpRequest() && $this->getRequest()->get('yField') && $this->getRequest()->get('xField')) {
-            if(!$this->getRequest()->get('sumBy')
-                    || $this->getRequest()->get('sumBy') && $this->getRequest()->get('sumBy') == "count") {
-                $sumField = null;
-                $sum = 'count';
-            } else {
-                $sum = 'sum';
-                $sumField = $this->getRequest()->get('sumBy');
-            }
-
-            $summary = new Summary($this->admin, $this->container, $this->getRequest()->get('yField'), $this->getRequest()->get('xField'), $sum, $sumField);
- 
-            $allResults = $datagrid->getAllResultsAsArray();
-            $summary->buildSummaryDataFromElementSet($allResults);
-        } else if(!$this->isXmlHttpRequest() && isset($this->admin->summaryXFields)) {
-            reset($this->admin->summaryYFields);
-            reset($this->admin->summaryYFields);
-
-            $summary = new Summary($this->admin, $this->container, key($this->admin->summaryYFields), key($this->admin->summaryXFields), 'count');
-            $allResults = $datagrid->getAllResultsAsArray();
-            $summary->buildSummaryDataFromElementSet($allResults);
+        if(isset($this->admin->summaryXFields)) {
+            $hasSummaryFields = true;
         } else {
-            $summary = null;
+            $hasSummaryFields = false;
         }
-        
+
+        $showSummaryPane = false;
+        $summary = null;
+
+        if($this->getRequest()->get('tab') && $this->getRequest()->get('tab') == "summary") {
+            if(!$this->isXmlHttpRequest() && $this->getRequest()->get('yField') && $this->getRequest()->get('xField')) {
+                $showSummaryPane = true;
+                
+                if(!$this->getRequest()->get('sumBy')
+                        || $this->getRequest()->get('sumBy') && $this->getRequest()->get('sumBy') == "count") {
+                    $sumField = null;
+                    $sum = 'count';
+                } else {
+                    $sum = 'sum';
+                    $sumField = $this->getRequest()->get('sumBy');
+                }
+
+                $summary = new Summary($this->admin, $this->container, $this->getRequest()->get('yField'), $this->getRequest()->get('xField'), $sum, $sumField);
+
+                $allResults = $datagrid->getAllResultsAsArray();
+                $summary->buildSummaryDataFromElementSet($allResults);
+            } else if(!$this->isXmlHttpRequest() && isset($this->admin->summaryXFields)) {
+                $showSummaryPane = true;
+
+                reset($this->admin->summaryYFields);
+                reset($this->admin->summaryYFields);
+
+                $summary = new Summary($this->admin, $this->container, key($this->admin->summaryYFields), key($this->admin->summaryXFields), 'count');
+                $allResults = $datagrid->getAllResultsAsArray();
+                $summary->buildSummaryDataFromElementSet($allResults);
+            }
+        }
+
+        // just initialize summary is on the list pane so we can generate links to the summary pane
+        if($hasSummaryFields && !isset($summary)) {
+            $summary = new Summary($this->admin, $this->container, key($this->admin->summaryYFields), key($this->admin->summaryXFields), 'count');
+        }
+            
         if($this->getRequest()->get('downloadListSpreadsheet')) {
             if(!isset($allResults)) {
                 $allResults = $datagrid->getAllResultsAsArray();
@@ -214,14 +231,14 @@ class CRUDController extends Controller
             return $this->redirect($this->getRequest()->getBasePath() . '/' . $filename);
         }
 
-
         return $this->render($this->admin->getListTemplate(), array(
                     'action' => 'list',
                     'form' => $formView,
                     'datagrid' => $datagrid,
                     'showHiddenFilters' => $showHiddenFilters,
                     'summary' => $summary,
-                    'isXmlHttpRequest' => $this->isXmlHttpRequest()
+                    'hasSummaryFields' => $hasSummaryFields,
+                    'showSummaryPane' => $showSummaryPane
                 ));
     }
 
