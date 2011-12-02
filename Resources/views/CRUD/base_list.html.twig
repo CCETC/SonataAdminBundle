@@ -118,7 +118,7 @@ file that was distributed with this source code.
 
                             <div class="actions sonata-ba-list-actions">
                                 {% if admin.spreadsheetFields is defined and admin.spreadsheetFields|length > 0 %}
-                                    <a style="margin-right: 25px;" href="{{ admin.generateUrl('list', admin.modelmanager.datagridparameters(admin.datagrid, {'downloadListSpreadsheet' : true}) ) }}" class="success btn small">Download Spreadsheet</a>
+                                    <a style="margin-right: 25px;" href="{{ admin.generateUrl('list', admin.modelmanager.datagridparameters(admin.datagrid, {'downloadListSpreadsheet' : true}) ) }}" class="success btn small spreadsheet-download">Download Spreadsheet</a>
                                 {% endif %}
                                 <select name="action">
                                     {% for action, options in batchactions %}
@@ -182,7 +182,7 @@ file that was distributed with this source code.
                     </table>
                     
                 <div class="actions">
-                        <a href="{{ admin.generateUrl('list', admin.modelmanager.datagridparameters(admin.datagrid, summary.getParameters({'tab' : 'summary','downloadSummarySpreadsheet' : true })) ) }}" class="success btn small">Download Summary Spreadsheet</a>
+                        <a href="{{ admin.generateUrl('list', admin.modelmanager.datagridparameters(admin.datagrid, summary.getParameters({'tab' : 'summary','downloadSummarySpreadsheet' : true })) ) }}" class="success btn small spreadsheet-download">Download Summary Spreadsheet</a>
                 </div>
             </div>
 
@@ -190,6 +190,13 @@ file that was distributed with this source code.
         {% if admin.listPostHook is defined and admin.listPostHook != "" %}
             {% include admin.listPostHook %}
         {% endif %}
+            
+            
+        <script>
+            var btn = $('a.btn.spreadsheet-download').click(function () {
+                btn.button('loading')
+            }) 
+        </script>
 
     </div>
 {% endblock %}
