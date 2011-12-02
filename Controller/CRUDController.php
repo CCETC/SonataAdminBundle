@@ -168,7 +168,8 @@ class CRUDController extends Controller
         // set the theme for the current Admin Form
         $this->get('twig')->getExtension('form')->setTheme($formView, $this->admin->getFilterTheme());
 
-        if($this->getRequest()->get('yField') && $this->getRequest()->get('xField')) {
+        
+        if(!$this->isXmlHttpRequest() && $this->getRequest()->get('yField') && $this->getRequest()->get('xField')) {
             if(!$this->getRequest()->get('sumBy')
                     || $this->getRequest()->get('sumBy') && $this->getRequest()->get('sumBy') == "count") {
                 $sumField = null;
@@ -178,27 +179,27 @@ class CRUDController extends Controller
                 $sumField = $this->getRequest()->get('sumBy');
             }
 
-            $summary = new Summary($this->admin, $this->getRequest()->get('yField'), $this->getRequest()->get('xField'), $sum, $sumField);
+            $summary = new Summary($this->admin, $this->container, $this->getRequest()->get('yField'), $this->getRequest()->get('xField'), $sum, $sumField);
  
             $allResults = $datagrid->getAllResultsAsArray();
             $summary->buildSummaryDataFromElementSet($allResults);
-        } else if(isset($this->admin->summaryXFields)) {
+        } else if(!$this->isXmlHttpRequest() && isset($this->admin->summaryXFields)) {
             reset($this->admin->summaryYFields);
             reset($this->admin->summaryYFields);
 
-            $summary = new Summary($this->admin, key($this->admin->summaryYFields), key($this->admin->summaryXFields), 'count');
+            $summary = new Summary($this->admin, $this->container, key($this->admin->summaryYFields), key($this->admin->summaryXFields), 'count');
             $allResults = $datagrid->getAllResultsAsArray();
             $summary->buildSummaryDataFromElementSet($allResults);
         } else {
             $summary = null;
         }
-
+        
         if($this->getRequest()->get('downloadListSpreadsheet')) {
             if(!isset($allResults)) {
                 $allResults = $datagrid->getAllResultsAsArray();
             }
                 
-            $spreadsheet = new Spreadsheet($this->admin);
+            $spreadsheet = new Spreadsheet($this->admin, $this->container);
             $filename = $spreadsheet->buildAndSaveListSpreadsheet($allResults);
 
             return $this->redirect($this->getRequest()->getBasePath() . '/' . $filename);
@@ -207,7 +208,7 @@ class CRUDController extends Controller
                 break;
             }
 
-            $spreadsheet = new Spreadsheet($this->admin);
+            $spreadsheet = new Spreadsheet($this->admin, $this->container);
             $filename = $spreadsheet->buildAndSaveSummarySpreadsheet($summary);
 
             return $this->redirect($this->getRequest()->getBasePath() . '/' . $filename);
@@ -219,7 +220,8 @@ class CRUDController extends Controller
                     'form' => $formView,
                     'datagrid' => $datagrid,
                     'showHiddenFilters' => $showHiddenFilters,
-                    'summary' => $summary
+                    'summary' => $summary,
+                    'isXmlHttpRequest' => $this->isXmlHttpRequest()
                 ));
     }
 
@@ -543,7 +545,9 @@ class CRUDController extends Controller
         }
 
         $object = $this->admin->getNewInstance();
-
+        
+        $object = $this->processUrlFormValues($object);        
+        
         $this->admin->setSubject($object);
 
         $form = $this->admin->getForm();
@@ -581,6 +585,70 @@ class CRUDController extends Controller
                     'form' => $view,
                     'object' => $object,
                 ));
+    }
+    
+    /**
+     * Check the url for data to build to new object on the create for with.
+     * 
+     * 1. Simple fields 
+     * 
+     *      a. Look for key/value pairs with keys containing "formValue"
+     *          
+     *          ex: ?formValue[name]=Pat
+     * 
+     *      b. Set $object's key field with the value
+     * 
+     *          $object->setName('Pat')
+     * 
+     * 2. Relation Fields
+     * 
+     *      a. Look for key/value pairs with keys containing "formObject"
+     *  
+     *          ex: ?formValue[fieldName]=User&formValue[repository]=MyBundle:User&formValue[id]=34
+     * 
+     *      b. Set $objects formValue[fieldName] field with the item from formValue[repository] that has id of formValue[id]
+     * 
+     *           $object->setUser($this->getDoctrine()->getRepository("MyBundle:User")->findOneById(34));
+     * 
+     * @param type $object
+     * @return type $object
+     */
+    public function processUrlFormValues($object)
+    {
+        if($this->getRequest()->getQueryString()) {
+            $allUrlKeyValuePairs = explode("&", $this->getRequest()->getQueryString());
+            $formObject = array();
+            
+            foreach($allUrlKeyValuePairs as $urlKeyValuePair) {
+                $keyValueArray = explode("=", $urlKeyValuePair);
+                $key = urldecode($keyValueArray[0]);
+                $key = str_replace("[", "", $key);
+                $key = str_replace("]", "", $key);
+                
+                $value = urldecode($keyValueArray[1]);
+
+                if(strstr($urlKeyValuePair, 'formValue')) {
+                    $key = str_replace("formValue", "", $key);
+                    $methodName = 'set'.ucFirst($key);
+
+                    $object->$methodName($value);
+                } else if(strstr($urlKeyValuePair, 'formObject')) {
+                    $key = str_replace("formObject", "", $key);
+                    $formObject[$key] = $value;
+                }
+            }
+
+            if(!empty($formObject)) {
+                $methodName = 'set'.ucFirst($formObject['fieldName']);
+                $repositoryName = $formObject['repositoryName'];
+                $id = $formObject['id'];
+
+                $object->$methodName($this->getDoctrine()->getRepository($repositoryName)->findOneById($id));
+            }
+            
+        }
+        
+        return $object;
     }
 
     /**

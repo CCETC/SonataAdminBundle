@@ -115,3 +115,18 @@ div.sonata-ba-form div.indented-field input[type="radio"] {
 div.sonata-ba-view tr.indented td.show-heading {
     text-align: right;
 }
+
+div.sonata-ba-form form.form-stacked div.sonata-ba-collapsed-fields {
+    padding-left: 25px;
+}
+
+a.sonata-ba-collapsed small {
+    font-size: 12px;
+    color: #0069D6;
+}
+
+.help-inline, .help-block {
+    color: #AAAAAA;
+    font-size: 12px;
+    line-height: 18px;
+}

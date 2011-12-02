@@ -72,7 +72,11 @@ class ShowMapper
         } else {
             throw new \RuntimeException('invalid state');
         }
-        
+
+        if (!$fieldDescription->getLabel()) {
+            $fieldDescription->setOption('label', $this->admin->getLabelTranslatorStrategy()->getLabel($fieldDescription->getName(), 'show', 'label'));
+        }
+
         // add the field with the FormBuilder
         $this->showBuilder->addField($this->list, $type, $fieldDescription, $this->admin);
 
@@ -99,12 +103,14 @@ class ShowMapper
 
     /**
      * @param string $key
-     * @return void
+     * @return \Sonata\AdminBundle\Show\ShowMapper
      */
     public function remove($key)
     {
         $this->admin->removeShowFieldDescription($key);
         $this->list->remove($key);
+
+        return $this;
     }
 
     /**

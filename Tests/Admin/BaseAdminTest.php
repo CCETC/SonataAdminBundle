@@ -14,6 +14,14 @@ namespace Sonata\AdminBundle\Tests\Admin;
 use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Route\RouteCollection;
 
+class FooTest_Admin
+{
+    public function __toString()
+    {
+        return 'salut';
+    }
+}
+
 class PostAdmin extends Admin
 {
     protected $metadataClass = null;
@@ -51,7 +59,7 @@ class CommentAdmin extends Admin
     }
 }
 
-class AdminTest extends \PHPUnit_Framework_TestCase
+class BaseAdminTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @covers Sonata\AdminBundle\Admin\Admin::__construct
@@ -104,15 +112,15 @@ class AdminTest extends \PHPUnit_Framework_TestCase
         $admin = new PostAdmin('sonata.post.admin.post', 'Application\Sonata\NewsBundle\Entity\Post', 'SonataNewsBundle:PostAdmin');
         $this->assertTrue($admin->getUniqid() == "");
 
-        $admin->configure();
+        $admin->initialize();
         $this->assertFalse($admin->getUniqid() == "");
-        $this->assertEquals('post', $admin->getClassnameLabel());
+        $this->assertEquals('Post', $admin->getClassnameLabel());
 
 
         $admin = new CommentAdmin('sonata.post.admin.comment', 'Application\Sonata\NewsBundle\Entity\Comment', 'SonataNewsBundle:CommentAdmin');
         $admin->setClassnameLabel('postcomment');
 
-        $admin->configure();
+        $admin->initialize();
         $this->assertEquals('postcomment', $admin->getClassnameLabel());
     }
 
@@ -121,7 +129,7 @@ class AdminTest extends \PHPUnit_Framework_TestCase
         $admin = new PostAdmin('sonata.post.admin.post', 'Application\Sonata\NewsBundle\Entity\Post', 'SonataNewsBundle:PostAdmin');
         $admin->setParentAssociationMapping('Category');
 
-        $admin->configure();
+        $admin->initialize();
         $this->assertEquals('Category', $admin->getParentAssociationMapping());
     }
 
@@ -161,10 +169,10 @@ class AdminTest extends \PHPUnit_Framework_TestCase
         $pathInfo = new \Sonata\AdminBundle\Route\PathInfoBuilder();
         $postAdmin = new PostAdmin('sonata.post.admin.post', 'Application\Sonata\NewsBundle\Entity\Post', 'SonataNewsBundle:PostAdmin');
         $postAdmin->setRouteBuilder($pathInfo);
-        $postAdmin->configure();
+        $postAdmin->initialize();
         $commentAdmin = new CommentAdmin('sonata.post.admin.comment', 'Application\Sonata\NewsBundle\Entity\Comment', 'SonataNewsBundle:CommentAdmin');
         $commentAdmin->setRouteBuilder($pathInfo);
-        $commentAdmin->configure();
+        $commentAdmin->initialize();
 
         $postAdmin->addChild($commentAdmin);
 
@@ -200,5 +208,17 @@ class AdminTest extends \PHPUnit_Framework_TestCase
         $admin->setUniqid($uniqid);
 
         $this->assertEquals($uniqid, $admin->getUniqid());
+    }
+
+    public function testToString()
+    {
+        $admin = new PostAdmin('sonata.post.admin.post', 'NewsBundle\Entity\Post', 'SonataNewsBundle:PostAdmin');
+
+        $s = new \stdClass();
+
+        $this->assertEquals('', $admin->toString($s));
+
+        $s = new FooTest_Admin;
+        $this->assertEquals('salut', $admin->toString($s));
     }
 }

@@ -13,6 +13,12 @@ Issues
 	- TH / TD spacing on show
 
 
+1.3
+=======================================
+	
+	- refactor and document Summary and Spreadsheet
+
+
 Ideas
 =========================================
 
