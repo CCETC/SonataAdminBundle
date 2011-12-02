@@ -575,21 +575,64 @@ class CRUDController extends Controller
         if($this->get('request')->getMethod() == 'POST') {
             $form->bindRequest($this->get('request'));
 
+            
+            
+            
             if($form->isValid()) {
-                $this->admin->create($object);
+                if(isset($this->admin->fieldsToCheckForDuplicates)) {
+                    $itemMayBeInDB = false;
+                    $itemFound = false;
+                    $repository = $this->getDoctrine()->getRepository($this->admin->getClass());
 
-                if($this->isXmlHttpRequest()) {
-                    return $this->renderJson(array(
-                                'result' => 'ok',
-                                'objectId' => $this->admin->getNormalizedIdentifier($object)
-                            ));
+                    foreach($this->admin->fieldsToCheckForDuplicates as $field) {
+                        if(!is_array($field)) $field = array($field);
+
+                        $parameters = array();
+                        
+                        foreach($field as $f) {
+                            $methodName = 'get'.ucfirst($f);
+                            $parameters[$f] = $object->$methodName();
+                        }
+                        $result = $repository->findBy($parameters);
+
+                        if($result) $itemFound = true;
+                    }
+                    
+                    if($itemFound)
+                    {
+                        if(!$this->getRequest()->getSession()->get('areYouSure'))
+                        {
+                            $itemMayBeInDB = true;
+                            $this->getRequest()->getSession()->set('areYouSure', true);
+                        }
+                        else
+                        {
+                            $this->getRequest()->getSession()->set('areYouSure', null);
+                        }
+                    }
                 }
+                
+                if($this->admin->getClassnameLabel() == 'Leads' && $itemMayBeInDB) {
+                    $this->getRequest()->getSession()->setFlash('sonata_flash_error', 'This '.$this->admin->getEntityLabel().' may already by in the database.  Please check the list before creating it.
+                    If you are sure that this '.$this->admin->getEntityLabel().' is not already in the database, click "Create" again.');
+                } else {
 
-                $this->get('session')->setFlash('sonata_flash_success', 'flash_create_success');
-                // redirect to edit mode
-                return $this->redirectTo($object);
+                    $this->admin->create($object);
+
+                    if($this->isXmlHttpRequest()) {
+                        return $this->renderJson(array(
+                                    'result' => 'ok',
+                                    'objectId' => $this->admin->getNormalizedIdentifier($object)
+                                ));
+                    }
+
+                    $this->get('session')->setFlash('sonata_flash_success', 'flash_create_success');
+                    // redirect to edit mode
+                    return $this->redirectTo($object);
+                }
+            } else {
+                $this->get('session')->setFlash('sonata_flash_error', 'flash_create_error');
             }
-            $this->get('session')->setFlash('sonata_flash_error', 'flash_create_error');
         }
 
         $view = $form->createView();

@@ -70,7 +70,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     
     public function getEntityLabel()
     {
-        if(!isset($entityLabel)) return ucfirst($this->classnameLabel);
+        if(!isset($this->entityLabel)) return 'item';
         else return $this->entityLabel;
     }
 
