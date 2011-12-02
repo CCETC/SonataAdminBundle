@@ -79,9 +79,13 @@ class Spreadsheet
                 return 'no';
         } else if($keys['type'] == 'model') {
             $repository = $this->container->get('doctrine')->getRepository($keys['repository']);
-            $object = $repository->findOneById($element[$keys['field_name']]);
             
-            return (string) $object;
+            if(isset($element[$keys['field_name']])) {
+                $object = $repository->findOneById($element[$keys['field_name']]);
+                return (string) $object;
+            } else {
+                return '';
+            }            
         } else {
             return (string) $element[$fieldName];
         }
