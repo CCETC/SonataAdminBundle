@@ -13,6 +13,7 @@ This bundle is used in all CCETC web applications.
 * pre/post template hooks for form/show fields and list/form/show templates
 * custom field summary reports
 * excel exporting for lists and summary reports
+* TinyMCE integration
 
 ### Interface Changes
 * Fewer submit buttons on edit
