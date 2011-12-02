@@ -17,7 +17,7 @@ file that was distributed with this source code.
 
     <div class="span7">
         {% for group in groups %}
-            {% if group.label != "User Data" or is_granted('ROLE_ADMIN') %}
+            {% if group.label != "Users" or is_granted('ROLE_ADMIN') %}
                 <table class="zebra-striped sonata-ba-list">
                     <thead>
                         <tr>
