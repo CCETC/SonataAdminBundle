@@ -13,9 +13,6 @@ $(document).ready(function() {
     $('div.sonata-ba-form input[type="checkbox"]').parent().css('float', 'left');
     $('div.sonata-ba-form input[type="checkbox"]').parent().siblings().css({'float' : 'left', 'margin-right' : '5px'});
     
-    $('select[id$="_Program"]').live("change", function(e){
-        console.log($(this).val());
-    });
 }); 
 
 tinyMCE.init({
