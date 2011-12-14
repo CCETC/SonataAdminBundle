@@ -148,7 +148,7 @@ class CRUDController extends Controller
         $filterValues = $this->admin->getDatagrid()->getValues();
 
         foreach($this->admin->getFilterDefaults() as $field => $default) {
-            if(!isset($filterValues[$field]['value']) || $filterValues[$field]['value'] == "") {
+            if(!isset($filterValues[$field]['value'])) {
                 $this->admin->getDatagrid()->setValue($field, "", $default);
             }
         }
@@ -156,7 +156,7 @@ class CRUDController extends Controller
         $showHiddenFilters = false;
 
         foreach($this->admin->getHiddenFilters() as $filterName => $method) {
-            if(array_key_exists($filterName, $filterValues) && $this->checkHiddenFilterValue($filterValues[$filterName]['value'])) {
+            if(array_key_exists($filterName, $filterValues) && $this->hiddenFilterIsset($filterValues[$filterName]['value'])) {
                 $showHiddenFilters = true;
             }
         }
@@ -242,6 +242,21 @@ class CRUDController extends Controller
                 ));
     }
 
+    protected function hiddenFilterIsset($value)
+    {
+        if(is_array($value)) {
+            foreach($value as $k => $v) {
+                if($this->hiddenFilterIsset($v)) {
+                    return true;
+                }
+            }
+        } else if($value != "") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     /**
      * execute a batch delete
      *
@@ -363,6 +378,38 @@ class CRUDController extends Controller
         $em->clear();
 
         $this->getRequest()->getSession()->setFlash('sonata_flash_success', 'The selected items have been un-approved');
+
+        return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
+    }
+    
+    public function batchActionSpam($query)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        foreach($query->getQuery()->iterate() as $pos => $object) {
+            $object[0]->setSpam(true);
+        }
+
+        $em->flush();
+        $em->clear();
+
+        $this->getRequest()->getSession()->setFlash('sonata_flash_success', 'The selected items have been marked as spam');
+
+        return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
+    }
+
+    public function batchActionUnSpam($query)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        foreach($query->getQuery()->iterate() as $pos => $object) {
+            $object[0]->setSpam(false);
+        }
+
+        $em->flush();
+        $em->clear();
+
+        $this->getRequest()->getSession()->setFlash('sonata_flash_success', 'The selected items have been marked as not spam');
 
         return new RedirectResponse($this->admin->generateUrl('list', $this->admin->getFilterParameters()));
     }
@@ -827,21 +874,6 @@ class CRUDController extends Controller
         $hook = $this->render($template, $parameters);
 
         return $hook->getContent();
-    }
-
-    protected function checkHiddenFilterValue($value)
-    {
-        if(is_array($value)) {
-            foreach($value as $k => $v) {
-                if($this->checkHiddenFilterValue($v)) {
-                    return true;
-                }
-            }
-        } else if($value != "") {
-            return true;
-        } else {
-            return false;
-        }
     }
 
 }
