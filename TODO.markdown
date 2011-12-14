@@ -18,8 +18,11 @@ Issues
 	- TH / TD spacing on show
 
 
-Next
-================
+1.3
+=======================================
+	
+    - refactor and document Summary and Spreadsheet
+
     1.  Trash
 
         - simply add field to trashable items

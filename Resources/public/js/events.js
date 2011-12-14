@@ -8,6 +8,11 @@ $(document).ready(function() {
         $(this).hide();
 
     }); 
+    
+    // fancy style hack for checkboxes on forms
+    $('div.sonata-ba-form input[type="checkbox"]').parent().css('float', 'left');
+    $('div.sonata-ba-form input[type="checkbox"]').parent().siblings().css({'float' : 'left', 'margin-right' : '5px'});
+    
 }); 
 
 tinyMCE.init({
@@ -24,6 +29,4 @@ tinyMCE.init({
         theme_advanced_toolbar_location : "top",
         theme_advanced_toolbar_align : "left",
         theme_advanced_resizing : true
-
-  
 });

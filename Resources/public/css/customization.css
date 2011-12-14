@@ -20,12 +20,33 @@ legend.filter_legend {
 legend.filter_legend:hover {
 }
 
-div.filter-container,
+div.filter-input-container,
 div.summary-field-container
 {
     float: left;
-    margin: 4px 6px;
+    margin: 2px 10px;
+    min-height: 50px;
+    width: 220px;
 }
+
+select[name*='[month]'],
+select[name*='[day]'],
+select[name*='[value][month]'],
+select[name*='[value][day]'],
+select[name*='[start][month]'],
+select[name*='[end][month]'],
+select[name*='[start][day]'],
+select[name*='[end][day]'] {
+    width: 50px;
+}
+
+select[name*='[value][year]'],
+select[name*='[end][year]'],
+select[name*='[start][year]'],
+select[name*='[year]'] {
+    width: 70px;
+}
+
 
 #headerMenu {
     float: right;
@@ -55,4 +76,57 @@ table th + th, table td + td {
 
 fieldset.filter_legend {
     border: none;
+}
+
+div.sonata-ba-view {
+    width: 800px;
+    margin: 0 auto;
+}
+
+div.filter_container {
+
+}
+
+div.sonata-ba-form div.other-field {
+    margin-left: 250px;
+}
+
+div.sonata-ba-form div.other-field input,
+div.sonata-ba-form div.other-field select,
+div.sonata-ba-form div.other-field textarea {
+    width: 150px;
+}
+
+div.sonata-ba-form div.indented-field {
+    margin-left: 50px;
+}
+
+div.sonata-ba-form div.indented-field input,
+div.sonata-ba-form div.indented-field select,
+div.sonata-ba-form div.indented-field textarea {
+    width: 350px;
+}
+
+div.sonata-ba-form div.indented-field input[type="checkbox"],
+div.sonata-ba-form div.indented-field input[type="radio"] {
+    width: auto;
+}
+
+div.sonata-ba-view tr.indented td.show-heading {
+    text-align: right;
+}
+
+div.sonata-ba-form form.form-stacked div.sonata-ba-collapsed-fields {
+    padding-left: 25px;
+}
+
+a.sonata-ba-collapsed small {
+    font-size: 12px;
+    color: #0069D6;
+}
+
+.help-inline, .help-block {
+    color: #AAAAAA;
+    font-size: 12px;
+    line-height: 18px;
 }

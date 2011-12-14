@@ -29,6 +29,7 @@ use Sonata\AdminBundle\Spreadsheet\SpreadsheetMapper;
 use Sonata\AdminBundle\Admin\Pool;
 use Sonata\AdminBundle\Validator\ErrorElement;
 
+use Sonata\AdminBundle\Translator\LabelTranslatorStrategyInterface;
 use Sonata\AdminBundle\Builder\FormContractorInterface;
 use Sonata\AdminBundle\Builder\ListBuilderInterface;
 use Sonata\AdminBundle\Builder\DatagridBuilderInterface;
@@ -69,7 +70,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     
     public function getEntityLabel()
     {
-        if(!isset($entityLabel)) return ucfirst($this->classnameLabel);
+        if(!isset($this->entityLabel)) return 'item';
         else return $this->entityLabel;
     }
 
@@ -385,6 +386,8 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
 
     protected $extensions = array();
 
+    protected $labelTranslatorStrategy;
+
     /**
      * This method can be overwritten to tweak the form construction, by default the form
      * is built by reading the FieldDescription
@@ -493,15 +496,28 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
         $this->baseControllerName = $baseControllerName;
     }
 
-    public function configure()
+    /**
+     * define custom variable
+     */
+    public function initialize()
     {
         $this->uniqid = uniqid();
 
         if (!$this->classnameLabel) {
-            $this->classnameLabel = $this->urlize(substr($this->getClass(), strrpos($this->getClass(), '\\') + 1), '_');
+            $this->classnameLabel = substr($this->getClass(), strrpos($this->getClass(), '\\') + 1);
         }
 
         $this->baseCodeRoute = $this->getCode();
+
+        $this->configure();
+    }
+
+    /**
+     *  Allows the user to define custom variables
+     */
+    public function configure()
+    {
+
     }
 
     public function update($object)
@@ -668,8 +684,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
         $this->configureDatagridFilters($mapper);
 
         // ok, try to limit to add parent filter
-        if($this->getParentAssociationMapping())
-        {
+         if ($this->isChild() && $this->getParentAssociationMapping() && !$mapper->has($this->getParentAssociationMapping())) {
             $mapper->add($this->getParentAssociationMapping(), null, array(
                 'field_type' => 'sonata_type_model_reference',
                 'field_options' => array(
@@ -912,6 +927,10 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
         return $this->routes->get($name);
     }
 
+    /**
+     * @param $name
+     * @return bool
+     */
     public function hasRoute($name)
     {
         $this->buildRoutes();
@@ -1166,6 +1185,14 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
         $this->buildList();
 
         return $this->list;
+    }
+
+    /**
+     * @return \Sonata\AdminBundle\Datagrid\ProxyQueryInterface
+     */
+    public function createQuery($context = 'list')
+    {
+        return $this->getModelManager()->createQuery($this->class);
     }
 
     /**
@@ -1756,7 +1783,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
      * Generates the breadcrumbs array
      *
      * @param string $action
-     * @param \Knp\Menu\MenuItem|null $menu
+     * @param \Knp\Menu\ItemInterface|null $menu
      * @return array
      */
     public function buildBreadcrumbs($action, MenuItemInterface $menu = null)
@@ -1770,7 +1797,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
         }
 
         $child = $menu->addChild(
-            $this->trans('breadcrumb.dashboard', array(), 'SonataAdminBundle'),
+            $this->trans($this->getLabelTranslatorStrategy()->getLabel('dashboard', 'breadcrumb', 'link'), array(), 'SonataAdminBundle'),
             array('uri' => $this->router->generate('sonata_admin_dashboard'))
         );
 
@@ -1790,6 +1817,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
             );
 
             return $childAdmin->buildBreadcrumbs($action, $child);
+
         } elseif ($this->isChild()) {
             if ($action != 'list') {
                 $menu = $menu->addChild(
@@ -2079,6 +2107,9 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
         return $this->modelManager;
     }
 
+    /**
+     * @param \Sonata\AdminBundle\Model\ModelManagerInterface $modelManager
+     */
     public function setModelManager(ModelManagerInterface $modelManager)
     {
         $this->modelManager = $modelManager;
@@ -2139,6 +2170,10 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
         return $this->securityHandler->isGranted($this, $name, $object ?: $this);
     }
 
+    /**
+     * @param $entity
+     * @return mixed
+     */
     public function getNormalizedIdentifier($entity)
     {
         return $this->getModelManager()->getNormalizedIdentifier($entity);
@@ -2256,5 +2291,34 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     public function getRouteBuilder()
     {
         return $this->routeBuilder;
+    }
+
+    /**
+     * @param $object
+     * @return string
+     */
+    public function toString($object)
+    {
+        if (method_exists($object, '__toString')) {
+            return (string) $object;
+        }
+
+        return '';
+    }
+
+    /**
+     * @param \Sonata\Adminbundle\Translator\LabelTranslatorStrategyInterface $labelTranslatorStrategy
+     */
+    public function setLabelTranslatorStrategy(LabelTranslatorStrategyInterface $labelTranslatorStrategy)
+    {
+        $this->labelTranslatorStrategy = $labelTranslatorStrategy;
+    }
+
+    /**
+     * @return \Sonata\AdminBundle\Translator\LabelTranslatorStrategyInterface
+     */
+    public function getLabelTranslatorStrategy()
+    {
+        return $this->labelTranslatorStrategy;
     }
 }

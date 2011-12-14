@@ -13,6 +13,7 @@ This bundle is used in all CCETC web applications.
 * pre/post template hooks for form/show fields and list/form/show templates
 * custom field summary reports
 * excel exporting for lists and summary reports
+* TinyMCE integration
 
 ### Interface Changes
 * Fewer submit buttons on edit
@@ -23,7 +24,7 @@ This bundle is used in all CCETC web applications.
 # Installation
 Install as a git submodule:
 
-        git submodule add git://github.com/CCETC/SonataAdminBundle.git vendor/bundles/CCETC/SonataAdminBundle
+        git submodule add git://github.com/CCETC/SonataAdminBundle.git vendor/bundles/Sonata/AdminBundle
 
 In config.yml, specific the application name and admin e-mail twice:
 

@@ -81,11 +81,11 @@ class Datagrid implements DatagridInterface
         return $this->results;
     }
 
-    public function getAllResults()
+    public function getAllResultsAsArray()
     {
         $this->buildPager();
         
-        return $this->pager->getAllResults();
+        return $this->pager->getAllResultsAsArray();
     }
     
     /**
@@ -139,6 +139,14 @@ class Datagrid implements DatagridInterface
     public function hasFilter($name)
     {
         return isset($this->filters[$name]);
+    }
+
+    /**
+     * @param $name
+     */
+    public function removeFilter($name)
+    {
+        unset($this->filters[$name]);
     }
 
     /**

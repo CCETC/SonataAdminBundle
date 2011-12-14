@@ -13,17 +13,16 @@ file that was distributed with this source code.
 
 {% block actions %}
     <div class="sonata-actions">
-        <ul>
             {% if admin.hasRoute('edit') and admin.isGranted('EDIT')%}
-                <li class="btn sonata-action-element"><a href="{{ admin.generateObjectUrl('edit', object) }}">{% trans from 'SonataAdminBundle' %}link_action_edit{% endtrans %}</a></li>
+                <a class="btn" href="{{ admin.generateObjectUrl('edit', object) }}">{% trans from 'SonataAdminBundle' %}link_action_edit{% endtrans %}</a>
             {% endif %}
 
             {% if admin.hasRoute('create') and admin.isGranted('CREATE')%}
-                <li class="btn sonata-action-element"><a href="{{ admin.generateUrl('create') }}">{% trans from 'SonataAdminBundle' %}link_action_create{% endtrans %}</a></li>
+                <a class="btn" href="{{ admin.generateUrl('create') }}">{% trans from 'SonataAdminBundle' %}link_action_create{% endtrans %}</a>
             {% endif %}
 
             {% if admin.hasRoute('list') and admin.isGranted('LIST')%}
-                <li class="btn sonata-action-element"><a href="{{ admin.generateUrl('list') }}">{% trans from 'SonataAdminBundle' %}link_action_list{% endtrans %}</a></li>
+                <a class="btn" href="{{ admin.generateUrl('list') }}">{% trans from 'SonataAdminBundle' %}link_action_list{% endtrans %}</a>
             {% endif %}
         </ul>
     </div>
@@ -33,10 +32,14 @@ file that was distributed with this source code.
 
 {% block show %}
     {% if admin.showPreHook is defined and admin.showPreHook != "" %}
-        {% include admin.showPreHook %}
+        {% if admin.showPreHook.parameters is defined %}
+            {% include admin.showPreHook.template with admin.showPreHook.parameters %}
+        {% else %}
+            {% include admin.showPreHook.template %}
+        {% endif %}
     {% endif %}
 
-    <div class="sonata-ba-view">
+    <div class="sonata-ba-view zebra-striped">
         {% for name, view_group in admin.showgroups %}
             {% if name and admin.showgroups|length > 1 %}
                 <h2>{{ admin.trans(name) }}</h2>
@@ -45,9 +48,12 @@ file that was distributed with this source code.
             <table>
                 {% for field_name in view_group.fields %}
                     {{ admin.showfielddescriptions[field_name].options['preHook']|raw }}
-                    <tr class="sonata-ba-view-container">
+                    
+                    <tr class="sonata-ba-view-container {{ admin.showfielddescriptions[field_name].options['additionalClasses'] }}">
                         {% if admin.show[field_name] is defined %}
                             {{ admin.show[field_name]|render_view_element(object) }}
+                        {% else %}
+                            {{ field_name }}
                         {% endif %}
                     </tr>
                     {{ admin.showfielddescriptions[field_name].options['postHook']|raw }}

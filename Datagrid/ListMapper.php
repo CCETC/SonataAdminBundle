@@ -65,6 +65,10 @@ class ListMapper
             throw new \RuntimeException('invalid state');
         }
 
+        if (!$fieldDescription->getLabel()) {
+            $fieldDescription->setOption('label', $this->admin->getLabelTranslatorStrategy()->getLabel($fieldDescription->getName(), 'list', 'label'));
+        }
+
         // add the field with the FormBuilder
         $this->listBuilder->addField($this->list, $type, $fieldDescription, $this->admin);
 
@@ -91,11 +95,13 @@ class ListMapper
 
     /**
      * @param  string $key
-     * @return void
+     * @return \Sonata\AdminBundle\Datagrid\ListMapper
      */
     public function remove($key)
     {
         $this->admin->removeListFieldDescription($key);
         $this->list->remove($key);
+
+        return $this;
     }
 }

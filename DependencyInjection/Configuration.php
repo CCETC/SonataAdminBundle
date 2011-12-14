@@ -35,20 +35,20 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('sonata_admin', 'array');
 
-        $this->addTemplateSection($rootNode);
-
-        return $treeBuilder;
-    }
-
-    private function addTemplateSection(ArrayNodeDefinition $rootNode)
-    {
         $rootNode
+            ->fixXmlConfig('dashboard_group')
+            ->fixXmlConfig('admin_service')
             ->children()
                 ->scalarNode('security_handler')->defaultValue('sonata.admin.security.handler.noop')->end()
+
+                ->scalarNode('title')->defaultValue('Sonata Admin')->cannotBeEmpty()->end()
+                ->scalarNode('title_logo')->defaultValue('bundles/sonataadmin/logo_title.png')->cannotBeEmpty()->end()
 
                 ->arrayNode('dashboard_groups')
                     ->useAttributeAsKey('id')
                     ->prototype('array')
+                        ->fixXmlConfig('item')
+                        ->fixXmlConfig('item_add')
                         ->children()
                             ->scalarNode('label')->end()
                             ->arrayNode('items')
@@ -65,7 +65,6 @@ class Configuration implements ConfigurationInterface
                     ->useAttributeAsKey('id')
                     ->prototype('array')
                         ->children()
-                            ->scalarNode('id')->end()
                             ->scalarNode('model_manager')->end()
                             ->scalarNode('form_contractor')->end()
                             ->scalarNode('show_builder')->end()
@@ -84,14 +83,18 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('templates')
                     ->addDefaultsIfNotSet()
                     ->children()
+                        ->scalarNode('user_block')->defaultValue('SonataAdminBundle:Core:user_block.html.twig')->cannotBeEmpty()->end()
                         ->scalarNode('layout')->defaultValue('SonataAdminBundle::standard_layout.html.twig')->cannotBeEmpty()->end()
                         ->scalarNode('ajax')->defaultValue('SonataAdminBundle::ajax_layout.html.twig')->cannotBeEmpty()->end()
                         ->scalarNode('list')->defaultValue('SonataAdminBundle:CRUD:list.html.twig')->cannotBeEmpty()->end()
                         ->scalarNode('show')->defaultValue('SonataAdminBundle:CRUD:show.html.twig')->cannotBeEmpty()->end()
                         ->scalarNode('edit')->defaultValue('SonataAdminBundle:CRUD:edit.html.twig')->cannotBeEmpty()->end()
+                        ->scalarNode('boolean_edit')->defaultValue('SonataAdminBundle:CRUD:list_boolean_edit.html.twig')->cannotBeEmpty()->end()
                     ->end()
                 ->end()
             ->end()
         ->end();
+
+        return $treeBuilder;
     }
 }

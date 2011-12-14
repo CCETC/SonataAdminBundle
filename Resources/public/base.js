@@ -104,6 +104,38 @@ var Admin = {
         }
 
         return targetElement;
+    },
+
+    add_filters: function(subject) {
+        //jQuery('div.filter_container', subject).hide();
+        jQuery('fieldset.filter_legend', subject).click(function(event) {
+           jQuery('div.filter_container', jQuery(event.target).parent()).toggle();
+        });
+    },
+
+    /**
+     * Change object field value
+     * @param MouseEvent
+     */
+    set_object_field_value: function(event) {
+        var targetElement = Admin.stopEvent(event);
+        var a = jQuery(targetElement).closest('a');
+
+        jQuery.ajax({
+            url: a.attr('href'),
+            type: 'POST',
+            success: function(json) {
+                if(json.status === "OK") {
+                    var elm = jQuery(a).parent();
+                    elm.children().remove();
+                    // fix issue with html comment ...
+                    elm.html(jQuery(json.content.replace(/<!--[\s\S]*?-->/g, "")).html());
+                    elm.effect("highlight", {'color' : '#57A957'}, 2000);
+                } else {
+                    jQuery(a).parent().effect("highlight", {'color' : '#C43C35'}, 2000);
+                }
+            }
+        });
     }
 
 }

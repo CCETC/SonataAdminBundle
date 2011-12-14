@@ -29,6 +29,22 @@
 
         <service id="sonata.admin.form.type.boolean" class="Sonata\AdminBundle\Form\Type\BooleanType">
             <tag name="form.type" alias="sonata_type_boolean" />
+            <argument type="service" id="translator" />
+        </service>
+
+        <service id="sonata.admin.form.type.translatable_choice" class="Sonata\AdminBundle\Form\Type\TranslatableChoiceType">
+            <tag name="form.type" alias="sonata_type_translatable_choice" />
+            <argument type="service" id="translator" />
+        </service>
+        
+        <service id="sonata.admin.form.type.date_range" class="Sonata\AdminBundle\Form\Type\DateRangeType">
+            <tag name="form.type" alias="sonata_type_date_range" />
+
+            <argument type="service" id="translator" />
+        </service>
+        
+        <service id="sonata.admin.form.type.date_range" class="Sonata\AdminBundle\Form\Type\DateRangeType">
+            <tag name="form.type" alias="sonata_type_date_range" />
 
             <argument type="service" id="translator" />
         </service>
@@ -54,6 +70,16 @@
 
         <service id="sonata.admin.form.filter.type.default" class="Sonata\AdminBundle\Form\Type\Filter\DefaultType">
             <tag name="form.type" alias="sonata_type_filter_default" />
+        </service>
+
+        <service id="sonata.admin.form.filter.type.date" class="Sonata\AdminBundle\Form\Type\Filter\DateType">
+            <tag name="form.type" alias="sonata_type_filter_date" />
+            <argument type="service" id="translator" />
+        </service>
+
+        <service id="sonata.admin.form.filter.type.date_range" class="Sonata\AdminBundle\Form\Type\Filter\DateRangeType">
+            <tag name="form.type" alias="sonata_type_filter_date_range" />
+            <argument type="service" id="translator" />
         </service>
     </services>
 

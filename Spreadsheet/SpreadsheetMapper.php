@@ -28,6 +28,10 @@ class SpreadsheetMapper {
        if(isset($options['type'])) $field['type'] = $options['type'];
        else $field['type'] = 'string';
 
+       if(isset($options['repository'])) $field['repository'] = $options['repository'];
+
+       if(isset($options['field_name'])) $field['field_name'] = $options['field_name'];
+
        return $field;       
    }
 }
