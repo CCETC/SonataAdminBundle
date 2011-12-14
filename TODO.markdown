@@ -1,6 +1,11 @@
 CCETC/SonataAdminBundle - TODO
 =========================================
 
+Roll Out
+====================
+
+	- check error report usePageHeader
+
 Issues
 =============================
 	
@@ -11,6 +16,19 @@ Issues
 		- link to view instead of edit
 		
 	- TH / TD spacing on show
+
+
+Next
+================
+    1.  Trash
+
+        - simply add field to trashable items
+
+        - on default, delete actions are not shown, trash are instead
+
+        - add link to view the trash that uses a filter to filter results
+
+            - when filter is on, use delete actions ONLY
 
 
 Ideas
