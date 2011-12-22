@@ -84,25 +84,25 @@ file that was distributed with this source code.
                 {% include admin.formPostHook %}
             {% endif %}
             
-            <div class="actions">
+            <div class="" style="position: fixed; right: 20px; top: 125px;">
                 {% if app.request.isxmlhttprequest %}
                     {% if admin.id(object) %}
-                        <input type="submit" class="btn primary" name="btn_save" value="{% trans from 'SonataAdminBundle' %}btn_save{% endtrans %}"/>
+                        <input type="submit" class="btn large primary" name="btn_save" value="{% trans from 'SonataAdminBundle' %}btn_save{% endtrans %}"/>
                     {% else %}
-                        <input type="submit" class="btn" name="btn_create" value="{% trans from 'SonataAdminBundle' %}btn_create{% endtrans %}"/>
+                        <input type="submit" class="btn large" name="btn_create" value="{% trans from 'SonataAdminBundle' %}btn_create{% endtrans %}"/>
                     {% endif %}
                 {% else %}
                     {% if admin.id(object) %}
-                        <input type="submit" class="btn primary" name="btn_save" value="{% trans from 'SonataAdminBundle' %}btn_save{% endtrans %}"/>
-                        <a class="btn" href="{{ admin.generateUrl('list') }}">{% trans from 'SonataAdminBundle' %}btn_cancel{% endtrans %}</a>
+                        <input type="submit" class="btn large primary" name="btn_save" value="{% trans from 'SonataAdminBundle' %}btn_save{% endtrans %}"/>
+                        <a class="btn large" href="{{ admin.generateUrl('list') }}">{% trans from 'SonataAdminBundle' %}btn_cancel{% endtrans %}</a>
                         
                         {% if admin.hasroute('delete') and admin.isGranted('DELETE') %}
                             {% trans from 'SonataAdminBundle' %}delete_or{% endtrans %}
-                            <a class="btn danger" href="{{ admin.generateObjectUrl('delete', object) }}">{% trans from 'SonataAdminBundle' %}link_delete{% endtrans %}</a>
+                            <a class="btn large danger" href="{{ admin.generateObjectUrl('delete', object) }}">{% trans from 'SonataAdminBundle' %}link_delete{% endtrans %}</a>
                         {% endif %}
                     {% else %}
-                        <input class="btn primary" type="submit" name="btn_create" value="{% trans from 'SonataAdminBundle' %}btn_create{% endtrans %}"/>
-                        <a class="btn" href="{{ admin.generateUrl('list') }}">{% trans from 'SonataAdminBundle' %}btn_cancel{% endtrans %}</a>
+                        <input class="btn large primary" type="submit" name="btn_create" value="{% trans from 'SonataAdminBundle' %}btn_create{% endtrans %}"/>
+                        <a class="btn large" href="{{ admin.generateUrl('list') }}">{% trans from 'SonataAdminBundle' %}btn_cancel{% endtrans %}</a>
                     {% endif %}
                 {% endif %}
             </div>

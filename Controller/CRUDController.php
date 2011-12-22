@@ -622,23 +622,23 @@ class CRUDController extends Controller
         if($this->get('request')->getMethod() == 'POST') {
             $form->bindRequest($this->get('request'));
 
-            
-            
-            
             if($form->isValid()) {
-                if(isset($this->admin->fieldsToCheckForDuplicates)) {
+                if(isset($this->admin->fieldGroupsToCheckForDuplicates)) {
                     $itemMayBeInDB = false;
                     $itemFound = false;
                     $repository = $this->getDoctrine()->getRepository($this->admin->getClass());
 
-                    foreach($this->admin->fieldsToCheckForDuplicates as $field) {
-                        if(!is_array($field)) $field = array($field);
+                    foreach($this->admin->fieldGroupsToCheckForDuplicates as $fieldGroup) {
+                        if(!is_array($fieldGroup)) $fieldGroup = array($fieldGroup);
 
                         $parameters = array();
                         
-                        foreach($field as $f) {
-                            $methodName = 'get'.ucfirst($f);
-                            $parameters[$f] = $object->$methodName();
+                        foreach($fieldGroup as $field) {
+                            $methodName = 'get'.ucfirst($field);
+                   
+                            if(!$object->$methodName()) continue 2; // if any field in a group is not set, skip the group
+                            
+                            $parameters[$field] = $object->$methodName();
                         }
                         $result = $repository->findBy($parameters);
 
