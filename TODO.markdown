@@ -45,11 +45,6 @@ Ideas
 
 	b.	summary
 	
-		- may be to slow if we are retrieving all objects every time
-		
-			- could move to separate page...
-
-
 		- summary units
 		
 			- default "items"
@@ -61,10 +56,17 @@ Ideas
 			- require noun for custom fields
 			
 		- use guesser
-
+		
 
 	c.	excel downloads
 	
 		- write cron to clear directory every day
 
 		- use guesser
+		
+		
+	d.	better implementation of boolean groups
+	
+		- big mess right now
+		
+		- doesn't work with summary
