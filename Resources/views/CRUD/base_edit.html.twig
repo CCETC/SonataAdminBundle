@@ -94,6 +94,7 @@ file that was distributed with this source code.
                 {% else %}
                     {% if admin.id(object) %}
                         <input type="submit" class="btn large primary" name="btn_save" value="{% trans from 'SonataAdminBundle' %}btn_save{% endtrans %}"/>
+                        <input type="submit" class="btn large" name="btn_save" value="{% trans from 'SonataAdminBundle' %}btn_save{% endtrans %}"/>
                         <a class="btn large" href="{{ admin.generateUrl('list') }}">{% trans from 'SonataAdminBundle' %}btn_cancel{% endtrans %}</a>
                         
                         {% if admin.hasroute('delete') and admin.isGranted('DELETE') %}
@@ -102,6 +103,7 @@ file that was distributed with this source code.
                         {% endif %}
                     {% else %}
                         <input class="btn large primary" type="submit" name="btn_create" value="{% trans from 'SonataAdminBundle' %}btn_create{% endtrans %}"/>
+                        <input class="btn large" type="submit" name="btn_create_and_create" value="{% trans from 'SonataAdminBundle' %}btn_create_and_create_a_new_one{% endtrans %}"/>
                         <a class="btn large" href="{{ admin.generateUrl('list') }}">{% trans from 'SonataAdminBundle' %}btn_cancel{% endtrans %}</a>
                     {% endif %}
                 {% endif %}

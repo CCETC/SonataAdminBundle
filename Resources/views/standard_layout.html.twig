@@ -139,17 +139,7 @@ file that was distributed with this source code.
         </div>
 
         <div class="container-fluid">
-            <div style="float: right">
-                {%block actions %}{% endblock %}
-            </div>
-
-            {% if _side_menu is not empty %}
-                <div class="sidebar">
-                    <div class="well sonata-ba-side-menu">{{ _side_menu|raw }}</div>
-                </div>
-            {% endif %}
-
-                {% block notice %}
+            {% block notice %}
 
                     {% for notice_level in ['success','error','info', 'warning'] %}
                         {% set session_var = 'sonata_flash_' ~ notice_level %}
@@ -160,6 +150,17 @@ file that was distributed with this source code.
                         {% endif %}
                     {% endfor %}
                 {% endblock %}
+            <div style="float: right">
+                {%block actions %}{% endblock %}
+            </div>
+
+            {% if _side_menu is not empty %}
+                <div class="sidebar">
+                    <div class="well sonata-ba-side-menu">{{ _side_menu|raw }}</div>
+                </div>
+            {% endif %}
+
+                
 
                 <div class="page-header">
                     <h3>
