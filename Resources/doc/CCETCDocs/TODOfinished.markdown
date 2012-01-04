@@ -13,7 +13,6 @@
  - improve filter layout
 	- use whole width
  - fix click event to hide/show filters
-
 2.	Report Summary
  - table
 	- build data
