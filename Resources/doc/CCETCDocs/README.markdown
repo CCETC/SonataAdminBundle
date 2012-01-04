@@ -1,9 +1,8 @@
-CCETC/SonataAdminBundle
-============
+# CCETC/SonataAdminBundle - README
 
 This bundle is a forked version of the SonataAdminBundle.
 It contains many customizations to the sonata-project bundle.
-This bundle is used in all CCETC web applications.
+This bundle is used in all CCETC Symfony web applications.
 
 ### Features
 * approve/unapprove actions
