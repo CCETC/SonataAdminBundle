@@ -1,4 +1,4 @@
 # CCETC/SonataAdminBundle - ISSUES
 
-- m2m relation not displayed on Show 
+1. m2m relation not displayed on Show 
 
