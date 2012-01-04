@@ -15,24 +15,24 @@
  - fix click event to hide/show filters
 
 2.	Report Summary
-- table
+ - table
 	- build data
 	- style better
 	- sort?
 	- fix resource table
-- customization
+ - customization
 	- drop down for gb, bb, s, sf
 	- more intuitive form
 	- current values
 	- default values
-- admin configuration
+ - admin configuration
 	- available fields for each
 	- labels
 	- field types
 		- date
 		- boolean
--	clean list interface
--	clean up code
+ -	clean list interface 
+ -	clean up code
 	- problems with code:
 		- hard to generate spreadsheet from method results
 			- make method that builds array
@@ -42,7 +42,7 @@
 		- general cleanup
 			- variable/method names
 			- more methods		
--	excel export
+ -	excel export
 	- get summary option values
 3.	excel exporting
  - move admin arrays to admin class, use methods
