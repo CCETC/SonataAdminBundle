@@ -20,9 +20,6 @@
 	- on default, delete actions are not shown, trash are instead
 	- add link to view the trash that uses a filter to filter results
 		- when filter is on, use delete actions ONLY	
-6.	Testing
-	- learn how to run original test to ensure customizations have not broken anything
-	- write tests for custom code
-7.	Minimize dependencies
+6.	Minimize dependencies
 	- should not depend upon FOSUser
 	- should not depend upon SonataDoctrineORMAdminBundle
