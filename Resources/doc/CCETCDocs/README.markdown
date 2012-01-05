@@ -100,19 +100,26 @@ You can include a table of field summary statistics on the list template by defi
 
     use Sonata\AdminBundle\Summary\SummaryMapper;
 
-    protected function configureSummaryFields(SummaryMapper $summaryMapper)
-    {
-        $summaryMapper
-            ->addXField('title')
-            ->addYField('category')
-            ->addYField('approved', array('type' => 'boolean'))
-            ->addSumField('stepCount', array('label' => 'Step Count'))
-        ;
+	class AnimalAdmin extends Admin
+	{
+		protected function configureSummaryFields(SummaryMapper $summaryMapper)
+		{
+			$summaryMapper
+				->addXField('species')
+				->addXField('animalType', array('other_field' => 'animalTypeOther'))            
+				->addYField('extinct', array('type' => 'boolean'))
+				->addYField('Genus', array('type' => 'relation', 'relation_field_name' => 'Genus_id', 'relation_repository' => 'MyAnimalBundle:Genus'))
+				->addSumField('numberOfLegs', array('label' => 'Number of Legs'))
+			;
+		}
     }
 
-### Options
-*type: boolean|date|(string)
+### X/Y Field Options
+*type: boolean|date|relation(default: string)
 *label: (default is uppercase fieldname)
+*relation_repository: if the field is a relation, the repository of the related entity
+*relation_field_name: if the field is a relation, the db field name of the relation field
+*other_field: an additional field to aggregate the values of with the values of the defined field
 
 ### Sum Fields
 By default, the total number of items for each group is summarized.  You can sum values of specific fields by adding "SumFields" using the addSumFields method.  This is entirely optional. 
@@ -122,15 +129,24 @@ You can include buttons on the List template to download a xls spreadsheet of al
         
     use Sonata\AdminBundle\Spreadsheet\SpreadsheetMapper;
 
-    protected function configureSpreadsheetFields(SpreadsheetMapper $spreadsheetMapper)
-    {
-        $spreadsheetMapper
-            ->add('title')
-            ->add('category')
-            ->add('approved', array('type' => 'boolean'))
-            ->add('stepCount', array('label' => 'Step Count'))
-        ;
-    }
+	class AnimalAdmin extends Admin
+	{
+		protected function configureSpreadsheetFields(SpreadsheetMapper $spreadsheetMapper)
+		{
+			$spreadsheetMapper
+				->add('species')
+	            ->add('Genus', array('type' => 'relation', 'relation_field_name' => 'Genus_id', 'relation_repository' => 'MyAnimalBundle:Genus'))
+				->add('extinct', array('type' => 'boolean'))
+				->add('numberOfLegs', array('label' => 'Number of Legs'))
+			;
+		}
+	}
+
+### Spreadsheet Field Options
+*type: boolean|date|relation(default: string)
+*label: (default is uppercase fieldname)
+*relation_repository: if the field is a relation, the repository of the related entity
+*relation_field_name: if the field is a relation, the db field name of the relation field
 
 
 # Configuration

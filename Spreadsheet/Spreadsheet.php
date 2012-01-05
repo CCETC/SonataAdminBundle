@@ -1,7 +1,13 @@
 <?php
+/**
+ * Pat Haggerty <haggertypat@gmail.com>
+ */
 
 namespace Sonata\AdminBundle\Spreadsheet;
 
+/**
+ * A Class for building and saving spreadsheets of SonataAdmin data using PHPExcel.
+ */
 class Spreadsheet
 {
 
@@ -14,6 +20,13 @@ class Spreadsheet
         $this->container = $container;
     }
 
+    /**
+     * Use PHP Excel to build and save a spreadsheet of data from a list of objects.
+     * Only save the fields specified by the spreadsheetFields array in the Admin class.
+     * 
+     * @param type $objects
+     * @return string 
+     */
     public function buildAndSaveListSpreadsheet($objects)
     {
         ini_set('memory_limit', '1024M');
@@ -62,6 +75,15 @@ class Spreadsheet
         return $filename;
     }
 
+    /**
+     * Get $element's value for $fieldName.
+     * Check the field's definition to determine how to turn it into a string.
+     * 
+     * @param type $element
+     * @param type $keys the attributes for $fieldName as defined in Admin->spreadsheetFields
+     * @param type $fieldName
+     * @return type 
+     */
     protected function getFieldValue($element, $keys, $fieldName)
     {
         ini_set('memory_limit', '1024M');
@@ -77,11 +99,11 @@ class Spreadsheet
                 return 'yes';
             else
                 return 'no';
-        } else if($keys['type'] == 'model') {
-            $repository = $this->container->get('doctrine')->getRepository($keys['repository']);
+        } else if($keys['type'] == 'relation') {
+            $repository = $this->container->get('doctrine')->getRepository($keys['relation_repository']);
             
-            if(isset($element[$keys['field_name']])) {
-                $object = $repository->findOneById($element[$keys['field_name']]);
+            if(isset($element[$keys['relation_field_name']])) {
+                $object = $repository->findOneById($element[$keys['relation_field_name']]);
                 return (string) $object;
             } else {
                 return '';
@@ -91,6 +113,12 @@ class Spreadsheet
         }
     }
 
+    /**
+     * Use PHP Excel to build and save a spreadsheet of data from summary data build by the Summary class.
+     *
+     * @param type $summary
+     * @return string 
+     */
     public function buildAndSaveSummarySpreadsheet($summary)
     {
         ini_set('memory_limit', '1024M');
@@ -134,7 +162,6 @@ class Spreadsheet
     /*
      * get the alpa representation of an integer, 2 => B, 27 => AA
      */
-
     protected static function num2alpha($n)
     {
         for($r = ""; $n >= 0; $n = intval($n / 26) - 1)

@@ -2,7 +2,7 @@
 
 ## 1.3
 	
-1. refactor and document Summary and Spreadsheet
+1. <del>refactor and document Summary and Spreadsheet
 2. learn how to run Sonata's tests to make sure our customizations don't break anything
 3. write tests for summary and spreadsheet
 

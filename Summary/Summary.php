@@ -1,7 +1,14 @@
 <?php
+/**
+ * Pat Haggerty <haggertypat@gmail.com>
+ */
 
 namespace Sonata\AdminBundle\Summary;
 
+/**
+ * A class for "summarizing" a set of objects by count or field value
+ * and organizing the summary data for display.  
+ */
 class Summary
 {
 
@@ -117,6 +124,7 @@ class Summary
             $xFieldsToCheck = array($this->xField);
             $yFieldsToCheck = array($this->yField);
 
+            // we will aggregate sums for two fields if requested
             if(isset($this->admin->summaryXFields[$this->xField]['other_field'])) {
                 $xFieldsToCheck[] = $this->admin->summaryXFields[$this->xField]['other_field'];
             }
@@ -124,20 +132,22 @@ class Summary
                 $yFieldsToCheck[] = $this->admin->summaryYFields[$this->yField]['other_field'];
             }
 
+            /*
+             * build a grid of data - once cell for each x,y combination,
+             * where x and y are unique values of xField and yField
+             */
             foreach($xFieldsToCheck as $xFieldToCheck) {
                 foreach($yFieldsToCheck as $yFieldToCheck) {
                     $yFieldValue = trim($this->getFieldValue($e, $this->admin->summaryYFields, $yFieldToCheck));
                     $xFieldValue = trim($this->getFieldValue($e, $this->admin->summaryXFields, $xFieldToCheck));
 
-                    if($this->sumBy == 'sum')
-                        $sumFieldKey = $this->getFieldValue($e, $this->admin->summarySumFields, $this->sumField);
-
-                    $this->initializeArrayKeys($yFieldValue, $xFieldValue);
-
+                    $this->initializeArrayKeys($yFieldValue, $xFieldValue);                    
+                    
                     if($this->sumBy == 'count') {
                         $value = 1;
                     } else if($this->sumBy == 'sum') {
-                        $value = $sumFieldKey;
+                        $sumFieldValue = $this->getFieldValue($e, $this->admin->summarySumFields, $this->sumField);
+                        $value = $sumFieldValue;
                     }
 
                     $this->summaries[$yFieldValue][$xFieldValue] = $this->summaries[$yFieldValue][$xFieldValue] + $value;
@@ -199,11 +209,11 @@ class Summary
                 return 'yes';
             else
                 return 'no';
-        } else if($fields[$fieldName]['type'] == 'model') {
-            $repository = $this->container->get('doctrine')->getRepository($fields[$fieldName]['repository']);
+        } else if($fields[$fieldName]['type'] == 'relation') {
+            $repository = $this->container->get('doctrine')->getRepository($fields[$fieldName]['relation_repository']);
 
-            if(isset($element[$fields[$fieldName]['field_name']])) {
-                $object = $repository->findOneById($element[$fields[$fieldName]['field_name']]);
+            if(isset($element[$fields[$fieldName]['relation_field_name']])) {
+                $object = $repository->findOneById($element[$fields[$fieldName]['relation_field_name']]);
                 return (string) $object;
             } else {
                 return '';
@@ -215,7 +225,10 @@ class Summary
     }
 
     /**
-     * Get an associative array that represents the table values for the summary table
+     * Build and return an associative array with summary data, and some labels
+     * 
+     * Note: it is useful to have this here because this table is displayed with
+     * different formatting in the twig template and the downloadable spreadsheet.
      */
     public function getTable()
     {

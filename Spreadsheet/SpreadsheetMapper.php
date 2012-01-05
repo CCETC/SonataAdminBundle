@@ -1,7 +1,15 @@
 <?php
+/**
+ * Pat Haggerty <haggertypat@gmail.com>
+ */
 
 namespace Sonata\AdminBundle\Spreadsheet;
 
+/**
+ * A class for building lists of fields of an Entity that the application programer
+ * wants to be included in list spreadsheets.
+ * 
+ */
 class SpreadsheetMapper {
    
    protected $admin;
@@ -28,9 +36,9 @@ class SpreadsheetMapper {
        if(isset($options['type'])) $field['type'] = $options['type'];
        else $field['type'] = 'string';
 
-       if(isset($options['repository'])) $field['repository'] = $options['repository'];
+       if(isset($options['relation_repository'])) $field['relation_repository'] = $options['relation_repository'];
 
-       if(isset($options['field_name'])) $field['field_name'] = $options['field_name'];
+       if(isset($options['relation_field_name'])) $field['relation_field_name'] = $options['relation_field_name'];
 
        return $field;       
    }
