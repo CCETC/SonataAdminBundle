@@ -61,7 +61,7 @@ file that was distributed with this source code.
         {% endblock %}
 
         <title>
-            {% block title %}{{ adminTitle }}
+            {% block title %}{{ admin_pool.title }}
                 {% if action is defined %}
                     -
                     {% for label, uri in admin.breadcrumbs(action) %}
@@ -81,10 +81,10 @@ file that was distributed with this source code.
             <div class="topbar">
                 <div class="topbar-inner">
                     <div class="container-fluid">
-                        <a href="{{ url('home') }}" class="brand">{{ adminTitle }}</a>
+                        <a href="{{ url('home') }}" class="brand">{{ admin_pool.title }}</a>
                         {% if admin_pool is defined %}
                             <ul class="nav">
-                                {% if expandedMenu is defined and expandedMenu %}
+                                {% if admin_pool.expandedMenu is defined and admin_pool.expandedMenu %}
                                     {% for group in admin_pool.dashboardgroups %}
                                         {% for admin in group.items %}
                                             {% if admin.isGranted('LIST') %}

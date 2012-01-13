@@ -9,6 +9,7 @@
             <argument type="service" id="service_container" />
             <argument />
             <argument />
+            <argument />
             <call method="setTemplates">
                 <argument>%sonata.admin.configuration.templates%</argument>
             </call>

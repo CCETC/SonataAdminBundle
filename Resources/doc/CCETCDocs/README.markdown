@@ -12,6 +12,8 @@ It contains many customizations to the sonata-project bundle.
 * custom field summary reports
 * excel exporting for lists and summary reports
 * TinyMCE integration
+* expanded menu option
+* improved acl handling on dashboard and menu
 
 ### Interface Changes
 * Fewer submit buttons on edit
@@ -23,19 +25,6 @@ It contains many customizations to the sonata-project bundle.
 Install as a git submodule:
 
         git submodule add git://github.com/CCETC/SonataAdminBundle.git vendor/bundles/Sonata/AdminBundle
-
-In config.yml, specific the application name and admin e-mail twice:
-
-        services
-            adminSettings:
-              class: Sonata\AdminBundle\Resources\config\Settings
-              arguments: [Get Your GreenBack - Tompkins!, haggertypat@gmail.com]
-        
-        twig:
-            globals:
-              adminTitle: "Get Your GreenBack - Tompkins!"
-              adminEmail: "haggertypat@gmail.com"
-        
 
 ### Dependencies
 CCETC/SonataAdminBundle requires the same dependencies as the sonata-admin/SonataAdminBundle (KnpMenu, JQuery).
@@ -127,4 +116,7 @@ You can include buttons on the List template to download a xls spreadsheet of al
 
 
 # Configuration
-TODO: document configuration
+We have added one additional configuration option that toggles between a dropdown menu and an expanded menu:
+
+	sonata_admin:
+    	expanded_menu: true

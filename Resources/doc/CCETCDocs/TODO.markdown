@@ -3,7 +3,7 @@
 ## 1.2 - cleanup
 1. <del>refactor and document Summary and Spreadsheet
 2. <del>integrate with SonataUser
-3. improve configuration and document it
+3. <del>improve configuration and document it
 4. minimize dependencies and set up requirements
 	- double check jQuery
 	- help route? home route?

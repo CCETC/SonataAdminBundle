@@ -28,15 +28,18 @@ class Pool
     protected $title;
 
     protected $titleLogo;
+    
+    protected $expandedMenu;
 
     /**
      * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container, $title, $logoTitle)
+    public function __construct(ContainerInterface $container, $title, $logoTitle, $expandedMenu)
     {
         $this->container  = $container;
         $this->title      = $title;
         $this->titleLogo  = $logoTitle;
+        $this->expandedMenu = $expandedMenu;
     }
 
     /**
@@ -228,5 +231,13 @@ class Pool
     public function getTitle()
     {
         return $this->title;
+    }
+    
+    /**
+     * @return boolean
+     */
+    public function getExpandedMenu()
+    {
+        return $this->expandedMenu;
     }
 }
