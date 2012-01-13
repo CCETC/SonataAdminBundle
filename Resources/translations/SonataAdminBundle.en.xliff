@@ -182,6 +182,10 @@
                 <source>breadcrumb.dashboard</source>
                 <target>Dashboard</target>
             </trans-unit>
+            <trans-unit id="breadcrumb_link_dashboard">
+                <source>breadcrumb.link_dashboard</source>
+                <target>Dashboard</target>
+            </trans-unit>
             <trans-unit id="title_delete">
                 <source>title_delete</source>
                 <target>Confirm deletion</target>
@@ -290,6 +294,10 @@
             <trans-unit id="_action">
               <source>_action</source>
               <target>Actions</target>
+            </trans-unit>
+            <trans-unit id="sonata_user">
+              <source>sonata_user</source>
+              <target>Users</target>
             </trans-unit>
 
 

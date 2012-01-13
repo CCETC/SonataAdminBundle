@@ -2,7 +2,6 @@
 
 This bundle is a forked version of the [SonataAdminBundle](https://github.com/sonata-project/SonataAdminBundle).
 It contains many customizations to the sonata-project bundle.
-This bundle is used in all CCETC Symfony web applications.
 
 ### Features
 * approve/unapprove actions
@@ -41,11 +40,11 @@ In config.yml, specific the application name and admin e-mail twice:
 ### Dependencies
 CCETC/SonataAdminBundle requires the same dependencies as the sonata-admin/SonataAdminBundle (KnpMenu, JQuery).
 
-CCETC specific dependencies are:
+This fork also requires CCETC forks of FOSUserBundle, SonataDoctrineORMAdminBundle, and SonataUserBundle.  It may work fine as is, or with small modifications, but all CCETC web applications use these bundles.
 
 - [CCETC/FOSUserBundle](https://github.com/CCETC/FOSUserBundle)
-- [CCETCErrorReportBundle] (https://github.com/CCETC/CCETCErrorReportBundle)
 - [CCETC/SonataDoctrineORMAdminBundle] (https://github.com/CCETC/SonataDoctrineORMAdminBundle)
+- [CCETC/SonataUserBundle](https://github.com/CCETC/SonataUserbundle)
 
 Other dependencies:
 
@@ -56,28 +55,6 @@ Other dependencies:
             'Twig_'            => __DIR__.'/../vendor/twig/lib',
             'PHPExcel'         => __DIR__.'/../vendor/PHPExcel',
         ));
-
-
-# Updating
-Pull updates from the CCETC/SonataAdminBundle:
-
-        git pull origin
-
-Add upstream remote and pull updates from Sonata/SonataAdminBundle
-
-        git remote add upstream git://github.com/sonata-project/SonataadminBundle.git
-        git pull upstream master
-
-
-# Development
-From any Symfony application with CCETC/SonataAdminBundle installed, you can make changes to the bundle and 
-push them to the GitHub repository.
-
-
-Before pushing, add upstream remotes to your checked-out submodule and pull upstream changes from the sonata-project:
-        
-        git remote add upstream git://githb.com/sonata-project/SonataAdminBundle.git
-        git pull upstream master
 
 # Pre/Post Template Hooks
 You can include templates before or after any form or show field, before or after the form contents in base_edit.html.twig, the show table in base_show.html.twig or the list table in base_list.html.twig.

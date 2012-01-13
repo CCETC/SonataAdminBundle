@@ -76,7 +76,8 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
 
     public function getEntityLabelPlural()
     {
-        return $this->entityLabelPlural;
+        if(!isset($this->entityLabelPlural)) return $this->classnameLabel.'s';
+        else return $this->entityLabelPlural;
     }
 
     public function getFormLabels()

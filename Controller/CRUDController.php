@@ -506,7 +506,7 @@ class CRUDController extends Controller
         }
 
         if(!$url) {
-            $url = $this->admin->generateObjectUrl('edit', $object);
+            $url = $this->admin->generateObjectUrl('show', $object);
         }
 
         return new RedirectResponse($url);
@@ -765,7 +765,7 @@ class CRUDController extends Controller
      */
     public function showAction($id = null)
     {
-        if(false === $this->admin->isGranted('SHOW')) {
+        if(false === $this->admin->isGranted('SHOW') && false === $this->admin->isGranted('VIEW')) {
             throw new AccessDeniedException();
         }
 

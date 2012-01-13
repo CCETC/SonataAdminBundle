@@ -87,9 +87,9 @@ file that was distributed with this source code.
             <div class="" style="position: fixed; right: 50px; bottom: 50px;">
                 {% if app.request.isxmlhttprequest %}
                     {% if admin.id(object) %}
-                        <input type="submit" class="btn large primary" name="btn_save" value="{% trans from 'SonataAdminBundle' %}btn_save{% endtrans %}"/>
+                        <input type="submit" class="btn primary" name="btn_save" value="{% trans from 'SonataAdminBundle' %}btn_save{% endtrans %}"/>
                     {% else %}
-                        <input type="submit" class="btn large" name="btn_create" value="{% trans from 'SonataAdminBundle' %}btn_create{% endtrans %}"/>
+                        <input type="submit" class="btn" name="btn_create" value="{% trans from 'SonataAdminBundle' %}btn_create{% endtrans %}"/>
                     {% endif %}
                 {% else %}
                     {% if admin.id(object) %}
