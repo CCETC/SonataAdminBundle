@@ -1,16 +1,5 @@
 # CCETC/SonataAdminBundle - TODO
 
-## 1.2 - cleanup
-1. <del>refactor and document Summary and Spreadsheet
-2. <del>integrate with SonataUser
-3. <del>improve configuration and document it
-4. minimize dependencies and set up requirements
-	- double check jQuery
-	- help route
-	- home route
-	- plural class labels
-	- document home/help routes and plural class labels
-
 ## 1.3
 1. learn how to run Sonata's tests to make sure our customizations don't break anything
 2. write tests for summary and spreadsheet

@@ -1,5 +1,16 @@
 # CCETC/SonataAdminBundle - TODOfinished
 
+## 1.2 - cleanup
+1. <del>refactor and document Summary and Spreadsheet
+2. <del>integrate with SonataUser
+3. <del>improve configuration and document it
+4. <del>check dependencies (jQuery, Boostrap, User Management) and and document them & set up requirements
+	- <del>double check jQuery
+	- <del>help route
+	- <del>home route
+	- <del>plural class labels
+	- <del>document home/help routes and plural class labels
+
 ## 1.1
 1.	New ideas and features lost from new admin layout
  - pre and post form and show hooks
