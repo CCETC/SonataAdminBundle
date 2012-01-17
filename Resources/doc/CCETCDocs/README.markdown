@@ -49,9 +49,10 @@ Other dependencies:
             'PHPExcel'         => __DIR__.'/../vendor/PHPExcel',
         ));
 
-### Setup
+### Home and Help Routes
 The twig base template uses ``home`` and ``adminHelp`` routes for the home and help links in the header.
 
+### Entity Labels
 The bundle makes use of singular and plural labels for each entity.  They are retrieved from ``Admin->getEntityLabel`` and ``Admin->getEntityLabelPlural``.  The labels should be set in each Admin class, but the defaults use the ``Admin->classnameLabel`` property.
 
 
