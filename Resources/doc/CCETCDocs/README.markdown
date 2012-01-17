@@ -29,11 +29,15 @@ Install as a git submodule:
 ### Dependencies
 CCETC/SonataAdminBundle requires the same dependencies as the sonata-admin/SonataAdminBundle (KnpMenu, JQuery).
 
-This fork also requires CCETC forks of FOSUserBundle, SonataDoctrineORMAdminBundle, and SonataUserBundle.  It may work fine as is, or with small modifications, but all CCETC web applications use these bundles.
+This fork also requires CCETC forks of FOSUserBundle, SonataDoctrineORMAdminBundle, and SonataUserBundle.
 
 - [CCETC/FOSUserBundle](https://github.com/CCETC/FOSUserBundle)
-- [CCETC/SonataDoctrineORMAdminBundle] (https://github.com/CCETC/SonataDoctrineORMAdminBundle)
+- [CCETC/SonataDoctrineORMAdminBundle](https://github.com/CCETC/SonataDoctrineORMAdminBundle)
 - [CCETC/SonataUserBundle](https://github.com/CCETC/SonataUserbundle)
+
+Additionally, the SonataAdminBundle requires [Twitter's Boostrap](http://twitter.github.com/bootstrap/).  The sonata-project fork includes Bootstrap, but since other CCETC bundles and projects require it, we have created a bundle as a container.  This fork of the admin bundle requires the CCETC/BoostrapBundle:
+
+- [CCETC/CCETCBoostrapBundle](https://github.com/CCETC/CCETCBootstrapBundle)
 
 Other dependencies:
 
@@ -44,6 +48,12 @@ Other dependencies:
             'Twig_'            => __DIR__.'/../vendor/twig/lib',
             'PHPExcel'         => __DIR__.'/../vendor/PHPExcel',
         ));
+
+### Setup
+The twig base template uses ``home`` and ``adminHelp`` routes for the home and help links in the header.
+
+The bundle makes use of singular and plural labels for each entity.  They are retrieved from ``Admin->getEntityLabel`` and ``Admin->getEntityLabelPlural``.  The labels should be set in each Admin class, but the defaults use the ``Admin->classnameLabel`` property.
+
 
 # Pre/Post Template Hooks
 You can include templates before or after any form or show field, before or after the form contents in base_edit.html.twig, the show table in base_show.html.twig or the list table in base_list.html.twig.
