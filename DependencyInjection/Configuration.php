@@ -43,7 +43,7 @@ class Configuration implements ConfigurationInterface
 
                 ->scalarNode('title')->defaultValue('Sonata Admin')->cannotBeEmpty()->end()
                 ->scalarNode('title_logo')->defaultValue('bundles/sonataadmin/logo_title.png')->cannotBeEmpty()->end()
-                ->scalarNode('expanded_menu')->defaultValue(false)->end()
+                ->booleanNode('expanded_menu')->defaultFalse()->end()
 
                 ->arrayNode('dashboard_groups')
                     ->useAttributeAsKey('id')
