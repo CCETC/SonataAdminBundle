@@ -16,6 +16,9 @@ file that was distributed with this source code.
             {% if admin.hasRoute('create') and admin.isGranted('CREATE')%}
                 <a class="btn" href="{{ admin.generateUrl('create') }}">{% trans from 'SonataAdminBundle' %}link_action_create{% endtrans %}</a>
             {% endif %}
+            {% for actionButton in admin.listActionButtons %}
+                <a class="btn" href="{{ admin.generateUrl(actionButton.route) }}">{{ actionButton.text }}</a>
+            {% endfor %}
     </div>
 {% endblock %}
 
@@ -187,8 +190,13 @@ file that was distributed with this source code.
             </div>
 
         {% endif %}
+
         {% if admin.listPostHook is defined and admin.listPostHook != "" %}
-            {% include admin.listPostHook %}
+            {% if admin.listPostHook.parameters is defined %}
+                {% include admin.listPostHook.template with admin.listPostHook.parameters %}
+            {% else %}
+                {% include admin.listPostHook.template %}
+            {% endif %}
         {% endif %}
             
             
@@ -203,8 +211,13 @@ file that was distributed with this source code.
 
 {% block list_filters %}
     {% if admin.listPreHook is defined and admin.listPreHook != "" %}
-        {% include admin.listPreHook %}
+        {% if admin.listPreHook.parameters is defined %}
+            {% include admin.listPreHook.template with admin.listPreHook.parameters %}
+        {% else %}
+            {% include admin.listPreHook.template %}
+        {% endif %}
     {% endif %}
+
     {% if admin.datagrid.filters %}
         <form class="sonata-filter-form {{ admin.isChild and 1 == admin.datagrid.filters|length ? 'hide' : '' }}" action="{{ admin.generateUrl('list') }}" method="GET">
             <fieldset class="filter_legend">

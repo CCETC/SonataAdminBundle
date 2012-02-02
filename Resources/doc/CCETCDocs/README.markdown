@@ -14,6 +14,8 @@ It contains many customizations to the sonata-project bundle.
 * TinyMCE integration
 * expanded menu option
 * improved acl handling on dashboard and menu
+* custom action buttons (buttons in top right corner) for list/edit/show templates
+* translations check the configured custom domain if nothing is found in the supplied domain
 
 ### Interface Changes
 * Fewer submit buttons on edit
@@ -68,9 +70,12 @@ The Admin class has four arrays, $formFieldPreHooks/$formFieldPostHooks and $sho
         
 ### Page Hooks
 The edit, list, and show templates all include pre/post template hooks before and after the main content of the page.
-The three variables used ar $formPreHook, $showPreHook, and $listPreHook.
+The three variables used are $formPreHook, $showPreHook, and $listPreHook.  You can pass an optional ``parameters`` array and the contents will be sent to the template.
 
-        public $formPreHook = 'MyBundle:myEntity:_myTemplate.html.twig';
+        public $formPreHook = array(
+            'template' => 'MyBundle:myEntity:_myTemplate.html.twig';
+            'parameters' => array('myVariable' => $myVariable)
+        );
 
 # Summary Reports
 You can include a table of field summary statistics on the list template by defining a few fields to summarize by:
@@ -125,6 +130,17 @@ You can include buttons on the List template to download a xls spreadsheet of al
 *relation_repository: if the field is a relation, the repository of the related entity
 *relation_field_name: if the field is a relation, the db field name of the relation field
 
+# Custom Action Buttons
+For the List, Edit, and Show templates, on a entity by entity basis, you can add additional buttons to be included in the top right corner of the page:
+
+	public $listActionButtons = array(
+        array(
+            'route' => 'createMultiple',
+            'text' => 'Assign to multiple Counties'
+        )
+    );
+
+The same can be done for ``$showActionButtons`` and ``$editActionButtons``.
 
 # Configuration
 We have added one additional configuration option that toggles between a dropdown menu and an expanded menu:

@@ -24,6 +24,9 @@ file that was distributed with this source code.
             {% if admin.hasRoute('list') and admin.isGranted('LIST')%}
                 <a class="btn" href="{{ admin.generateUrl('list') }}">{% trans from 'SonataAdminBundle' %}link_action_list{% endtrans %}</a>
             {% endif %}
+            {% for actionButton in admin.showActionButtons %}
+                <a class="btn" href="{{ admin.generateUrl(actionButton.route) }}">{{ actionButton.text }}</a>
+            {% endfor %}                
         </ul>
     </div>
 {% endblock %}
@@ -63,7 +66,11 @@ file that was distributed with this source code.
     </div>
 
     {% if admin.showPostHook is defined and admin.showPostHook != "" %}
-        {% include admin.showPostHook %}
+        {% if admin.showPostHook.parameters is defined %}
+            {% include admin.showPostHook.template with admin.showPostHook.parameters %}
+        {% else %}
+            {% include admin.showPostHook.template %}
+        {% endif %}
     {% endif %}
 
 {% endblock %}

@@ -863,7 +863,7 @@ class CRUDController extends Controller
     {
         $parameters = array();
         $parameters['object'] = $object;
-        
+
         if(is_array($hookTemplate)) {
             $template = $hookTemplate['template'];
             $parameters = $hookTemplate['parameters'];

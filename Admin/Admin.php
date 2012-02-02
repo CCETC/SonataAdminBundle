@@ -114,6 +114,10 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     
     public $spreadsheetFields;
     
+    public $listActionButtons;
+    public $editActionButtons;
+    public $showActionButtons;
+    
     /**
      * The class name managed by the admin class
      *
@@ -1894,14 +1898,17 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
      */
     public function trans($id, array $parameters = array(), $domain = null, $locale = null)
     {
-        $domain = $domain ? : $this->translationDomain;
-
         if(!$this->translator)
         {
             return $id;
         }
 
-        return $this->translator->trans($id, $parameters, $domain, $locale);
+        // check the translationDomain if none is specified, or there is not translation in the specified domain
+        if(!$domain || $id == $this->translator->trans($id, $parameters, $domain, $locale)) {
+            return $this->translator->trans($id, $parameters, $this->translationDomain, $locale);
+        } else {
+            return $this->translator->trans($id, $parameters, $domain, $locale);
+        }
     }
 
     /**

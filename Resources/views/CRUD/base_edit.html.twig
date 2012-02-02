@@ -14,7 +14,7 @@ file that was distributed with this source code.
 {% block actions %}
     <div class="sonata-actions">
         
-            {% if admin.hasroute('show') and admin.id(object) and admin.isGranted('VIEW') and admin.show|length > 0 %}
+            {% if admin.hasroute('show') and admin.id(object) and admin.isGranted('SHOW') and admin.show|length > 0 %}
                <a class="btn" href="{{ admin.generateObjectUrl('show', object) }}">{% trans from 'SonataAdminBundle' %}link_action_show{% endtrans %}</a>
             {% endif %}
             {% if admin.hasroute('create') and admin.isGranted('CREATE')%}
@@ -23,7 +23,10 @@ file that was distributed with this source code.
             {% if admin.hasroute('list') and admin.isGranted('LIST')%}
                 <a class="btn" href="{{ admin.generateUrl('list') }}">{% trans from 'SonataAdminBundle' %}link_action_list{% endtrans %}</a>
             {% endif %}
-
+            
+            {% for actionButton in admin.editActionButtons %}
+                <a class="btn" href="{{ admin.generateUrl(actionButton.route) }}">{{ actionButton.text }}</a>
+            {% endfor %}
     </div>
 {% endblock %}
 
@@ -31,8 +34,13 @@ file that was distributed with this source code.
 
 {% block form %}
     {% if admin.formPreHook is defined and admin.formPreHook != "" %}
-        {% include admin.formPreHook %}
+        {% if admin.formPreHook.parameters is defined %}
+            {% include admin.formPreHook.template with admin.formPreHook.parameters %}
+        {% else %}
+            {% include admin.formPreHook.template %}
+        {% endif %}
     {% endif %}
+
     
     {% if admin.id(object) %}
         {% set url = 'edit' %}
@@ -81,8 +89,13 @@ file that was distributed with this source code.
             {{ form_rest(form) }}
 
             {% if admin.formPostHook is defined and admin.formPostHook != "" %}
-                {% include admin.formPostHook %}
+                {% if admin.formPostHook.parameters is defined %}
+                    {% include admin.formPostHook.template with admin.formPostHook.parameters %}
+                {% else %}
+                    {% include admin.formPostHook.template %}
+                {% endif %}
             {% endif %}
+                        
             
             <div class="" style="position: fixed; right: 50px; bottom: 50px;">
                 {% if app.request.isxmlhttprequest %}
