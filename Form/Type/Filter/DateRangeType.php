@@ -20,7 +20,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class DateRangeType extends AbstractType
 {
-    const TYPE_RANGE = 1;
+    const TYPE_BETWEEN = 1;
+    const TYPE_NOT_BETWEEN = 2;
 
     protected $translator;
 
@@ -45,22 +46,21 @@ class DateRangeType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $choices = array(
-            self::TYPE_RANGE            => $this->translator->trans('label_date_type_range', array(), 'SonataAdminBundle'),
+            self::TYPE_BETWEEN    => $this->translator->trans('label_date_type_between', array(), 'SonataAdminBundle'),
+            self::TYPE_NOT_BETWEEN    => $this->translator->trans('label_date_type_not_between', array(), 'SonataAdminBundle'),
         );
-
+        
         $builder
             ->add('type', 'choice', array('choices' => $choices, 'required' => false))
-            ->add('value', 'sonata_type_date_range', array('required' => false))
+            ->add('value', 'sonata_type_date_range', array('field_options' => $options['field_options']))
         ;
     }
 
     public function getDefaultOptions(array $options)
     {
         $defaultOptions = array(
-            'operator_type'    => 'hidden',
-            'operator_options' => array(),
-            'field_type'       => 'text',
-            'field_options'    => array()
+            'field_type'       => 'sonata_type_date_range',
+            'field_options'    => array('format' => 'yyyy-MM-dd')
         );
 
         $options = array_replace($options, $defaultOptions);

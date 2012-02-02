@@ -76,7 +76,7 @@
             </trans-unit>
             <trans-unit id="title_edit">
                 <source>title_edit</source>
-                <target>Uređivanje</target>
+                <target>Uređivanje "%name%"</target>
             </trans-unit>
             <trans-unit id="title_list">
                 <source>title_list</source>
@@ -89,6 +89,14 @@
             <trans-unit id="link_previous_pager">
                 <source>link_previous_pager</source>
                 <target>Prethodna</target>
+            </trans-unit>
+            <trans-unit id="link_first_pager">
+                <source>link_first_pager</source>
+                <target>link_first_pager</target>
+            </trans-unit>
+            <trans-unit id="link_last_pager">
+                <source>link_last_pager</source>
+                <target>link_last_pager</target>
             </trans-unit>
             <trans-unit id="Admin">
                 <source>Admin</source>

@@ -31,16 +31,6 @@
             <argument />
         </service>
 
-        <!-- Some security services -->
-        <service id="sonata.admin.security.handler.noop" class="Sonata\AdminBundle\Security\Handler\NoopSecurityHandler" />
-
-        <service id="sonata.admin.security.handler.acl" class="Sonata\AdminBundle\Security\Handler\AclSecurityHandler">
-            <argument type="service" id="security.context" on-invalid="null" />
-            <argument type="collection">
-                <argument>ROLE_SUPER_ADMIN</argument>
-            </argument>
-        </service>
-
         <!-- Services used to format the label, default is sonata.admin.label.strategy.noop -->
         <service id="sonata.admin.label.strategy.bc" class="Sonata\AdminBundle\Translator\BCLabelTranslatorStrategy" />
         <service id="sonata.admin.label.strategy.native" class="Sonata\AdminBundle\Translator\NativeLabelTranslatorStrategy" />
@@ -53,6 +43,19 @@
             <tag name="jms_translation.extractor" alias="sonata_admin"/>
             <argument type="service" id="logger" />
             <argument type="service" id="sonata.admin.pool" />
+        </service>
+
+        <!-- controller as services -->
+        <service id="sonata.admin.controller.admin" class="Sonata\AdminBundle\Controller\HelperController" scope="request">
+            <argument type="service" id="twig" />
+            <argument type="service" id="request" />
+            <argument type="service" id="sonata.admin.pool" />
+            <argument type="service" id="sonata.admin.helper" />
+        </service>
+
+        <!-- audit manager -->
+        <service id="sonata.admin.audit.manager" class="Sonata\AdminBundle\Model\AuditManager">
+            <argument type="service" id="service_container" />
         </service>
     </services>
 </container>

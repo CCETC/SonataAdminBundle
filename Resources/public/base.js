@@ -1,6 +1,10 @@
 jQuery(document).ready(function() {
+    jQuery('html').removeClass('no-js');
     Admin.add_pretty_errors(document);
     Admin.add_collapsed_toggle();
+    Admin.add_filters(document);
+    Admin.set_object_field_value(document);
+    Admin.setup_collection_buttons(document);
 });
 
 var Admin = {
@@ -115,27 +119,49 @@ var Admin = {
 
     /**
      * Change object field value
-     * @param MouseEvent
+     * @param subject
      */
-    set_object_field_value: function(event) {
-        var targetElement = Admin.stopEvent(event);
-        var a = jQuery(targetElement).closest('a');
+    set_object_field_value: function(subject) {
 
-        jQuery.ajax({
-            url: a.attr('href'),
-            type: 'POST',
-            success: function(json) {
-                if(json.status === "OK") {
-                    var elm = jQuery(a).parent();
-                    elm.children().remove();
-                    // fix issue with html comment ...
-                    elm.html(jQuery(json.content.replace(/<!--[\s\S]*?-->/g, "")).html());
-                    elm.effect("highlight", {'color' : '#57A957'}, 2000);
-                } else {
-                    jQuery(a).parent().effect("highlight", {'color' : '#C43C35'}, 2000);
+        this.log(jQuery('a.sonata-ba-edit-inline', subject));
+        jQuery('a.sonata-ba-edit-inline', subject).click(function(event) {
+            Admin.stopEvent(event);
+
+            var subject = jQuery(this);
+            jQuery.ajax({
+                url: subject.attr('href'),
+                type: 'POST',
+                success: function(json) {
+                    if(json.status === "OK") {
+                        var elm = jQuery(subject).parent();
+                        elm.children().remove();
+                        // fix issue with html comment ...
+                        elm.html(jQuery(json.content.replace(/<!--[\s\S]*?-->/g, "")).html());
+                        elm.effect("highlight", {'color' : '#57A957'}, 2000);
+                        Admin.set_object_field_value(elm);
+                    } else {
+                        jQuery(a).parent().effect("highlight", {'color' : '#C43C35'}, 2000);
+                    }
                 }
-            }
+            });
+        });
+    },
+
+    setup_collection_buttons: function(subject) {
+
+        jQuery(subject).on('click', '.sonata-collection-add', function(event) {
+            Admin.stopEvent(event);
+
+            var container = jQuery(this).closest('[data-prototype]');
+            var proto = container.attr('data-prototype');
+            proto = proto.replace(/\$\$name\$\$/g, '');
+            jQuery(proto).insertBefore(jQuery(this).parent());
+        });
+
+        jQuery(subject).on('click', '.sonata-collection-delete', function(event) {
+            Admin.stopEvent(event);
+
+            jQuery(this).closest('.sonata-collection-row').remove();
         });
     }
-
 }

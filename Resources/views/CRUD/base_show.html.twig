@@ -13,10 +13,14 @@ file that was distributed with this source code.
 
 {% block actions %}
     <div class="sonata-actions">
-            {% if admin.hasRoute('edit') and admin.isGranted('EDIT')%}
+
+        <ul>
+            {% if admin.hasRoute('edit') and admin.isGranted('EDIT', object)%}
                 <a class="btn" href="{{ admin.generateObjectUrl('edit', object) }}">{% trans from 'SonataAdminBundle' %}link_action_edit{% endtrans %}</a>
             {% endif %}
-
+            {% if admin.hasroute('history') and admin.id(object) and admin.isGranted('EDIT', object) %}
+                <a class="btn" href="{{ admin.generateObjectUrl('history', object) }}">{% trans from 'SonataAdminBundle' %}link_action_history{% endtrans %}</a>
+            {% endif %}
             {% if admin.hasRoute('create') and admin.isGranted('CREATE')%}
                 <a class="btn" href="{{ admin.generateUrl('create') }}">{% trans from 'SonataAdminBundle' %}link_action_create{% endtrans %}</a>
             {% endif %}
@@ -47,8 +51,9 @@ file that was distributed with this source code.
             {% if name and admin.showgroups|length > 1 %}
                 <h2>{{ admin.trans(name) }}</h2>
             {% endif %}
+                
+            <table class="bordered-table">
 
-            <table>
                 {% for field_name in view_group.fields %}
                     {{ admin.showfielddescriptions[field_name].options['preHook']|raw }}
                     

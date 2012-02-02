@@ -288,10 +288,6 @@ class CRUDController extends Controller
      */
     public function deleteAction($id)
     {
-        if(false === $this->admin->isGranted('DELETE')) {
-            throw new AccessDeniedException();
-        }
-
         $id = $this->get('request')->get($this->admin->getIdParameter());
         $object = $this->admin->getObject($id);
 
@@ -299,7 +295,11 @@ class CRUDController extends Controller
             throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
         }
 
-        if($this->getRequest()->getMethod() == 'DELETE') {
+        if (false === $this->admin->isGranted('DELETE', $object)) {
+            throw new AccessDeniedException();
+        }
+
+        if ($this->getRequest()->getMethod() == 'DELETE') {
             try {
                 $this->admin->delete($object);
                 $this->get('session')->setFlash('sonata_flash_success', 'flash_delete_success');
@@ -423,16 +423,16 @@ class CRUDController extends Controller
      */
     public function editAction($id = null)
     {
-        if(false === $this->admin->isGranted('EDIT')) {
-            throw new AccessDeniedException();
-        }
-
         $id = $this->get('request')->get($this->admin->getIdParameter());
 
         $object = $this->admin->getObject($id);
 
         if(!$object) {
             throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+        }
+
+        if (false === $this->admin->isGranted('EDIT', $object)) {
+            throw new AccessDeniedException();
         }
 
         $this->admin->setSubject($object);
@@ -688,10 +688,10 @@ class CRUDController extends Controller
         $this->get('twig')->getExtension('form')->setTheme($view, $this->admin->getFormTheme());
 
         return $this->render($this->admin->getEditTemplate(), array(
-                    'action' => 'create',
-                    'form' => $view,
-                    'object' => $object,
-                ));
+            'action' => 'create',
+            'form'   => $view,
+            'object' => $object,
+        ));
     }
     
     /**
@@ -765,7 +765,34 @@ class CRUDController extends Controller
      */
     public function showAction($id = null)
     {
-        if(false === $this->admin->isGranted('SHOW') && false === $this->admin->isGranted('VIEW')) {
+        $id = $this->get('request')->get($this->admin->getIdParameter());
+
+        $object = $this->admin->getObject($id);
+
+        if (!$object) {
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+        }
+
+        if (false === $this->admin->isGranted('VIEW', $object)) {
+            throw new AccessDeniedException();
+        }
+
+        $this->admin->setSubject($object);
+
+        return $this->render($this->admin->getShowTemplate(), array(
+            'action'   => 'show',
+            'object'   => $object,
+            'elements' => $this->admin->getShow(),
+        ));
+    }
+
+    /**
+     * @param null $id
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException|\Symfony\Component\Security\Core\Exception\AccessDeniedException
+     */
+    public function historyAction($id = null)
+    {
+        if (false === $this->admin->isGranted('EDIT')) {
             throw new AccessDeniedException();
         }
 
@@ -777,20 +804,67 @@ class CRUDController extends Controller
             throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
         }
 
-        $this->admin->setSubject($object);
+        $manager = $this->get('sonata.admin.audit.manager');
 
-        // build the show list
-        $elements = $this->admin->getShow();
+        if (!$manager->hasReader($this->admin->getClass())) {
+            throw new NotFoundHttpException(sprintf('unable to find the audit reader for class : %s', $this->admin->getClass()));
+        }
+
+        $reader = $manager->getReader($this->admin->getClass());
+
+        $revisions = $reader->findRevisions($this->admin->getClass(), $id);
+
+        return $this->render($this->admin->getTemplate('history'), array(
+            'action'   => 'history',
+            'object'   => $object,
+            'revisions' => $revisions,
+        ));
+    }
+
+    /**
+     * @param null $id
+     * @param $revision
+     */
+    public function historyViewRevisionAction($id = null, $revision = null)
+    {
+        if (false === $this->admin->isGranted('EDIT')) {
+            throw new AccessDeniedException();
+        }
+
+        $id = $this->get('request')->get($this->admin->getIdParameter());
+
+        $object = $this->admin->getObject($id);
+
+        if (!$object) {
+            throw new NotFoundHttpException(sprintf('unable to find the object with id : %s', $id));
+        }
+
+        $manager = $this->get('sonata.admin.audit.manager');
+
+        if (!$manager->hasReader($this->admin->getClass())) {
+            throw new NotFoundHttpException(sprintf('unable to find the audit reader for class : %s', $this->admin->getClass()));
+        }
+
+        $reader = $manager->getReader($this->admin->getClass());
+
+        // retrieve the revisioned object
+        $object = $reader->find($this->admin->getClass(), $id, $revision);
+
+        if (!$object) {
+            throw new NotFoundHttpException(sprintf('unable to find the targeted object `%s` from the revision `%s` with classname : `%s`', $id, $revision, $this->admin->getClass()));
+        }
+
+        $this->admin->setSubject($object);
 
         $this->processShowFieldHooks($object);
 
         $this->processShowFieldClasses();
        
         return $this->render($this->admin->getShowTemplate(), array(
-                    'action' => 'show',
-                    'object' => $object,
-                    'elements' => $elements,
-                ));
+            'action' => 'show',
+            'object' => $object,
+            'elements' => $elements,
+        ));
     }
 
     public function processFormFieldHooks($object)

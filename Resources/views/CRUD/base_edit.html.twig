@@ -13,9 +13,11 @@ file that was distributed with this source code.
 
 {% block actions %}
     <div class="sonata-actions">
-        
-            {% if admin.hasroute('show') and admin.id(object) and admin.isGranted('SHOW') and admin.show|length > 0 %}
+            {% if admin.hasroute('show') and admin.id(object) and admin.isGranted('VIEW') and admin.show|length > 0 %}
                <a class="btn" href="{{ admin.generateObjectUrl('show', object) }}">{% trans from 'SonataAdminBundle' %}link_action_show{% endtrans %}</a>
+            {% endif %}
+            {% if admin.hasroute('history') and admin.id(object) and admin.isGranted('EDIT', object) %}
+                <a class="btn" href="{{ admin.generateObjectUrl('history', object) }}">{% trans from 'SonataAdminBundle' %}link_action_history{% endtrans %}</a>
             {% endif %}
             {% if admin.hasroute('create') and admin.isGranted('CREATE')%}
                 <a class="btn" href="{{ admin.generateUrl('create') }}">{% trans from 'SonataAdminBundle' %}link_action_create{% endtrans %}</a>
@@ -109,7 +111,7 @@ file that was distributed with this source code.
                         <input type="submit" class="btn primary" name="btn_save" value="{% trans from 'SonataAdminBundle' %}btn_save{% endtrans %}"/>
                         <a class="btn" href="{{ admin.generateUrl('list') }}">{% trans from 'SonataAdminBundle' %}btn_cancel{% endtrans %}</a>
                         
-                        {% if admin.hasroute('delete') and admin.isGranted('DELETE') %}
+                        {% if admin.hasroute('delete') and admin.isGranted('DELETE', object) %}
                             {% trans from 'SonataAdminBundle' %}delete_or{% endtrans %}
                             <a class="btn danger" href="{{ admin.generateObjectUrl('delete', object) }}">{% trans from 'SonataAdminBundle' %}link_delete{% endtrans %}</a>
                         {% endif %}

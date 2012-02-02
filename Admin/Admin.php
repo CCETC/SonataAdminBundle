@@ -46,7 +46,6 @@ use Knp\Menu\MenuItem;
 
 abstract class Admin implements AdminInterface, DomainObjectInterface
 {
-
     /**
      * Values in this array are displayed preceding the form element that matches the key
      * @var associative array
@@ -118,6 +117,8 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     public $editActionButtons;
     public $showActionButtons;
     
+    const CONTEXT_MENU       = 'menu';
+    const CONTEXT_DASHBOARD  = 'dashboard';
     /**
      * The class name managed by the admin class
      *
@@ -139,7 +140,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     protected $listFieldDescriptions = array();
     private $show;
     /**
-     * The show FieldDescription constructed from the configureShowField method
+     * The show FieldDescription constructed from the configureShowFields method
      *
      * @var array
      */
@@ -303,6 +304,13 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
      */
     protected $modelManager;
     /**
+     * The manager type to use for the admin
+     *
+     * @var string
+     */
+    private $managerType;
+
+    /**
      * The current request object
      *
      * @var \Symfony\Component\HttpFoundation\Request
@@ -362,6 +370,10 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
      */
     protected $breadcrumbs = array();
     protected $securityHandler = null;
+
+    /**
+     * @var \Symfony\Component\Validator\ValidatorInterface $validator
+     */
     protected $validator = null;
     /**
      * The configuration pool
@@ -392,6 +404,13 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     protected $extensions = array();
 
     protected $labelTranslatorStrategy;
+
+    /**
+     * Roles and permissions per role
+     *
+     * @var array [role] => array([permission], [permission])
+     */
+    protected $securityInformation = array();
 
     /**
      * This method can be overwritten to tweak the form construction, by default the form
@@ -435,10 +454,20 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     }
 
     /**
+     * @deprecated Use configureShowFields instead.
+     * @param \Sonata\AdminBundle\Show\ShowMapper $show
+     * @return void
+     */
+    protected function configureShowField(ShowMapper $show)
+    {
+
+    }
+
+    /**
      * @param \Sonata\AdminBundle\Show\ShowMapper $filter
      * @return void
      */
-    protected function configureShowField(ShowMapper $filter)
+    protected function configureShowFields(ShowMapper $filter)
     {
         
     }
@@ -473,20 +502,6 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     public function validate(ErrorElement $errorElement, $object)
     {
         
-    }
-
-    /**
-     * @param \Sonata\AdminBundle\Validator\ErrorElement $errorElement
-     * @param $object
-     * @return void
-     */
-    public function doValidate(ErrorElement $errorElement, $object)
-    {
-        $this->validate($errorElement, $object);
-
-        foreach ($this->extensions as $extension) {
-            $extension->validate($this, $errorElement, $object);
-        }
     }
 
     /**
@@ -537,11 +552,13 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
         $this->prePersist($object);
         $this->getModelManager()->create($object);
         $this->postPersist($object);
+        $this->createObjectSecurity($object);
     }
 
     public function delete($object)
     {
         $this->preRemove($object);
+        $this->getSecurityHandler()->deleteObjectSecurity($this, $object);
         $this->getModelManager()->delete($object);
         $this->postRemove($object);
     }
@@ -591,7 +608,8 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
         $collection = new FieldDescriptionCollection();
         $mapper = new ShowMapper($this->showBuilder, $collection, $this);
 
-        $this->configureShowField($mapper);
+        $this->configureShowField($mapper); // deprecated, use configureShowFields instead
+        $this->configureShowFields($mapper);
 
         $this->show = $collection;
     }
@@ -633,7 +651,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
 
         $this->configureListFields($mapper);
 
-        foreach($this->extensions as $extension) {
+        foreach($this->getExtensions() as $extension) {
             $extension->configureListFields($mapper);
         }
     }
@@ -699,7 +717,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
             ));
         }
 
-        foreach($this->extensions as $extension) {
+        foreach($this->getExtensions() as $extension) {
             $extension->configureDatagridFilters($mapper);
         }
     }
@@ -841,7 +859,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     {
         $actions = array();
 
-        if ($this->isGranted('DELETE')) {
+        if ($this->hasRoute('delete') && $this->isGranted('DELETE')) {
             $actions['delete'] = array(
                 'label' => $this->trans('batch_delete', array(), 'SonataAdminBundle'),
                 'ask_confirmation' => true, // by default always true
@@ -909,7 +927,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
 
         $this->configureRoutes($this->routes);
 
-        foreach($this->extensions as $extension) {
+        foreach($this->getExtensions() as $extension) {
             $extension->configureRoutes($this, $this->routes);
         }
     }
@@ -1071,6 +1089,16 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     }
 
     /**
+     * @param $name
+     * @param $template
+     * @return void
+     */
+    public function setTemplate($name, $template)
+    {
+        $this->templates[$name] = $template;
+    }
+
+    /**
      * @return array
      */
     public function getTemplates()
@@ -1106,11 +1134,27 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
      */
     public function getFormBuilder()
     {
+        $admin = $this;
+
         // add the custom inline validation option
         $metadata = $this->validator->getMetadataFactory()->getClassMetadata($this->getClass());
         $metadata->addConstraint(new \Sonata\AdminBundle\Validator\Constraints\InlineConstraint(array(
             'service' => $this,
-            'method'  => 'doValidate'
+            'method'  => function(ErrorElement $errorElement, $object) use ($admin) {
+                /* @var \Sonata\AdminBundle\Admin\AdminInterface $admin */
+
+                // This avoid the main validation to be cascaded to children
+                // The problem occurs when a model Page has a collection of Page as property
+                if ($admin->hasSubject() && spl_object_hash($object) !== spl_object_hash($admin->getSubject())) {
+                    return;
+                }
+
+                $admin->validate($errorElement, $object);
+
+                foreach ($admin->getExtensions() as $extension) {
+                    $extension->validate($admin, $errorElement, $object);
+                }
+            }
         )));
 
         $this->formOptions['data_class'] = $this->getClass();
@@ -1134,7 +1178,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
 
         $this->configureFormFields($mapper);
 
-        foreach($this->extensions as $extension) {
+        foreach($this->getExtensions() as $extension) {
             $extension->configureFormFields($mapper);
         }
     }
@@ -1232,7 +1276,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
 
         $this->configureSideMenu($menu, $action, $childAdmin);
 
-        foreach ($this->extensions as $extension) {
+        foreach ($this->getExtensions() as $extension) {
             $extension->configureSideMenu($this, $menu, $action, $childAdmin);
         }
 
@@ -1468,6 +1512,8 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
      */
     public function getShowFieldDescriptions()
     {
+        $this->buildShow();
+
         return $this->showFieldDescriptions;
     }
 
@@ -1479,6 +1525,8 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
      */
     public function getShowFieldDescription($name)
     {
+        $this->buildShow();
+
         return $this->hasShowFieldDescription($name) ? $this->showFieldDescriptions[$name] : null;
     }
 
@@ -1831,9 +1879,14 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
                 );
             }
 
-            $breadcrumbs = $menu->getBreadcrumbsArray(
-                $this->trans(sprintf('action_%s', $action), array(), 'SonataAdminBundle')
-            );
+            if ($action != 'create' && $this->hasSubject()) {
+                $breadcrumbs = $menu->getBreadcrumbsArray( (string) $this->getSubject());
+            } else {
+                $breadcrumbs = $menu->getBreadcrumbsArray(
+                    $this->trans($this->getLabelTranslatorStrategy()->getLabel(sprintf('%s_%s', $this->getClassnameLabel(), $action), 'breadcrumb', 'link'))
+                );
+            }
+
         } else if ($action != 'list') {
             $breadcrumbs = $child->getBreadcrumbsArray(
                 $this->trans(sprintf('action_%s', $action), array(), 'SonataAdminBundle')
@@ -2124,6 +2177,22 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     }
 
     /**
+     * @return string the manager type of the admin
+     */
+    public function getManagerType()
+    {
+        return $this->managerType;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setManagerType($type)
+    {
+        $this->managerType = $type;
+    }
+
+    /**
      * Returns a unique identifier for this domain object.
      *
      * @return string
@@ -2134,21 +2203,68 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     }
 
     /**
-     * Return the list of security name available for the current admin
+     * Set the roles and permissions per role
+     *
+     * @param array $information
+     */
+    public function setSecurityInformation(array $information)
+    {
+        $this->securityInformation = $information;
+    }
+
+    /**
+     * Return the roles and permissions per role
+     * - different permissions per role for the acl handler
+     * - one permission that has the same name as the role for the role handler
      * This should be used by experimented users
      *
-     * @return array
+     * @return array [role] => array([permission], [permission])
      */
     public function getSecurityInformation()
     {
-        return array(
-            'EDIT' => array('EDIT'),
-            'LIST' => array('LIST'),
-            'CREATE' => array('CREATE'),
-            'VIEW' => array('VIEW'),
-            'DELETE' => array('DELETE'),
-            'OPERATOR' => array('OPERATOR')
-        );
+        return $this->securityInformation;
+    }
+
+    /**
+     * Return the list of permissions the user should have in order to display the admin
+     *
+     * @param string $context
+     * @return array
+     */
+    public function getPermissionsShow($context)
+    {
+        switch ($context) {
+            case self::CONTEXT_DASHBOARD:
+            case self::CONTEXT_MENU:
+            default:
+                return array('LIST');
+        }
+    }
+
+    /**
+     * Return if this admin is displayed depending on the context
+     *
+     * @param string $context
+     * @return boolean
+     */
+    public function showIn($context)
+    {
+        switch ($context) {
+            case self::CONTEXT_DASHBOARD:
+            case self::CONTEXT_MENU:
+            default:
+                return $this->isGranted($this->getPermissionsShow($context));
+        }
+    }
+
+    /**
+     * Add object security, fe. make the current user owner of the object
+     *
+     * @param $object
+     */
+    public function createObjectSecurity($object)
+    {
+        $this->getSecurityHandler()->createObjectSecurity($this, $object);
     }
 
     /**
@@ -2266,6 +2382,14 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     public function addExtension(AdminExtensionInterface $extension)
     {
         $this->extensions[] = $extension;
+    }
+
+    /**
+     * @return array
+     */
+    public function getExtensions()
+    {
+        return $this->extensions;
     }
 
     /**

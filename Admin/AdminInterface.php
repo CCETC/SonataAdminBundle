@@ -19,6 +19,7 @@ use Sonata\AdminBundle\Builder\DatagridBuilderInterface;
 use Sonata\AdminBundle\Security\Handler\SecurityHandlerInterface;
 use Sonata\AdminBundle\Builder\RouteBuilderInterface;
 use Sonata\AdminBundle\Translator\LabelTranslatorStrategyInterface;
+use Sonata\AdminBundle\Validator\ErrorElement;
 
 use Knp\Menu\FactoryInterface as MenuFactoryInterface;
 
@@ -112,6 +113,12 @@ interface AdminInterface
      * @return \Sonata\AdminBundle\ModelManagerInterface;
      */
     function getModelManager();
+
+    /**
+     * @abstract
+     * @return string the manager type of the admin
+     */
+    function getManagerType();
 
     /**
      * @abstract
@@ -287,6 +294,13 @@ interface AdminInterface
     function addExtension(AdminExtensionInterface $extension);
 
     /**
+     * Returns an array of extension related to the current Admin
+     *
+     * @return void
+     */
+    function getExtensions();
+
+    /**
      * @param \Knp\Menu\FactoryInterface $menuFactory
      * @return void
      */
@@ -358,4 +372,68 @@ interface AdminInterface
      * @return object a new object instance
      */
     function getNewInstance();
+
+    function setUniqid($uniqId);
+
+    function getObject($id);
+
+    function setSubject($subject);
+
+    function getSubject();
+
+    /**
+     * Returns a list FieldDescription
+     *
+     * @param string $name
+     * @return \Sonata\AdminBundle\Admin\FieldDescriptionInterface
+     */
+    function getListFieldDescription($name);
+
+    function configure();
+
+    function update($object);
+
+    function create($object);
+
+    function delete($object);
+
+    function preUpdate($object);
+
+    function postUpdate($object);
+
+    function prePersist($object);
+
+    function postPersist($object);
+
+    function preRemove($object);
+
+    function postRemove($object);
+
+    /**
+     * Return true if the Admin is related to a subject
+     *
+     * @return boolean
+     */
+    function hasSubject();
+
+    /**
+     * @param \Sonata\AdminBundle\Validator\ErrorElement $errorElement
+     * @param $object
+     * @return void
+     */
+    function validate(ErrorElement $errorElement, $object);
+
+    /**
+     * @abstract
+     * @param $context
+     * @return boolean
+     */
+    function showIn($context);
+
+    /**
+     * @abstract
+     * @param $object
+     * @return void
+     */
+    function createObjectSecurity($object);
 }

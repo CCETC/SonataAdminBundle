@@ -106,6 +106,14 @@
                 <source>link_previous_pager</source>
                 <target>&#8592;</target>
             </trans-unit>
+            <trans-unit id="link_first_pager">
+                <source>link_first_pager</source>
+                <target>First</target>
+            </trans-unit>
+            <trans-unit id="link_last_pager">
+                <source>link_last_pager</source>
+                <target>Last</target>
+            </trans-unit>
             <trans-unit id="Admin">
                 <source>Admin</source>
                 <target>Admin</target>
@@ -278,9 +286,13 @@
               <source>label_date_type_not_null</source>
               <target>is not empty</target>
             </trans-unit>
-            <trans-unit id="label_date_type_range">
-              <source>label_date_type_range</source>
-              <target>range of dates</target>
+            <trans-unit id="label_date_type_between">
+              <source>label_date_type_between</source>
+              <target>between</target>
+            </trans-unit>
+            <trans-unit id="label_date_not_between">
+              <source>label_date_type_not_between</source>
+              <target>not between</target>
             </trans-unit>
             <trans-unit id="label_filters">
               <source>label_filters</source>
@@ -300,6 +312,30 @@
               <target>Users</target>
             </trans-unit>
 
+            <trans-unit id="link_action_history">
+                <source>link_action_history</source>
+                <target>Revisions</target>
+            </trans-unit>
+            <trans-unit id="td_action">
+                <source>td_action</source>
+                <target>Action</target>
+            </trans-unit>
+            <trans-unit id="td_revision">
+                <source>td_revision</source>
+                <target>Revisions</target>
+            </trans-unit>
+            <trans-unit id="td_timestamp">
+                <source>td_timestamp</source>
+                <target>Date</target>
+            </trans-unit>
+            <trans-unit id="td_username">
+                <source>td_username</source>
+                <target>Author</target>
+            </trans-unit>
+            <trans-unit id="label_view_revision">
+                <source>label_view_revision</source>
+                <target>View Revision</target>
+            </trans-unit>
 
         </body>
     </file>

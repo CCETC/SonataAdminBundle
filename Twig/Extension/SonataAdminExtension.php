@@ -12,8 +12,8 @@
 namespace Sonata\AdminBundle\Twig\Extension;
 
 use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
+use Sonata\AdminBundle\Exception\NoValueException;
 use Sonata\AdminBundle\Filter\FilterInterface;
-use Sonata\AdminBundle\Admin\NoValueException;
 
 use Symfony\Component\Form\FormView;
 
@@ -173,7 +173,8 @@ class SonataAdminExtension extends \Twig_Extension
         return $this->output($fieldDescription, $template, array(
             'field_description' => $fieldDescription,
             'object'            => $object,
-            'value'             => $value
+            'value'             => $value,
+            'admin'             => $fieldDescription->getAdmin()
         ));
     }
 

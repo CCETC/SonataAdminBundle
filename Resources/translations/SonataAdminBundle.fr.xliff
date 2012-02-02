@@ -90,6 +90,14 @@
                 <source>link_previous_pager</source>
                 <target>Précédent</target>
             </trans-unit>
+            <trans-unit id="link_first_pager">
+                <source>link_first_pager</source>
+                <target>Première</target>
+            </trans-unit>
+            <trans-unit id="link_last_pager">
+                <source>link_last_pager</source>
+                <target>Dernière</target>
+            </trans-unit>
             <trans-unit id="Admin">
                 <source>Admin</source>
                 <target>Admin</target>
@@ -230,6 +238,27 @@
               <source>delete_or</source>
               <target>ou</target>
             </trans-unit>
+            <trans-unit id="link_action_history">
+                <source>link_action_history</source>
+                <target>Révisions</target>
+            </trans-unit>
+            <trans-unit id="td_revision">
+                <source>td_revision</source>
+                <target>Révisions</target>
+            </trans-unit>
+            <trans-unit id="td_timestamp">
+                <source>td_timestamp</source>
+                <target>Date</target>
+            </trans-unit>
+            <trans-unit id="td_username">
+                <source>td_username</source>
+                <target>Auteur</target>
+            </trans-unit>
+            <trans-unit id="label_view_revision">
+                <source>label_view_revision</source>
+                <target>Afficher la révision</target>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>
