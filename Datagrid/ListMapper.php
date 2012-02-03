@@ -40,7 +40,7 @@ class ListMapper
         $fieldDescriptionOptions['identifier'] = true;
 
         if (!isset($fieldDescriptionOptions['route']['name'])) {
-            $fieldDescriptionOptions['route']['name'] = 'edit';
+            $fieldDescriptionOptions['route']['name'] = 'show';
         }
 
         if (!isset($fieldDescriptionOptions['route']['parameters'])) {

@@ -778,7 +778,11 @@ class CRUDController extends Controller
         }
 
         $this->admin->setSubject($object);
+        
+        $this->processShowFieldHooks($object);
 
+        $this->processShowFieldClasses();
+        
         return $this->render($this->admin->getShowTemplate(), array(
             'action'   => 'show',
             'object'   => $object,
