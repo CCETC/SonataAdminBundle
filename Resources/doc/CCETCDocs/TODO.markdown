@@ -17,3 +17,7 @@
 - clean up config
 - focus on thinking outside the box to make it more easy to use
 - notifications!
+- improve customizations
+    - merging upstream changes is messy
+        - do a better job seperating customizations
+    - replace customizations.css with changes to layout.css?

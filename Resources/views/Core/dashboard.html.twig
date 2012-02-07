@@ -27,7 +27,12 @@ file that was distributed with this source code.
                 <tbody>
                     {% for admin in group.items %}
                         <tr>
-                            <td class="sonata-ba-list-label">{{ admin.label|trans({}, admin.translationdomain) }}</td>
+                            <td class="sonata-ba-list-label">
+                                {% if admin.entityIconPath is defined and admin.entityIconPath != "" %}
+                                    <img src="{{ asset(admin.entityIconPath) }}" />
+                                {% endif %}
+                                <a href="{{ admin.generateUrl('list') }}">{{ admin.label|trans({}, admin.translationdomain) }}</a>
+                            </td>
                             <td>
                                 {% if admin.hasroute('create') and admin.isGranted('CREATE') %}
                                     <a href="{{ admin.generateUrl('create')}}">

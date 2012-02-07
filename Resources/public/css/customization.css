@@ -10,9 +10,9 @@ select[multiple="multiple"] {
     height: 300px;
 }
 
-fieldset.filter_legend {
+.sonata-bc fieldset.filter_legend {
+    border: none;
 }
-
 
 legend.filter_legend {
 }
