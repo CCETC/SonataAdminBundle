@@ -37,14 +37,14 @@ select[name*='[start][month]'],
 select[name*='[end][month]'],
 select[name*='[start][day]'],
 select[name*='[end][day]'] {
-    width: 50px;
+    width: 50px !important;
 }
 
 select[name*='[value][year]'],
 select[name*='[end][year]'],
 select[name*='[start][year]'],
 select[name*='[year]'] {
-    width: 70px;
+    width: 70px !important;
 }
 
 

@@ -16,6 +16,7 @@ It contains many customizations to the sonata-project bundle.
 * improved acl handling on dashboard and menu
 * custom action buttons (buttons in top right corner) for list/edit/show templates
 * translations check the configured custom domain if nothing is found in the supplied domain
+* option to hide show fields with empty values
 
 ### Interface Changes
 * Fewer submit buttons on edit
@@ -141,6 +142,21 @@ For the List, Edit, and Show templates, on a entity by entity basis, you can add
     );
 
 The same can be done for ``$showActionButtons`` and ``$editActionButtons``.
+
+# Hiding Empty Show Fields
+You can optionally have the Show template exclude fields that are null for the object.
+In your Admin class, add the following to enable:
+
+	public $hideEmptyShowFields = true;
+	
+To always show some fields, regardless of their value, include a black list:
+
+    public $hideableShowFieldBlacklist = array (
+        'field1',
+        'field2',
+        'field3',
+    );
+
 
 # Configuration
 We have added one additional configuration option that toggles between a dropdown menu and an expanded menu:

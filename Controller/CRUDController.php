@@ -22,6 +22,8 @@ use Sonata\AdminBundle\Summary\Summary;
 use Sonata\AdminBundle\Spreadsheet\Spreadsheet;
 use Sonata\AdminBundle\Spreadsheet\SpreadsheetMapper;
 
+use Sonata\AdminBundle\Show\HideableShowFields;
+
 class CRUDController extends Controller
 {
 
@@ -783,10 +785,14 @@ class CRUDController extends Controller
 
         $this->processShowFieldClasses();
         
+        $HideableShowFields = new HideableShowFields($this->admin, $object, $this->get('request')->get('showAllFields'));
+        $HideableShowFields->processHiddenShowFields();
+        
         return $this->render($this->admin->getShowTemplate(), array(
             'action'   => 'show',
             'object'   => $object,
             'elements' => $this->admin->getShow(),
+            'showAllFields' => $this->get('request')->get('showAllFields')
         ));
     }
 
@@ -859,10 +865,6 @@ class CRUDController extends Controller
         }
 
         $this->admin->setSubject($object);
-
-        $this->processShowFieldHooks($object);
-
-        $this->processShowFieldClasses();
        
         return $this->render($this->admin->getShowTemplate(), array(
             'action' => 'show',

@@ -75,7 +75,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
 
     public function getEntityLabelPlural()
     {
-        if(!isset($this->entityLabelPlural)) return $this->classnameLabel.'s';
+        if(!isset($this->entityLabelPlural)) return $this->getEntityLabel().'s';
         else return $this->entityLabelPlural;
     }
 
@@ -107,6 +107,17 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     public $formPreHook;
     public $formPostHook;
        
+    /**
+     * whether or not show fields with empty values should be displayed
+     * @var bool 
+     */
+    public $hideEmptyShowFields = false;
+    /**
+     * an array of show fields that should be displayed no matter what, when $hideEmptyShowFields is true
+     * @var type 
+     */
+    public $hideableShowFieldBlacklist = array();
+    
     public $summaryYFields;
     public $summaryXFields;
     public $summarySumFields;

@@ -46,29 +46,44 @@ file that was distributed with this source code.
         {% endif %}
     {% endif %}
 
-    <div class="sonata-ba-view zebra-striped">
+    <div class="sonata-ba-view">
         {% for name, view_group in admin.showgroups %}
-            {% if name and admin.showgroups|length > 1 %}
-                <h2>{{ admin.trans(name) }}</h2>
-            {% endif %}
-                
-            <table class="bordered-table">
+            {% if view_group.displayGroup %}
+                {% if name and admin.showgroups|length > 1 %}
+                    <h2>{{ admin.trans(name) }}</h2>
+                {% endif %}
 
-                {% for field_name in view_group.fields %}
-                    {{ admin.showfielddescriptions[field_name].options['preHook']|raw }}
-                    
-                    <tr class="sonata-ba-view-container {{ admin.showfielddescriptions[field_name].options['additionalClasses'] }}">
-                        {% if admin.show[field_name] is defined %}
-                            {{ admin.show[field_name]|render_view_element(object) }}
-                        {% else %}
-                            {{ field_name }}
+                <table class="bordered-table">
+                    {% for field_name in view_group.fields %}
+                        {% if admin.showfielddescriptions[field_name].options['displayField'] %}
+                            {{ admin.showfielddescriptions[field_name].options['preHook']|raw }}
+
+                            <tr class="sonata-ba-view-container {{ admin.showfielddescriptions[field_name].options['additionalClasses'] }}">
+                                {% if admin.show[field_name] is defined %}
+                                    {{ admin.show[field_name]|render_view_element(object) }}
+                                {% else %}
+                                    {{ field_name }}
+                                {% endif %}
+                            </tr>
+                            {{ admin.showfielddescriptions[field_name].options['postHook']|raw }}
                         {% endif %}
-                    </tr>
-                    {{ admin.showfielddescriptions[field_name].options['postHook']|raw }}
-                {% endfor %}
-            </table>
+                    {% endfor %}
+                </table>
+            {% endif %}
         {% endfor %}
     </div>
+
+    {% if admin.hideEmptyShowFields %}
+        <div class="alert-message warning block-message sonata-ba-view">            
+            {% if showAllFields %}
+                All fields are shown.<br/><br/>
+                <a class="btn" href="{{ admin.generateObjectUrl('show', object) }}">Hide empty fields</a>
+            {% else %}
+                Some empty fields are hidden.<br/><br/>
+                <a class="btn" href="?showAllFields=true">View all fields</a>
+            {% endif %}
+        </div>  
+    {% endif %}
 
     {% if admin.showPostHook is defined and admin.showPostHook != "" %}
         {% if admin.showPostHook.parameters is defined %}
