@@ -618,7 +618,7 @@ class CRUDController extends Controller
 
         $form = $this->admin->getForm();
         $form->setData($object);
-
+        
         $this->processFormFieldHooks($object);
 
         if($this->get('request')->getMethod() == 'POST') {
@@ -685,7 +685,7 @@ class CRUDController extends Controller
         }
 
         $view = $form->createView();
-
+        
         // set the theme for the current Admin Form
         $this->get('twig')->getExtension('form')->setTheme($view, $this->admin->getFormTheme());
 

@@ -53,6 +53,17 @@ file that was distributed with this source code.
             <script src="{{ asset('bundles/sonataadmin/tiny_mce/tiny_mce.js') }}" type="text/javascript"></script>
             <script src="{{ asset('bundles/sonataadmin/base.js') }}" type="text/javascript"></script>
             <script src="{{ asset('bundles/sonataadmin/js/events.js') }}" type="text/javascript"></script> 
+            
+            <script type="text/javascript">
+                {% set js_date_patern =  'mm/dd/yy' %}
+                (function($) {
+                    $(document).ready(function(){
+                         $.datepicker.setDefaults($.datepicker.regional['']);
+ 
+                        $('body').delegate('.datepicker', 'focusin', function(){$(this).datepicker({'changeMonth': true, 'changeYear': true, 'dateFormat': '{{ js_date_patern }}'});});
+                    });
+                })(jQuery);
+            </script>
         {% endblock %}
 
         <title>

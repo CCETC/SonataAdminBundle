@@ -127,6 +127,12 @@ a.sonata-ba-collapsed small {
 
 .help-inline, .help-block {
     color: #AAAAAA;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 18px;
+    clear: both;
+}
+
+.form-stacked .inputs-list li {
+    float: left;
+    width: 200px;
 }
