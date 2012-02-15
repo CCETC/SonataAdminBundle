@@ -626,42 +626,10 @@ class CRUDController extends Controller
 
             if($form->isValid()) {
                 if(isset($this->admin->fieldGroupsToCheckForDuplicates)) {
-                    $itemMayBeInDB = false;
-                    $itemFound = false;
-                    $repository = $this->getDoctrine()->getRepository($this->admin->getClass());
-
-                    foreach($this->admin->fieldGroupsToCheckForDuplicates as $fieldGroup) {
-                        if(!is_array($fieldGroup)) $fieldGroup = array($fieldGroup);
-
-                        $parameters = array();
-                        
-                        foreach($fieldGroup as $field) {
-                            $methodName = 'get'.ucfirst($field);
-                   
-                            if(!$object->$methodName()) continue 2; // if any field in a group is not set, skip the group
-                            
-                            $parameters[$field] = $object->$methodName();
-                        }
-                        $result = $repository->findBy($parameters);
-
-                        if($result) $itemFound = true;
-                    }
-                    
-                    if($itemFound)
-                    {
-                        if(!$this->getRequest()->getSession()->get('areYouSure'))
-                        {
-                            $itemMayBeInDB = true;
-                            $this->getRequest()->getSession()->set('areYouSure', true);
-                        }
-                        else
-                        {
-                            $this->getRequest()->getSession()->set('areYouSure', null);
-                        }
-                    }
+                    $itemMayBeInDB = $this->checkForDuplicates($object);
                 }
                 
-                if($this->admin->getClassnameLabel() == 'Leads' && $itemMayBeInDB) {
+                if(isset($itemMayBeInDB) && $itemMayBeInDB) {
                     $this->getRequest()->getSession()->setFlash('sonata_flash_error', 'This '.$this->admin->getEntityLabel().' may already by in the database.  Please check the list before creating it.
                     If you are sure that this '.$this->admin->getEntityLabel().' is not already in the database, click "Create" again.');
                 } else {
@@ -954,6 +922,45 @@ class CRUDController extends Controller
         $hook = $this->render($template, $parameters);
 
         return $hook->getContent();
+    }
+    
+    protected function checkForDuplicates($object)
+    {                        
+        $itemMayBeInDB = false;
+        $itemFound = false;
+        $repository = $this->getDoctrine()->getRepository($this->admin->getClass());
+
+        foreach($this->admin->fieldGroupsToCheckForDuplicates as $fieldGroup) {
+            if(!is_array($fieldGroup)) $fieldGroup = array($fieldGroup);
+
+            $parameters = array();
+
+            foreach($fieldGroup as $field) {
+                $methodName = 'get'.ucfirst($field);
+
+                if(!$object->$methodName()) continue 2; // if any field in a group is not set, skip the group
+
+                $parameters[$field] = $object->$methodName();
+            }
+            $result = $repository->findBy($parameters);
+
+            if($result) $itemFound = true;
+        }
+
+        if($itemFound)
+        {
+            if(!$this->getRequest()->getSession()->get('areYouSure'))
+            {
+                $itemMayBeInDB = true;
+                $this->getRequest()->getSession()->set('areYouSure', true);
+            }
+            else
+            {
+                $this->getRequest()->getSession()->set('areYouSure', null);
+            }
+        }
+        
+        return $itemMayBeInDB;
     }
 
 }

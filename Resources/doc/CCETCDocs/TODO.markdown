@@ -6,6 +6,8 @@
     - list matches
     - generate partial matches
     - document
+    - check models
+    - refactor out of action
 
 ## 1.3
 1. learn how to run Sonata's tests to make sure our customizations don't break anything

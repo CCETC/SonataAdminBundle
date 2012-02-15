@@ -162,8 +162,8 @@ file that was distributed with this source code.
                     {% for notice_level in ['success','error','info', 'warning'] %}
                         {% set session_var = 'sonata_flash_' ~ notice_level %}
                         {% if app.session.hasFlash(session_var) %}
-                            <div class="alert-message {{ notice_level }}">
-                                {{ app.session.flash(session_var) | trans([],'SonataAdminBundle') }}
+                            <div class="alert-message block-message {{ notice_level }}">
+                                {{ app.session.flash(session_var) | trans([],'SonataAdminBundle') | raw }}
                             </div>
                         {% endif %}
                     {% endfor %}

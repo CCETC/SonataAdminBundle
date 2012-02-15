@@ -52,6 +52,16 @@ file that was distributed with this source code.
 {% block choice_widget %}
 {% spaceless %}
     {% if expanded %}
+        <label><input type="checkbox" id="list_batch_checkbox"><span> Select All </span></label>
+        
+        <script type="text/javascript">
+            jQuery(document).ready(function($){
+               $('#list_batch_checkbox').change(function(){
+                   $(this).parent().siblings('ul.inputs-list').find("label input[type='checkbox']").attr('checked', $(this).is(':checked'));
+               });
+            });
+        </script>
+        
         <ul {{ block('widget_container_attributes_choice_widget') }}>
         {% for child in form %}
             <li>
