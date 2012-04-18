@@ -58,6 +58,8 @@ The twig base template uses ``home`` and ``adminHelp`` routes for the home and h
 ### Entity Labels
 The bundle makes use of singular and plural labels for each entity.  They are retrieved from ``Admin->getEntityLabel`` and ``Admin->getEntityLabelPlural``.  The labels should be set in each Admin class, but the defaults use the ``Admin->classnameLabel`` property.
 
+# Documentation
+All ISSUES, IDEAS, and FEATURES are documented on the [trello board](https://trello.com/board/sonataadminbundle/4f8f1c3859fe52017a1fc2e9).
 
 # Pre/Post Template Hooks
 You can include templates before or after any form or show field, before or after the form contents in base_edit.html.twig, the show table in base_show.html.twig or the list table in base_list.html.twig.
