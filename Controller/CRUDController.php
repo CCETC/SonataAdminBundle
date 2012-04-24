@@ -21,8 +21,8 @@ use Sonata\AdminBundle\Exception\ModelManagerException;
 use Sonata\AdminBundle\Summary\Summary;
 use Sonata\AdminBundle\Spreadsheet\Spreadsheet;
 use Sonata\AdminBundle\Spreadsheet\SpreadsheetMapper;
-
 use Sonata\AdminBundle\Show\HideableShowFields;
+use Symfony\Component\HttpFoundation\Request;
 
 class CRUDController extends Controller
 {
@@ -104,7 +104,13 @@ class CRUDController extends Controller
             $rootAdmin = $rootAdmin->getParent();
         }
 
-        $rootAdmin->setRequest($this->container->get('request'));
+        $request = $this->container->get('request');
+
+        $rootAdmin->setRequest($request);
+
+        if ($request->get('uniqid')) {
+            $this->admin->setUniqid($request->get('uniqid'));
+        }
     }
 
     /**
@@ -420,7 +426,7 @@ class CRUDController extends Controller
      * return the Response object associated to the edit action
      *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     * @param  $id
+     * @param mixed $id
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction($id = null)
@@ -480,7 +486,7 @@ class CRUDController extends Controller
     /**
      * redirect the user depend on this choice
      *
-     * @param  $object
+     * @param object $object
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function redirectTo($object)
@@ -765,8 +771,9 @@ class CRUDController extends Controller
     }
 
     /**
-     * @param null $id
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException|\Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @param mixed $id
+     * @return \Symfony\Bundle\FrameworkBundle\Controller\Response
      */
     public function historyAction($id = null)
     {
@@ -802,6 +809,7 @@ class CRUDController extends Controller
     /**
      * @param null $id
      * @param $revision
+     * @return \Symfony\Bundle\FrameworkBundle\Controller\Response
      */
     public function historyViewRevisionAction($id = null, $revision = null)
     {
@@ -963,4 +971,26 @@ class CRUDController extends Controller
         return $itemMayBeInDB;
     }
 
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function exportAction(Request $request)
+    {
+        $format = $request->get('format');
+
+        $allowedExportFormats = (array) $this->admin->getExportFormats();
+
+        if(!in_array($format, $allowedExportFormats) ) {
+            throw new \RuntimeException(sprintf('Export in format `%s` is not allowed for class: `%s`. Allowed formats are: `%s`', $format, $this->admin->getClass(), implode(', ', $allowedExportFormats)));
+        }
+
+        $filename = sprintf('export_%s_%s.%s',
+            strtolower(substr($this->admin->getClass(), strripos($this->admin->getClass(), '\\') + 1)),
+            date('Y_m_d_H_i_s', strtotime('now')),
+            $format
+        );
+
+        return $this->get('sonata.admin.exporter')->getResponse($format, $filename, $this->admin->getDataSourceIterator());
+    }
 }

@@ -101,9 +101,6 @@ class Datagrid implements DatagridInterface
             list($type, $options) = $filter->getRenderSettings();
 
             $this->formBuilder->add($name, $type, $options);
-
-            $this->values[$name] = isset($this->values[$name]) ? $this->values[$name] : null;
-            $filter->apply($this->query, $this->values[$name]);
         }
 
         $this->formBuilder->add('_sort_by', 'hidden');
@@ -112,6 +109,13 @@ class Datagrid implements DatagridInterface
 
         $this->form = $this->formBuilder->getForm();
         $this->form->bind($this->values);
+
+        $data = $this->form->getData();
+
+        foreach ($this->getFilters() as $name => $filter) {
+            $this->values[$name] = isset($this->values[$name]) ? $this->values[$name] : null;
+            $filter->apply($this->query, $data[$name]);
+        }
 
         $this->query->setSortBy(isset($this->values['_sort_by']) ? $this->values['_sort_by'] : null);
         $this->query->setSortOrder(isset($this->values['_sort_order']) ? $this->values['_sort_order'] : null);
@@ -166,6 +170,11 @@ class Datagrid implements DatagridInterface
         return $this->filters;
     }
 
+    public function reorderFilters(array $keys)
+    {
+        $this->filters = array_merge(array_flip($keys), $this->filters);
+    }
+
     /**
      * @return array
      */
@@ -182,6 +191,20 @@ class Datagrid implements DatagridInterface
     public function setValue($name, $operator, $value)
     {
         $this->values[$name] = array('type' => $operator, 'value' => $value);
+    }
+
+    /**
+     * @return boolean
+     */
+    public function hasActiveFilters()
+    {
+        foreach ($this->filters as $name => $filter) {
+            if ($filter->isActive()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -209,5 +232,4 @@ class Datagrid implements DatagridInterface
 
         return $this->form;
     }
-    
 }

@@ -28,6 +28,11 @@ class ListMapper
 
     protected $admin;
 
+    /**
+     * @param \Sonata\AdminBundle\Builder\ListBuilderInterface $listBuilder
+     * @param \Sonata\AdminBundle\Admin\FieldDescriptionCollection $list
+     * @param \Sonata\AdminBundle\Admin\AdminInterface $admin
+     */
     public function __construct(ListBuilderInterface $listBuilder, FieldDescriptionCollection $list, AdminInterface $admin)
     {
         $this->listBuilder  = $listBuilder;
@@ -35,6 +40,12 @@ class ListMapper
         $this->admin        = $admin;
     }
 
+    /**
+     * @param string $name
+     * @param null $type
+     * @param array $fieldDescriptionOptions
+     * @return ListMapper
+     */
     public function addIdentifier($name, $type = null, array $fieldDescriptionOptions = array())
     {
         $fieldDescriptionOptions['identifier'] = true;
@@ -70,7 +81,7 @@ class ListMapper
                 $fieldDescriptionOptions
             );
         } else {
-            throw new \RuntimeException('invalid state');
+            throw new \RuntimeException('Unknown or duplicate field name in list mapper. Field name should be either of FieldDescriptionInterface interface or string. Names should be unique.');
         }
 
         if (!$fieldDescription->getLabel()) {
@@ -85,7 +96,7 @@ class ListMapper
 
     /**
      * @param string $name
-     * @return array
+     * @return \Sonata\AdminBundle\Admin\FieldDescriptionInterface
      */
     public function get($name)
     {
@@ -109,6 +120,17 @@ class ListMapper
     {
         $this->admin->removeListFieldDescription($key);
         $this->list->remove($key);
+
+        return $this;
+    }
+
+    /**
+     * @param array $keys field names
+     * @return \Sonata\AdminBundle\Datagrid\ListMapper
+     */
+    public function reorder(array $keys)
+    {
+        $this->list->reorder($keys);
 
         return $this;
     }

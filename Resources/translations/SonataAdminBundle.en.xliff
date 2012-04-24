@@ -238,6 +238,10 @@
               <source>label_type_equals</source>
               <target>is equal to</target>
             </trans-unit>
+            <trans-unit id="label_type_not_equals">
+              <source>label_type_not_equals</source>
+              <target>is not equal to</target>
+            </trans-unit>
             <trans-unit id="label_type_equal">
               <source>label_type_equal</source>
               <target>=</target>
@@ -337,6 +341,18 @@
                 <target>View Revision</target>
             </trans-unit>
 
+            <trans-unit id="list_results_count">
+                <source>list_results_count</source>
+                <target>1 result|%count% results</target>
+            </trans-unit>
+            <trans-unit id="label_export_download">
+                <source>label_export_download</source>
+                <target>Download : </target>
+            </trans-unit>
+            <trans-unit id="loading_information">
+                <source>loading_information</source>
+                <target>Loading information…</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

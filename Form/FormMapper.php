@@ -68,6 +68,21 @@ class FormMapper
     }
 
     /**
+     * @param array $keys field names
+     * @return \Sonata\AdminBundle\Form\FormMapper
+     */
+    public function reorder(array $keys)
+    {
+        if (!$this->currentGroup) {
+            $this->with($this->admin->getLabel());
+        }
+
+        $this->admin->reorderFormGroup($this->currentGroup, $keys);
+
+        return $this;
+    }
+
+    /**
      * @param string $name
      * @param string $type
      * @param array $options
@@ -80,8 +95,10 @@ class FormMapper
             $this->with($this->admin->getLabel());
         }
 
+        $label = $name instanceof FormBuilder ? $name->getName() : $name;
+
         $formGroups = $this->admin->getFormGroups();
-        $formGroups[$this->currentGroup]['fields'][$name] = $name;
+        $formGroups[$this->currentGroup]['fields'][$label] = $label;
         $this->admin->setFormGroups($formGroups);
 
         if (!isset($fieldDescriptionOptions['type']) && is_string($type)) {
@@ -107,7 +124,17 @@ class FormMapper
                 $options['label'] = $this->admin->getLabelTranslatorStrategy()->getLabel($fieldDescription->getName(), 'form', 'label');
             }
 
+            $help = null;
+            if (isset($options['help'])) {
+                $help = $options['help'];
+                unset($options['help']);
+            }
+
             $this->formBuilder->add($name, $type, $options);
+
+            if (null !== $help) {
+                $this->admin->getFormFieldDescription($name)->setHelp($help);
+            }
         }
 
         return $this;

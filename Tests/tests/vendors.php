@@ -9,9 +9,10 @@ if (!is_dir($vendorDir)) {
 }
 
 $deps = array(
-    array('symfony', 'git://github.com/symfony/symfony.git', isset($_SERVER['SYMFONY_VERSION']) ? $_SERVER['SYMFONY_VERSION'] : 'origin/master'),
+    array('symfony', 'git://github.com/symfony/symfony.git', isset($_SERVER['SYMFONY_VERSION']) ? $_SERVER['SYMFONY_VERSION'] : 'origin/2.0'),
     array('knpmenu', 'git://github.com/KnpLabs/KnpMenu.git', 'origin/master'),
-    array('twig', 'git://github.com/fabpot/Twig.git', '1.3.0'),
+    array('twig', 'git://github.com/fabpot/Twig.git', '1.6.1'),
+    array('exporter', 'git://github.com/sonata-project/exporter.git', 'origin/master'),
 );
 
 foreach ($deps as $dep) {
