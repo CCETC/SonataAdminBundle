@@ -2,22 +2,12 @@ tr.sonata-ba-list-field-header {
     background-image: -moz-linear-gradient(-90deg, #F8F8F8, #E2E2E2);
 }
 
-
-div.container-fluid {
-}
-
 select[multiple="multiple"] {
     height: 300px;
 }
 
 .sonata-bc fieldset.filter_legend {
     border: none;
-}
-
-legend.filter_legend {
-}
-
-legend.filter_legend:hover {
 }
 
 div.filter-input-container,
@@ -86,10 +76,6 @@ fieldset.filter_legend {
 div.sonata-ba-view {
     width: 800px;
     margin: 0 auto;
-}
-
-div.filter_container {
-
 }
 
 div.sonata-ba-form div.other-field {

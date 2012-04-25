@@ -112,25 +112,6 @@ body.sonata-bc {
     vertical-align: bottom
 }
 
-.sonata-bc td.pager ul {
-    float: left;
-    list-style: none;
-    margin: 2px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.sonata-bc td.pager ul li {
-    float: left;
-}
-
-.sonata-bc td.pager ul li a {
-    border: 1px solid #cccccc;
-    line-height: 25px;
-    padding: 1px 8px 1px 8px;
-    margin: 2px;
-}
-
 .sonata-bc div.sonata-ba-modal-edit-one-to-one td.sonata-ba-list-field-batch,
 .sonata-bc div.sonata-ba-modal-edit-one-to-one div.sonata-ba-list-actions,
 .sonata-bc div.sonata-ba-modal-edit-one-to-one th.sonata-ba-list-field-header-batch
