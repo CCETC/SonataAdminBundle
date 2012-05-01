@@ -122,8 +122,3 @@ a.sonata-ba-collapsed small {
     line-height: 18px;
     clear: both;
 }
-
-.form-stacked .inputs-list li {
-    float: left;
-    width: 200px;
-}
