@@ -12,7 +12,7 @@
             </trans-unit>
             <trans-unit id="btn_batch">
                 <source>btn_batch</source>
-                <target>Ok</target>
+                <target>Apply</target>
             </trans-unit>
             <trans-unit id="btn_create">
                 <source>btn_create</source>
@@ -84,7 +84,7 @@
             </trans-unit>
             <trans-unit id="title_create">
                 <source>title_create</source>
-                <target>Create</target>
+                <target>New</target>
             </trans-unit>
             <trans-unit id="title_dashboard">
                 <source>title_dashboard</source>

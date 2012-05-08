@@ -11,6 +11,15 @@ file that was distributed with this source code.
 
 {% extends base_template %}
 
+{% block title %}
+    {{ "action_delete"|trans({}, 'SonataAdminBundle') }}
+
+    {% if admin.id(object) %}
+        "{{ admin.toString(object) }}"
+    {% endif %}
+{% endblock%}
+
+
 {% block actions %}
     <div class="sonata-actions">
             {% if admin.hasRoute('edit') and admin.isGranted('EDIT', object)%}

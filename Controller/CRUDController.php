@@ -250,6 +250,11 @@ class CRUDController extends Controller
                 ));
     }
 
+    protected function processScopes()
+    {
+        
+    }
+    
     protected function hiddenFilterIsset($value)
     {
         if(is_array($value)) {
