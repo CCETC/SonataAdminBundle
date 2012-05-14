@@ -1,10 +1,10 @@
 
 
 $(document).ready(function() {
-    $('a#hiddenFiltersToggle').live("click", function(e){
+    $('a#extraFiltersToggle').live("click", function(e){
         e.preventDefault();
 
-        $('div.hiddenFilters').show();
+        $('div.extraFilters').show();
         $(this).hide();
 
     }); 

@@ -84,20 +84,8 @@ file that was distributed with this source code.
                             {% endblock %}
             </table>
                             <div class="pagination">
-                                <div style="float: left; margin: 10px; color: #666;">
-                                  {% set lastPossible = admin.datagrid.pager.page * admin.datagrid.pager.maxPerPage %}
-                                    
-                                  {% if admin.datagrid.pager.page == admin.datagrid.pager.lastpage %}
-                                    {% set resultsEnd = admin.datagrid.pager.nbresults %}
-                                  {% else %}
-                                    {% set resultsEnd = lastPossible %}  
-                                  {% endif %}
-                                        
-                                  {% set resultsStart = lastPossible - admin.datagrid.pager.maxPerPage + 1 %}  
-                                        
-                                  
-                                        
-                                  Displaying <b>{{ resultsStart }}</b> - <b>{{ resultsEnd }}</b> of <b>{{ admin.datagrid.pager.nbresults }}</b> Results
+                                <div style="float: left; margin: 10px; color: #666;">                                        
+                                    {{ admin.datagrid.pager.nbresults }} Results
                                 </div>
                               <ul>
                                   {% if admin.datagrid.pager.page != 1  %}
@@ -253,24 +241,24 @@ file that was distributed with this source code.
     {% endif %}
 
 
-    {% if admin.scopes %}
+    {% if admin.datagrid.scopes %}
         <ul class="pills">
-            <li class="active"><a href="{{ admin.generateUrl('list') }}">All</a></li>
-            {% for scope in admin.scopes %}
-                <li><a href="{{ admin.generateUrl('list') }}?filter[{{ scope['field'] }}][value]={{ scope['value'] }}">{{ scope['label'] }}</a></li>
+            <li {% if not admin.datagrid.hasActiveScope() %}class="active"{% endif %}><a href="{{ admin.generateUrl('list') }}">All</a></li>
+            {% for scope in admin.datagrid.scopes %}
+                <li {% if admin.datagrid.scopeIsActive(scope) %}class="active"{% endif %}><a href="{{ admin.generateUrl('list') }}?filter[{{ scope['field'] }}][value]={{ scope['value'] }}">{{ scope['label'] }}</a></li>
             {% endfor %}
         </ul>
     {% endif %}
 
 
-    {% if admin.datagrid.filters %}
+    {% if admin.datagrid.hasVisibleFilters %}
         <form class="sonata-filter-form form-stacked {{ admin.isChild and 1 == admin.datagrid.filters|length ? 'hide' : '' }}" action="{{ admin.generateUrl('list') }}" method="GET">
             <fieldset class="filter_legend">
                 <div class="filter_container form-stacked">
                     <h4>Filters</h4>
                     {% for filter in admin.datagrid.filters %}
-                        {% if admin.hiddenFilters[filter.name] is not defined %}
-                            <div class="clearfix filter-input-container">
+                        {% if not filter.isExtra %}
+                            <div class="clearfix filter-input-container" {% if filter.isInvisible %}style="display: none;"{% endif %}>
                                 {{ admin.trans(filter.label) }}
                                 <div class="filter-type input">{{ form_widget(form.getChild(filter.name).getChild('type')) }}</div>
                                 <div class="input">
@@ -279,9 +267,9 @@ file that was distributed with this source code.
                             </div><!-- /clearfix -->
                         {% endif %}
                     {% endfor %}
-                    <div class="hiddenFilters" style="{% if not showHiddenFilters %}display: none;{% endif %}">
+                    <div class="extraFilters" style="{% if not admin.datagrid.hasSetExtraFilters %}display: none;{% endif %}">
                         {% for filter in admin.datagrid.filters %}
-                            {% if admin.hiddenFilters[filter.name] is defined %}
+                            {% if filter.isExtra %}
                                 <div class="clearfix filter-input-container">
                                     {{ admin.trans(filter.label) }}
                                     <span class="filter-type">{{ form_widget(form.getChild(filter.name).getChild('type')) }}</span>
@@ -351,8 +339,8 @@ file that was distributed with this source code.
                     <input type="submit" class="btn primary" value="Update" />
 
                     <a class="btn" href="{{ admin.generateUrl('list') }}">{% trans from 'SonataAdminBundle' %}link_reset_filter{% endtrans %}</a>
-                    {% if admin.hiddenFilters|length != 0 and not showHiddenFilters and not app.request.isxmlhttprequest %}
-                            <a id="hiddenFiltersToggle" class="btn" href="#">More Filters</a>
+                    {% if admin.datagrid.hasExtraFilters and not admin.datagrid.hasSetExtraFilters and not app.request.isxmlhttprequest %}
+                            <a id="extraFiltersToggle" class="btn" href="#">More Filters</a>
                     {% endif %}
                 </div>
             </fieldset>

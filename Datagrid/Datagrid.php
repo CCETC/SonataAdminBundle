@@ -42,6 +42,8 @@ class Datagrid implements DatagridInterface
     protected $form;
 
     protected $results;
+    
+    protected $scopes;
 
     /**
      * @param ProxyQueryInterface $query
@@ -194,13 +196,21 @@ class Datagrid implements DatagridInterface
     }
 
     /**
-     * @return boolean
+     * @param bool $excludeHidden exclude from the check the filters marked as hidden
+     * 
+     * @return bool
      */
-    public function hasActiveFilters()
+    public function hasActiveFilters($excludeHidden = false)
     {
         foreach ($this->filters as $name => $filter) {
             if ($filter->isActive()) {
-                return true;
+                if ($excludeHidden) {
+                    if (!$filter->isHidden()) {
+                        return true;
+                    }
+                } else {
+                    return true;
+                }
             }
         }
 
@@ -231,5 +241,65 @@ class Datagrid implements DatagridInterface
         $this->buildPager();
 
         return $this->form;
+    }
+    
+    public function hasVisibleFilters()
+    {
+        foreach($this->filters as $filter)
+        {
+            if(!$filter->isInvisible()) return true;
+        }
+        return false;
+    }
+    
+    public function hasExtraFilters()
+    {
+        foreach($this->filters as $filter)
+        {
+            if($filter->isExtra()) return true;
+        }
+        return false;
+    }
+    
+    public function hasSetExtraFilters()
+    {
+        $filterValues = $this->getValues();
+        
+        foreach($this->filters as $filter)
+        {
+            if($filter->isExtra() && $filter->isActive()) {
+                return true;
+            }
+        }
+        return false;
+        
+    }   
+    
+    public function setScopes($scopes)
+    {
+        $this->scopes = $scopes;
+    }
+    
+    public function getScopes()
+    {
+        return $this->scopes;
+    }
+    
+    public function scopeIsActive($scope)
+    {
+        $filterValues = $this->getValues();
+                
+        return isset($filterValues[$scope['field']]) && $filterValues[$scope['field']]['value'] == $scope['value'];
+    }
+    
+    public function hasActiveScope()
+    {
+        foreach($this->scopes as $scope)
+        {
+            if($this->scopeIsActive($scope)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

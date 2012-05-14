@@ -160,14 +160,6 @@ class CRUDController extends Controller
                 $this->admin->getDatagrid()->setValue($field, "", $default);
             }
         }
-        // check each hidden filter to see if it was requested, so we can show the hidden filters in the template
-        $showHiddenFilters = false;
-
-        foreach($this->admin->getHiddenFilters() as $filterName => $method) {
-            if(array_key_exists($filterName, $filterValues) && $this->hiddenFilterIsset($filterValues[$filterName]['value'])) {
-                $showHiddenFilters = true;
-            }
-        }
         
         $datagrid = $this->admin->getDatagrid();
 
@@ -243,7 +235,6 @@ class CRUDController extends Controller
                     'action' => 'list',
                     'form' => $formView,
                     'datagrid' => $datagrid,
-                    'showHiddenFilters' => $showHiddenFilters,
                     'summary' => $summary,
                     'hasSummaryFields' => $hasSummaryFields,
                     'showSummaryPane' => $showSummaryPane
@@ -253,21 +244,6 @@ class CRUDController extends Controller
     protected function processScopes()
     {
         
-    }
-    
-    protected function hiddenFilterIsset($value)
-    {
-        if(is_array($value)) {
-            foreach($value as $k => $v) {
-                if($this->hiddenFilterIsset($v)) {
-                    return true;
-                }
-            }
-        } else if($value != "") {
-            return true;
-        } else {
-            return false;
-        }
     }
     
     /**

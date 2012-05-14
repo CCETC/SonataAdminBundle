@@ -173,4 +173,19 @@ abstract class Filter implements FilterInterface
     {
         return $this->condition;
     }
+    
+    /**
+     * @return bool
+     */
+    public function isInvisible()
+    {
+        return $this->getOption('isInvisible');
+    }
+    /**
+     * @return bool
+     */
+    public function isExtra()
+    {
+        return $this->getOption('isExtra');
+    }
 }

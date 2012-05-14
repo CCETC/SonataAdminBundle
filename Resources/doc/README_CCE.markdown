@@ -6,7 +6,8 @@ It contains many customizations to the sonata-project bundle.
 ### Features
 * approve/unapprove actions
 * entity icons in breadcrumbs and on dashboard
-* hidden filters
+* invisible filters
+* extra filters ("more filters" button that adds some extra filters to the form)
 * default filters
 * pre/post template hooks for form/show fields and list/form/show templates
 * custom field summary reports
@@ -79,6 +80,51 @@ The three variables used are $formPreHook, $showPreHook, and $listPreHook.  You 
             'template' => 'MyBundle:myEntity:_myTemplate.html.twig';
             'parameters' => array('myVariable' => $myVariable)
         );
+
+# Filters
+We've added some features to the list filters.
+
+## Invisible Filters
+Use ``->add('myFilter', null, array('isInvisible' => true))`` to make the filter invisible to the user.
+
+## Extra Filters
+Using ``->add('myFilter', null, array('isExtra' => true))`` will hide the filter by default, and add a "more filters" button to the form that will toggle all extra filters.
+
+## Default Filters
+You can define default values for any selection of filters.  These values will be used on every list request, provided no other value is set for that filter.
+
+	$this->filterDefaults = array(
+		'state' => 'NY'	
+	);
+
+## Scopes
+For simple entites, improve browsing by adding scopes.  The list will use the scopes to add pills to the top of the page.  After defining your filters, set your Scopes:
+
+        $this->getDatagrid()->setScopes(array(
+            array(
+                'field' => 'approved',
+                'label' => 'Approved',
+                'value' => '1'
+            ),
+            array(
+                'field' => 'approved',
+                'label' => 'Unapproved',
+                'value' => '2'
+            ),
+            array(
+                'field' => 'spam',
+                'label' => 'Spam',
+                'value' => '1'
+            ),
+            array(
+                'field' => 'dateSubmitted',
+                'label' => 'Submitted Today',
+                'value' => date('Y-m-d');
+            )
+        ));
+
+**NOTE**: you must have a filter defined for each field used in your scopes.  So in the above example, you would need filters for ``dateSubmitted``, ``spam``, and ``approved``.
+
 
 # Summary Reports
 You can include a table of field summary statistics on the list template by defining a few fields to summarize by:
