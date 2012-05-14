@@ -245,7 +245,7 @@ file that was distributed with this source code.
         <ul class="pills">
             <li {% if not admin.datagrid.hasActiveScope() %}class="active"{% endif %}><a href="{{ admin.generateUrl('list') }}">All</a></li>
             {% for scope in admin.datagrid.scopes %}
-                <li {% if admin.datagrid.scopeIsActive(scope) %}class="active"{% endif %}><a href="{{ admin.generateUrl('list') }}?filter[{{ scope['field'] }}][value]={{ scope['value'] }}">{{ scope['label'] }}</a></li>
+                <li {% if admin.datagrid.scopeIsActive(scope) %}class="active"{% endif %}><a href="{{ admin.generateUrl('list') }}?filter[{{ scope['field'] }}][value]={{ scope['value'] }}">{% if scope['label'] is defined %}{{ scope['label'] }}{% else %}{{ scope['field']|capitalize }}{% endif %}</a></li>
             {% endfor %}
         </ul>
     {% endif %}
