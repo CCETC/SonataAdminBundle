@@ -98,32 +98,36 @@ You can define default values for any selection of filters.  These values will b
 	);
 
 ## Scopes
-For simple entites, improve browsing by adding scopes.  The list will use the scopes to add pills to the top of the page.  After defining your filters, set your Scopes:
+For simple entites, improve browsing by adding scopes.  The list will use the scopes to add pills/tabs to the top of the page.  In ``configureDatagridFilters``, set your Scopes:
 
-        $this->getDatagrid()->setScopes(array(
-            array(
-                'field' => 'approved',
-                'label' => 'Approved',
-                'value' => '1'
-            ),
-            array(
-                'field' => 'approved',
-                'label' => 'Unapproved',
-                'value' => '2'
-            ),
-            array(
-                'field' => 'spam',
-                'label' => 'Spam',
-                'value' => '1'
-            ),
-            array(
-                'field' => 'dateSubmitted',
-                'label' => 'Submitted Today',
-                'value' => date('Y-m-d');
-            )
-        ));
+		$this->getDatagrid()->addScopeGroup(
+				new ScopeGroup('pills', $this->getDatagrid(), $datagridMapper, array(
+                    new Scope('approved', '1'),
+                    new Scope('approved', '2', 'Unapproved'),
+                )
+        );		
+		
+Each scope takes a field/value pair that corresponds to a datagrid filter.  If a filter for the field in a scope does not exist, it will be created.  You can also set a label for a group.  Finally you can mark a group as a "strong" group.  If a group is not "strong" its links will not affect the selected scope of other groups.
 
-**NOTE**: you must have a filter defined for each field used in your scopes.  So in the above example, you would need filters for ``dateSubmitted``, ``spam``, and ``approved``.
+        $tabs = new ScopeGroup('tabs', $this->getDatagrid(), $datagridMapper, array(
+                    new Scope('beef', '1'),
+                    new Scope('pork', '1'),
+                    new Scope('rabbit', '1'),
+                    new Scope('goat', '1'),
+                    new Scope('lamb', '1'),
+                )
+        );
+        
+        $pills = new ScopeGroup('pills', $this->getDatagrid(), $datagridMapper, array(
+                    new Scope('organic', '1'),
+                    new Scope('organic', '2', 'Non-organic'),
+                )
+        );
+        $pills->setLabel("Type");
+		$pills->setStrongGroup(true);
+                
+        $this->getDatagrid()->addScopeGroup($tabs);
+        $this->getDatagrid()->addScopeGroup($pills);
 
 
 # Summary Reports

@@ -43,7 +43,7 @@ class Datagrid implements DatagridInterface
 
     protected $results;
     
-    protected $scopes;
+    protected $scopeGroups = array();
 
     /**
      * @param ProxyQueryInterface $query
@@ -275,31 +275,15 @@ class Datagrid implements DatagridInterface
         
     }   
     
-    public function setScopes($scopes)
+    public function addScopeGroup($scopeGroup)
     {
-        $this->scopes = $scopes;
+        $this->scopeGroups[] = $scopeGroup;
     }
     
-    public function getScopes()
+    public function getScopeGroups()
     {
-        return $this->scopes;
+        return $this->scopeGroups;
     }
+
     
-    public function scopeIsActive($scope)
-    {
-        $filterValues = $this->getValues();
-                
-        return isset($filterValues[$scope['field']]) && $filterValues[$scope['field']]['value'] == $scope['value'];
-    }
-    
-    public function hasActiveScope()
-    {
-        foreach($this->scopes as $scope)
-        {
-            if($this->scopeIsActive($scope)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }
