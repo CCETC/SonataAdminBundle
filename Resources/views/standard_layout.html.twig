@@ -26,7 +26,7 @@ file that was distributed with this source code.
             <!-- jQuery code -->
             <link rel="stylesheet" href="{{ asset('bundles/sonatajquery/themes/flick/jquery-ui-1.8.16.custom.css') }}" type="text/css" media="all" />
 
-            <link rel="stylesheet" href="{{ asset('bundles/ccetcbootstrap/bootstrap/bootstrap.css') }}" type="text/css" media="all" >
+            <link rel="stylesheet" href="{{ asset('bundles/sonataadmin/bootstrap/bootstrap.min.css') }}" type="text/css" media="all" >
 
             <!-- base application asset -->
             <link rel="stylesheet" href="{{ asset('bundles/sonataadmin/css/layout.css') }}" type="text/css" media="all">
@@ -239,10 +239,10 @@ file that was distributed with this source code.
                 {% endif %}
 
                 {% if _list_table is not empty or _list_filters is not empty %}
-                    <div class="sonata-ba-filter">
+                    <div class="sonata-ba-filter sidebar">
                         {{ _list_filters|raw }}
                     </div>
-                    <div class="sonata-ba-list">
+                    <div class="sonata-ba-list content">
                         {{ _list_table|raw }}
                     </div>
                 {% endif %}

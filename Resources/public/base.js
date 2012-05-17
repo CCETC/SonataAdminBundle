@@ -2,7 +2,6 @@ jQuery(document).ready(function() {
     jQuery('html').removeClass('no-js');
     Admin.add_pretty_errors(document);
     Admin.add_collapsed_toggle();
-    Admin.add_filters(document);
     Admin.set_object_field_value(document);
     Admin.setup_collection_buttons(document);
 });
@@ -108,13 +107,6 @@ var Admin = {
         }
 
         return targetElement;
-    },
-
-    add_filters: function(subject) {
-        jQuery('div.filter_container.inactive', subject).hide();
-        jQuery('fieldset.filter_legend', subject).click(function(event) {
-           jQuery('div.filter_container', jQuery(event.target).parent()).toggle();
-        });
     },
 
     /**

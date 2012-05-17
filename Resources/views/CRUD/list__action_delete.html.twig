@@ -1,5 +1,5 @@
 {% if admin.isGranted('DELETE', object) and admin.hasRoute('delete') %}
-    <a class="btn small delete_link" href="{{ admin.generateObjectUrl('delete', object) }}" title="{% trans from 'SonataAdminBundle' %}action_delete{% endtrans %}">
-        <img src="{{ asset('bundles/sonataadmin/famfamfam/delete.png') }}" alt="{% trans from 'SonataAdminBundle' %}action_delete{% endtrans %}" /> Delete
+    <a class="action-link delete_link" href="{{ admin.generateObjectUrl('delete', object) }}" title="{% trans from 'SonataAdminBundle' %}action_delete{% endtrans %}">
+        Delete
     </a>
 {% endif %}

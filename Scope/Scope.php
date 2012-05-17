@@ -42,11 +42,15 @@ class Scope {
      * Get the parameters to include in this scope's link
      * @return associative array 
      */
-    public function getParameters()
+    public function getParameters($additions = array())
     {
         $parameters = $this->group->getParameters();
         
         $parameters['filter['.$this->field.'][value]'] = $this->value;
+        
+        foreach($additions as $k => $v) {
+            $parameters[$k] = $v;
+        }
         
         return $parameters;
     }

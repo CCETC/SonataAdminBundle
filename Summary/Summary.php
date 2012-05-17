@@ -333,7 +333,7 @@ class Summary
         return $this->sumBy;
     }
 
-    public function getParameters($additions)
+    public function getParameters($additions = array())
     {
         $parameters = array('xField' => $this->xField, 'yField' => $this->yField);
         if(isset($this->sumField)) {

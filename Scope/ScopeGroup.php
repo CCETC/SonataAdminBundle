@@ -71,7 +71,7 @@ class ScopeGroup {
      * Get an associative array of parameters that should be included in every link for this group.
      * @return type 
      */
-    public function getParameters()
+    public function getParameters($additions = array())
     {
         $parameters = array();
         
@@ -83,6 +83,10 @@ class ScopeGroup {
                     $parameters['filter['.$activeScope->getField().'][value]'] = $activeScope->getValue();
                 }
             }
+        }
+        
+        foreach($additions as $k => $v) {
+            $parameters[$k] = $v;
         }
         
         return $parameters;

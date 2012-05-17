@@ -44,6 +44,8 @@ class Datagrid implements DatagridInterface
     protected $results;
     
     protected $scopeGroups = array();
+    
+    protected $showFilterTypes = false;
 
     /**
      * @param ProxyQueryInterface $query
@@ -196,16 +198,32 @@ class Datagrid implements DatagridInterface
     }
 
     /**
-     * @param bool $excludeHidden exclude from the check the filters marked as hidden
+     * @param bool $excludeInvisible exclude from the check the filters marked as invisible
      * 
      * @return bool
      */
-    public function hasActiveFilters($excludeHidden = false)
+    public function hasActiveFilters($excludeInvisible = true)
     {
         foreach ($this->filters as $name => $filter) {
             if ($filter->isActive()) {
-                if ($excludeHidden) {
-                    if (!$filter->isHidden()) {
+                if ($excludeInvisible) {
+                    if (!$filter->isInvisible()) {
+                        return true;
+                    }
+                } else {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+    public function hasInactiveFilters($excludeInvisible = true)
+    {
+        foreach ($this->filters as $name => $filter) {
+            if (!$filter->isActive()) {
+                if ($excludeInvisible) {
+                    if (!$filter->isInvisible()) {
                         return true;
                     }
                 } else {
@@ -283,6 +301,16 @@ class Datagrid implements DatagridInterface
     public function getScopeGroups()
     {
         return $this->scopeGroups;
+    }
+    
+    public function setShowFilterTypes($bool)
+    {
+        $this->showFilterTypes = $bool;
+    }
+
+    public function getShowFilterTypes()
+    {
+        return $this->showFilterTypes;
     }
 
     

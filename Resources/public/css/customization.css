@@ -7,24 +7,6 @@ select[multiple="multiple"] {
     height: 300px;
 }
 
-.sonata-bc fieldset.filter_legend {
-    border: none;
-}
-
-div.filter-input-container,
-div.summary-field-container
-{
-    float: left;
-    margin: 2px 10px;
-    min-height: 70px;
-    width: 220px;
-    background: #efefef;
-    border-radius:5px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    padding: 3px 6px;
-}
-
 select[name*='[month]'],
 select[name*='[day]'],
 select[name*='[value][month]'],
@@ -61,17 +43,8 @@ select[name*='[year]'] {
     border: none;
 }
 
-
-table.filter-container-table {
-    border: none;
-}
-
 table th + th, table td + td {
     border-left: none;
-}
-
-fieldset.filter_legend {
-    border: none;
 }
 
 div.sonata-ba-view {
@@ -134,4 +107,50 @@ td.sonata-ba-list-field-action a.btn {
 td.sonata-ba-list-field-action a.btn img {
     float: left;
     margin-right: 5px;
+}
+
+.sonata-bc fieldset.filter_legend {
+    border: none;
+    margin-bottom: 10px;
+    font-weight: normal;
+}
+
+.sonata-bc fieldset.filter_legend legend {
+    font-size: 14px;
+}
+
+div.filter-container,
+div.summary-field-container
+{
+    margin: 5px 0;
+    padding: 3px 6px;
+}
+div.filter-container.active {
+    background-color: #FAFF9E;
+}
+
+a.action-link {
+    padding: 2px 0 0 18px;
+    margin-right: 8px;
+    background: no-repeat center left;
+}
+
+a.delete_link {
+    background-image: url(../famfamfam/delete.png);
+}
+a.edit_link {
+    background-image: url(../famfamfam/page_white_edit.png);
+    padding-left: 20px;
+}
+a.view_link {
+    background-image: url(../famfamfam/magnifier.png);
+}
+
+.container-fluid > .sonata-ba-filter.sidebar {
+    right: 20px;
+    left: auto;
+}
+
+.container-fluid > .sonata-ba-list.content {
+    margin-right: 240px;
 }

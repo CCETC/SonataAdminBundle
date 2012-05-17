@@ -1,14 +1,6 @@
 
 
 $(document).ready(function() {
-    $('a#extraFiltersToggle').live("click", function(e){
-        e.preventDefault();
-
-        $('div.extraFilters').show();
-        $(this).hide();
-
-    }); 
-    
 }); 
 
 tinyMCE.init({

@@ -174,12 +174,12 @@ class CRUDController extends Controller
             $hasSummaryFields = false;
         }
 
-        $showSummaryPane = false;
+        $showSummary = false;
         $summary = null;
 
-        if($this->getRequest()->get('tab') && $this->getRequest()->get('tab') == "summary") {
+        if($this->getRequest()->get('showSummary') && $this->getRequest()->get('showSummary') == "1") {
             if(!$this->isXmlHttpRequest() && $this->getRequest()->get('yField') && $this->getRequest()->get('xField')) {
-                $showSummaryPane = true;
+                $showSummary = true;
                 
                 if(!$this->getRequest()->get('sumBy')
                         || $this->getRequest()->get('sumBy') && $this->getRequest()->get('sumBy') == "count") {
@@ -195,7 +195,7 @@ class CRUDController extends Controller
                 $allResults = $datagrid->getAllResultsAsArray();
                 $summary->buildSummaryDataFromElementSet($allResults);
             } else if(!$this->isXmlHttpRequest() && isset($this->admin->summaryXFields)) {
-                $showSummaryPane = true;
+                $showSummary = true;
 
                 reset($this->admin->summaryYFields);
                 reset($this->admin->summaryYFields);
@@ -237,7 +237,7 @@ class CRUDController extends Controller
                     'datagrid' => $datagrid,
                     'summary' => $summary,
                     'hasSummaryFields' => $hasSummaryFields,
-                    'showSummaryPane' => $showSummaryPane
+                    'showSummary' => $showSummary
                 ));
     }
 
