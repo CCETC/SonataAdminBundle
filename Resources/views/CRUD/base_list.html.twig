@@ -38,7 +38,7 @@ file that was distributed with this source code.
     {% endif %}
     <div>
         {% for scopeGroup in admin.datagrid.scopeGroups %}
-            <ul class="{{ scopeGroup.class }} pull-left">
+            <ul class="{{ scopeGroup.class }}">
                 {% if scopeGroup.label %}<li style="margin: 10px;">{{ scopeGroup.label }}:</li>{% endif %}
                 <li {{ not scopeGroup.activeScope ? 'class="active"' : '' }}><a href="{{ admin.generateUrl('list', scopeGroup.parameters({'showSummary' : showSummary }) ) }}">All</a></li>
                 {% for scope in scopeGroup.scopes %}
@@ -46,15 +46,6 @@ file that was distributed with this source code.
                 {% endfor %}
             </ul>    
         {% endfor %}
-
-        {% if hasSummaryFields and not app.request.isxmlhttprequest %}
-            <div class="pull-right">
-                <a class="btn {{ showSummary ? '' : 'disabled' }}" href="{{ admin.generateUrl('list', admin.modelmanager.datagridparameters(admin.datagrid)) }}">List</a></li>
-                <a class="btn {{ showSummary ? 'disabled' : '' }}" href="{{ admin.generateUrl('list', admin.modelmanager.datagridparameters(admin.datagrid, summary.getParameters({'showSummary' : '1' })) ) }}">Summary</a></li>
-            </div>
-        {% endif %}
-        <div style="clear: both;"></div>
-            
     </div>
 {% endblock %}
 
@@ -169,7 +160,7 @@ file that was distributed with this source code.
                         {% endif %}
 
                         {% if admin.getExportFormats()|length > 0 %}
-                            <div style="font-size: 11px; color: #666; margin-top: 10px;">
+                            <div style="color: gray; margin-top: 15px;">
                                 {{ "label_export_download"|trans({}, "SonataAdminBundle") }}
                                 {% for format in admin.getExportFormats() %}
                                     <a href="{{ admin.generateUrl('export', admin.modelmanager.paginationparameters(admin.datagrid, 0) + {'format' : format}) }}">{{ format }}</a>{% if not loop.last%},{% endif %}
@@ -229,8 +220,20 @@ file that was distributed with this source code.
                     {% endif %}
                 {% endfor %}    
             </table>
+            
+            <div style="color: gray; margin-bottom: 10px;">
+                Download: <a style="margin-bottom: 5px;" href="{{ admin.generateUrl('list', admin.modelmanager.datagridparameters(admin.datagrid, summary.getParameters({'showSummary' : '1','downloadSummarySpreadsheet' : true })) ) }}">xls</a>
+            </div>
+        </div>
+    {% endif %}
 
-            <a href="{{ admin.generateUrl('list', admin.modelmanager.datagridparameters(admin.datagrid, summary.getParameters({'showSummary' : '1','downloadSummarySpreadsheet' : true })) ) }}" class="btn small spreadsheet-download">Download XLS</a>
+    {% if hasSummaryFields and not app.request.isxmlhttprequest %}
+        <div class="pull-left">
+            <ul class="pills">
+                <li style="margin: 10px 10px 10px 0;">View:</li>                
+                <li class=" {{ showSummary ? '' : 'active' }}"><a href="{{ admin.generateUrl('list', admin.modelmanager.datagridparameters(admin.datagrid)) }}">List</a></li>
+                <li class=" {{ showSummary ? 'active' : '' }}"><a href="{{ admin.generateUrl('list', admin.modelmanager.datagridparameters(admin.datagrid, summary.getParameters({'showSummary' : '1' })) ) }}">Summary</a></li>
+            </ul>
         </div>
     {% endif %}
 
