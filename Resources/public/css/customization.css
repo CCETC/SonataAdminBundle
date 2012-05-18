@@ -125,7 +125,7 @@ div.summary-field-container
     margin: 5px 0;
     padding: 3px 6px;
 }
-div.filter-container.active {
+tr.filter-container.active {
     background-color: #FAFF9E;
 }
 
@@ -153,4 +153,13 @@ a.view_link {
 
 .container-fluid > .sonata-ba-list.content {
     margin-right: 240px;
+}
+
+table.bordered-table td,
+table.bordered-table th {
+    border-left: none !important;
+}
+
+.sonata-bc fieldset.filter_legend table {
+    margin: 0 0 10px 0;
 }

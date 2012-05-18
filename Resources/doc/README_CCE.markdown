@@ -87,9 +87,6 @@ We've added some features to the list filters.
 ## Invisible Filters
 Use ``->add('myFilter', null, array('isInvisible' => true))`` to make the filter invisible to the user.
 
-## Extra Filters
-Using ``->add('myFilter', null, array('isExtra' => true))`` will hide the filter by default, and add a "more filters" button to the form that will toggle all extra filters.
-
 ## Default Filters
 You can define default values for any selection of filters.  These values will be used on every list request, provided no other value is set for that filter.
 

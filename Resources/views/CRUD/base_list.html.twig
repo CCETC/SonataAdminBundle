@@ -245,78 +245,97 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block list_filters %}
+{% if admin.datagrid.hasVisibleFilters or showSummary %}
+    <form class="sonata-filter-form form-stacked {{ admin.isChild and 1 == admin.datagrid.filters|length ? 'hide' : '' }}" action="{{ admin.generateUrl('list') }}" method="GET">
+        <fieldset class="filter_legend">
+            {% if admin.datagrid.hasVisibleFilters %}
+                <div class="filter_container active">
+                    <table class="bordered-table">
+                        <thead>
+                            <tr class="sonata-ba-list-field-header">
+                                <th colspan="2">Filters</th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
-    {% if admin.datagrid.hasVisibleFilters or showSummary %}
-        <form class="sonata-filter-form form-stacked {{ admin.isChild and 1 == admin.datagrid.filters|length ? 'hide' : '' }}" action="{{ admin.generateUrl('list') }}" method="GET">
-            <fieldset class="filter_legend">
-                {% if admin.datagrid.hasVisibleFilters %}
-                    <div class="filter_container active">
-                        <h4>Filters</h4>
                         {% for filter in admin.datagrid.filters %}
-                            <div class="filter-container {{ filter.isActive ? 'active' : ''}}" {{ filter.isInvisible ? 'style="display: none;"' : '' }}>
-                                <span {{ filter.isActive ? 'style="font-weight: bold;"' : ''}}>{{ admin.trans(filter.label) }}</span>
-                                <div class="" style="{{ admin.datagrid.showFilterTypes ? "" : "display: none;"}}">{{ form_widget(form.getChild(filter.name).getChild('type'), { 'attr': {'class': 'span3'} }) }}</div>
-                                <div class="">{{ form_widget(form.getChild(filter.name).getChild('value'), { 'attr': {'class': 'span3'} }) }}</div>
-                            </div>
+                            <tr class="filter-container {{ filter.isActive ? 'active' : ''}}" {{ filter.isInvisible ? 'style="display: none;"' : '' }}>
+                                    <td {{ filter.isActive ? 'style="font-weight: bold;"' : ''}}>{{ admin.trans(filter.label) }}</td>
+                                <td>
+                                    <div class="" style="{{ admin.datagrid.showFilterTypes ? "" : "display: none;"}}">{{ form_widget(form.getChild(filter.name).getChild('type'), { 'attr': {'class': 'span3'} }) }}</div>
+                                    <div class="">{{ form_widget(form.getChild(filter.name).getChild('value'), { 'attr': {'class': 'span3'} }) }}</div>
+                                </td>
+                            </tr>
                         {% endfor %}
 
                         <input type="hidden" name="filter[_page]" id="filter__page" value="1" />
 
                         {% set foo = form.getChild('_page').setRendered() %}
                         {{ form_rest(form) }}
-                    </div>
-                {% endif %}
-                
-                {% if showSummary %}
-                    <h4>Summary Options</h4>
-                    <div class="clearfix summary-field-container">
-                        <label>Group by</label>
-                        <div class="input">
-                            <select name="yField">
-                                {% for field, values in admin.summaryYFields %}
-                                    <option value="{{ field }}" {% if summary.yField is defined and summary.yField == field %}selected="selected"{% endif %}>
-                                        {{ values.label }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="clearfix summary-field-container">
-                        <label>and by</label>
-                        <div class="input">
-                            <select name="xField">
-                                {% for field, values in admin.summaryXFields %}
-                                    <option value="{{ field }}" {% if summary.xField is defined and summary.xField == field %}selected="selected"{% endif %}>
-                                        {{ values.label }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    {% if admin.summarySumFields is defined and admin.summarySumFields|length > 0 %}
-                        <div class="clearfix summary-field-container">
-                            <label>Summarize by</label>
-                            <div class="input">
-                                <select name="sumBy">
-                                    <option value="count" {% if summary.sumBy is defined and summary.sumBy == 'count' %}selected="selected"{% endif %}>total items</option>
-                                    {% for field, values in admin.summarySumFields %}
-                                        <option value="{{ field }}" {% if summary.sumField is defined and summary.sumField == field %}selected="selected"{% endif %}>
+                        </tbody>                           
+                    </table>
+                </div>
+            {% endif %}
+
+            {% if showSummary %}
+                <table class="bordered-table">
+                    <thead>
+                        <tr class="sonata-ba-list-field-header">
+                            <th colspan="2">Summary Options</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Group by</td>
+                            <td>
+                                <select name="yField" class="span3">
+                                    {% for field, values in admin.summaryYFields %}
+                                        <option value="{{ field }}" {% if summary.yField is defined and summary.yField == field %}selected="selected"{% endif %}>
                                             {{ values.label }}
                                         </option>
                                     {% endfor %}
                                 </select>
-                            </div>
-                        </div>
-                    {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>and by</td>
+                            <td>
+                                <select name="xField" class="span3">
+                                    {% for field, values in admin.summaryXFields %}
+                                        <option value="{{ field }}" {% if summary.xField is defined and summary.xField == field %}selected="selected"{% endif %}>
+                                            {{ values.label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+                        {% if admin.summarySumFields is defined and admin.summarySumFields|length > 0 %}
+                            <tr>
+                                <td>Summarize by</td>
+                                <td>
+                                    <select name="sumBy" class="span3">
+                                        <option value="count" {% if summary.sumBy is defined and summary.sumBy == 'count' %}selected="selected"{% endif %}>total items</option>
+                                        {% for field, values in admin.summarySumFields %}
+                                            <option value="{{ field }}" {% if summary.sumField is defined and summary.sumField == field %}selected="selected"{% endif %}>
+                                                {{ values.label }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
+                        {% endif %}
 
-                    <input type="hidden" value="1" name="showSummary" /> 
-                {% endif %}                    
-                    
-                <input id="submit-filters" type="submit" class="btn primary" value="{{ admin.datagrid.hasActiveFilters or showSummary ? 'Update' : 'Filter'}}" />
-                    
-                <a id="reset-filters" class="btn" href="{{ admin.generateUrl('list') }}">reset</a>                    
-                
-            </fieldset>
-        </form>
-    {% endif %}
+                        <input type="hidden" value="1" name="showSummary" /> 
+
+                    </tbody>
+                </table>
+            {% endif %}                    
+
+            <input id="submit-filters" type="submit" class="btn primary" value="{{ admin.datagrid.hasActiveFilters or showSummary ? 'Update' : 'Filter'}}" />
+
+            <a id="reset-filters" class="btn" href="{{ admin.generateUrl('list') }}">reset</a>                    
+
+        </fieldset>
+    </form>
+{% endif %}
 {% endblock %}

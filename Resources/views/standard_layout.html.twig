@@ -242,7 +242,7 @@ file that was distributed with this source code.
                     <div class="sonata-ba-filter sidebar">
                         {{ _list_filters|raw }}
                     </div>
-                    <div class="sonata-ba-list content">
+                    <div class="sonata-ba-list {{ _list_filters is not empty ? 'content' : '' }}">
                         {{ _list_table|raw }}
                     </div>
                 {% endif %}
