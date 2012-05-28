@@ -1862,7 +1862,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
 
         // the generated $breadcrumbs contains an empty element
         array_shift($breadcrumbs);
-
+        
         return $this->breadcrumbs[$action] = $breadcrumbs;
     }
 

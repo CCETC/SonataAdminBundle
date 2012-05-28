@@ -93,7 +93,10 @@ file that was distributed with this source code.
                 <div class="topbar-inner">
                     <div class="container-fluid">
                         {% if admin_pool is defined %}
-                            <a href="{{ url('home') }}" class="brand">{{ admin_pool.title }}</a>
+                            <a href="{{ url('home') }}" class="brand">
+                                <img src="{{ asset(admin_pool.titlelogo) }}"  alt="{{ admin_pool.title }}" />
+                                {{ admin_pool.title }}
+                            </a>
 
                             <ul class="nav">
                                 {% if admin_pool.expandedMenu is defined and admin_pool.expandedMenu %}               
