@@ -52,12 +52,6 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
      * @var associative array
      */
     protected $formLabels;
-    /**
-     * A list of filters that are hidden by default
-     * @var array
-     */
-    protected $hiddenFilters = array();
-    
     protected $filterDefaults = array();
     protected $entityLabel;
     protected $entityLabelPlural;
@@ -83,11 +77,6 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     public function getFormLabels()
     {
         return $this->formLabels;
-    }
-
-    public function getHiddenFilters()
-    {
-        return $this->hiddenFilters;
     }
 
     public function getFilterDefaults()
@@ -128,6 +117,8 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     public $listActionButtons;
     public $editActionButtons;
     public $showActionButtons;
+    
+    public $parentAdmin;
     
     const CONTEXT_MENU       = 'menu';
     const CONTEXT_DASHBOARD  = 'dashboard';
@@ -1914,6 +1905,12 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
 
         if (!$this->translator) {
             return $id;
+        }
+        // check the translationDomain if there is no translation in the specified domain
+        if($id == $this->translator->trans($id, $parameters, $domain, $locale)) {
+            return $this->translator->trans($id, $parameters, $this->translationDomain, $locale);
+        } else {
+            return $this->translator->trans($id, $parameters, $domain, $locale);
         }
 
         return $this->translator->trans($id, $parameters, $domain, $locale);

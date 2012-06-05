@@ -100,9 +100,16 @@ For simple entites, improve browsing by adding scopes.  The list will use the sc
 		$this->getDatagrid()->addScopeGroup(
 				new ScopeGroup('pills', $this->getDatagrid(), $datagridMapper, array(
                     new Scope('approved', '1'),
-                    new Scope('approved', '2', 'Unapproved'),
+                    new Scope('approved', '2', null, 'Unapproved'),
                 )
         );		
+		
+The Scope constructor takes the following parameters:
+
+ - $field
+ - $value
+ - $type (optional)
+ - $label (default ucfirst($field))
 		
 Each scope takes a field/value pair that corresponds to a datagrid filter.  If a filter for the field in a scope does not exist, it will be created.  You can also set a label for a group.  Finally you can mark a group as a "strong" group.  If a group is not "strong" its links will not affect the selected scope of other groups.
 
@@ -117,7 +124,7 @@ Each scope takes a field/value pair that corresponds to a datagrid filter.  If a
         
         $pills = new ScopeGroup('pills', $this->getDatagrid(), $datagridMapper, array(
                     new Scope('organic', '1'),
-                    new Scope('organic', '2', 'Non-organic'),
+                    new Scope('organic', '2', '1', 'Non-organic'),
                 )
         );
         $pills->setLabel("Type");

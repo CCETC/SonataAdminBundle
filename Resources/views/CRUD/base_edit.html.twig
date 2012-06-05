@@ -13,9 +13,9 @@ file that was distributed with this source code.
 
 {% block title %}
     {% if admin.id(object) %}
-        {{ "title_edit"|trans({'%name%': admin.toString(object) }, 'SonataAdminBundle') }}
+        {{ admin.entityLabelPlural }} / {{ "title_edit"|trans({'%name%': admin.toString(object) }, 'SonataAdminBundle') }}
     {% else %}
-        {{ "title_create"|trans({}, 'SonataAdminBundle') }}
+        {{ admin.entityLabelPlural }} / {{ "title_create"|trans({}, 'SonataAdminBundle') }}
     {% endif %}
 {% endblock%}
 
@@ -89,6 +89,8 @@ file that was distributed with this source code.
                                 {{ admin.formfielddescriptions[field_name].options['preHook']|raw }}
                                 {{ form_row(form[field_name])}}
                                 {{ admin.formfielddescriptions[field_name].options['postHook']|raw }}
+                            {% else %}
+                                {{ form_row(form[field_name])}}                            
                             {% endif %}
                         {% endfor %}
                     </div>

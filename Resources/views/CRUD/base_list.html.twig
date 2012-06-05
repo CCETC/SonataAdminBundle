@@ -40,9 +40,9 @@ file that was distributed with this source code.
         {% for scopeGroup in admin.datagrid.scopeGroups %}
             <ul class="{{ scopeGroup.class }}">
                 {% if scopeGroup.label %}<li style="margin: 10px;">{{ scopeGroup.label }}:</li>{% endif %}
-                <li {{ not scopeGroup.activeScope ? 'class="active"' : '' }}><a href="{{ admin.generateUrl('list', scopeGroup.parameters({'showSummary' : showSummary }) ) }}">All</a></li>
+                <li {{ not scopeGroup.activeScope ? 'class="active"' : '' }}><a href="{{ admin.generateUrl('list', scopeGroup.parameters(admin.modelmanager.datagridparameters(admin.datagrid, {'showSummary' : showSummary })) ) }}">All</a></li>
                 {% for scope in scopeGroup.scopes %}
-                    <li {{ scope.isActive ? 'class="active"' : '' }}><a href="{{ admin.generateUrl('list', scope.parameters({'showSummary' : showSummary }) ) }}">{{ scope.label }}</a></li>
+                    <li {{ scope.isActive ? 'class="active"' : '' }}><a href="{{ admin.generateUrl('list', scope.parameters(admin.modelmanager.datagridparameters(admin.datagrid, {'showSummary' : showSummary})) ) }}">{{ scope.label }}</a></li>
                 {% endfor %}
             </ul>    
         {% endfor %}

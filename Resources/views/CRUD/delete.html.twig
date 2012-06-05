@@ -12,6 +12,8 @@ file that was distributed with this source code.
 {% extends base_template %}
 
 {% block title %}
+    {{ admin.entityLabelPlural }} /
+
     {{ "action_delete"|trans({}, 'SonataAdminBundle') }}
 
     {% if admin.id(object) %}

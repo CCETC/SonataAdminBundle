@@ -12,7 +12,9 @@ file that was distributed with this source code.
 {% extends base_template %}
 
 {% block title %}
-    {{ "action_show"|trans({}, 'SonataAdminBundle') }}
+     {{ admin.entityLabelPlural }} /
+
+   {{ "action_show"|trans({}, 'SonataAdminBundle') }}
 
     {% if admin.id(object) %}
         "{{ admin.toString(object) }}"

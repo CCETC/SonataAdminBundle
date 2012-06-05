@@ -130,20 +130,45 @@ tr.filter-container.active {
 }
 
 a.action-link {
-    padding: 2px 0 0 18px;
+    padding: 2px 0 0 2px;
     margin-right: 8px;
     background: no-repeat center left;
 }
 
-a.delete_link {
-    background-image: url(../famfamfam/delete.png);
+a.action-link i {
+    color: black;
+    font-size: 16px;
 }
-a.edit_link {
-    background-image: url(../famfamfam/page_white_edit.png);
-    padding-left: 20px;
+
+i.size16 {
+    font-size: 16px;
 }
-a.view_link {
-    background-image: url(../famfamfam/magnifier.png);
+i.sizee20 {
+    font-size: 20px;
+}
+i.size32 {
+    font-size: 32px;
+}
+
+
+i.red {
+    color: #B94A48 !important;
+}
+
+i.green {
+    color: #468847 !important;
+}
+
+i.black {
+    color: black !important;
+}
+
+i.orange {
+    color: #F89406 !important;
+}
+
+i.lightBlue {
+    color: #3A87AD !important;
 }
 
 .container-fluid > .sonata-ba-filter.sidebar {
@@ -176,43 +201,54 @@ table.bordered-table th {
     margin: 0 0 15px 0;
 }
 
-.ccetc-widget-container .ccetc-item-container {
+.ccetc-item-container {
     border-bottom: 1px solid #eee;
     font-size: 16px;
     overflow: auto;
 }
-.ccetc-widget-container .ccetc-app-container {
+.ccetc-item-container.last {
+    border-bottom: none;
+}
+.ccetc-app-container {
     font-size: 12px;
     margin: 5px;
     float: left;
     text-align: center;
 }
-.ccetc-widget-container .ccetc-app {
-    border: 1px solid #ddd;
-    border-radius: 7px;
-    -moz-border-radius: 7px;
-    -webkit-border-radius: 7px;    
-    padding: 10px;
-}
-
-.ccetc-widget-container .ccetc-app-container img {
-    width: 16px;
+.ccetc-app-icon-container {
+    border-radius: 13px;
+    -moz-border-radius: 13px;
+    -webkit-border-radius: 13px;    
+    padding: 10px 12px 10px 10px;
+    background: black;
     margin: 0 auto;
-    display: block;
+    width: 32px;
+    height: 32px;
 }
 
-.ccetc-widget-container .ccetc-item-container.active {
+.ccetc-app-container i {
+    font-size: 32px;
+    color: white;
+    line-height: 32px;
+}
+
+.ccetc-item-container.active {
     background: #FCFFC4;
 }
 
-.ccetc-widget-container .ccetc-item-container .ccetc-item {
+.ccetc-item-container .ccetc-item {
     padding: 8px 6px;
 }
-.ccetc-widget-container .ccetc-item-container .ccetc-icon-item {
-    padding: 8px 6px 8px 30px;
-    background-position: 7px 9px;
-    background-repeat: no-repeat;
-    overflow: auto;
+
+.ccetc-item-container .ccetc-meta-item {
+    text-align: center;
+    font-size: 11px;
+}
+
+.ccetc-item-container .ccetc-icon-item i {
+    font-size: 20px;
+    color: black;
+    padding: 8px 6px;
 }
 
 .ccetc-widget-container .ccetc-widget-heading {
@@ -234,5 +270,3 @@ table.bordered-table th {
     line-height: 23px;
     margin: 7px 0 0 0;
 }
-
-

@@ -106,7 +106,7 @@ file that was distributed with this source code.
                                                 <li>
                                                     <a href="{{ admin.generateUrl('list')}}">
                                                         {% if admin.entityIconPath is defined and admin.entityIconPath != "" %}
-                                                            <img src="{{ asset(admin.entityIconPath) }}" />
+                                                            <img src="{{ asset(admin.entityIconPath) }}" style="margin-top: 5px;" />
                                                         {% endif %}
                                                         {{ admin.label|trans({}, admin.translationdomain) }}
                                                     </a>

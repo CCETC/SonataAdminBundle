@@ -69,29 +69,41 @@ class ScopeGroup {
     
     /**
      * Get an associative array of parameters that should be included in every link for this group.
+     * This array should include:
+     *  - anything in $additions
+     * 
+     * Unset from this array should be:
+     *  - this group's active scope
+     *  - active scopes for every other group if this group is strong
+     * 
      * @return type 
      */
     public function getParameters($additions = array())
     {
         $parameters = array();
-        
-        // groups that are not strong should retain active scopes for other groups
-        if(!$this->strongGroup) {
-            foreach($this->datagrid->getScopeGroups() as $group) {
-                if($group != $this && $group->getActiveScope()) {
-                    $activeScope = $group->getActiveScope();
-                    $parameters['filter['.$activeScope->getField().'][value]'] = $activeScope->getValue();
-                }
-            }
-        }
-        
         foreach($additions as $k => $v) {
             $parameters[$k] = $v;
         }
         
+        // reset this group's active field
+        if($this->getActiveScope()) {
+            unset($parameters['filter'][$this->getActiveScope()->getField()]['value']);
+            unset($parameters['filter'][$this->getActiveScope()->getField()]['type']);
+        }
+                
+        // reset active scopes in other groups if strong
+        if($this->strongGroup) {
+            foreach($this->datagrid->getScopeGroups() as $group) {
+                if($group != $this && $group->getActiveScope()) {
+                    $activeScope = $group->getActiveScope();
+                    unset($parameters['filter'][$activeScope->getField()]['value']);
+                    unset($parameters['filter'][$activeScope->getField()]['type']);
+                }
+            }
+        }
+        
         return $parameters;
     }
-    
     
     public function setStrongGroup($bool)
     {

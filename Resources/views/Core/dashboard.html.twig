@@ -22,7 +22,7 @@ file that was distributed with this source code.
                 {% endif %}
             {% endfor %}
         </div>
-        <div class="span10">
+        <div class="span9">
             {% for block in blocks %}
                 {% if block.position == 'right' %}
                     {{ sonata_block_render({ 'type': block.type, 'settings': block.settings}) }}
