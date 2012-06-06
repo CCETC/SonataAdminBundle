@@ -31,6 +31,7 @@ select[name*='[year]'] {
     color: white;
     font-size: 12px;
     margin-top: 5px;
+    line-height: 29px;
 }
 
 #headerMenu a {
@@ -209,6 +210,9 @@ table.bordered-table th {
 .ccetc-item-container.last {
     border-bottom: none;
 }
+.ccetc-item-container.first {
+    border-top: 1px solid #eee;
+}
 .ccetc-app-container {
     font-size: 12px;
     margin: 5px;
@@ -238,6 +242,7 @@ table.bordered-table th {
 
 .ccetc-item-container .ccetc-item {
     padding: 8px 6px;
+    overflow: auto;
 }
 
 .ccetc-item-container .ccetc-meta-item {
@@ -249,6 +254,11 @@ table.bordered-table th {
     font-size: 20px;
     color: black;
     padding: 8px 6px;
+    overflow: auto;    
+}
+
+.ccetc-item-container .ccetc-main-content-container {
+    overflow: auto;
 }
 
 .ccetc-widget-container .ccetc-widget-heading {
@@ -269,4 +279,13 @@ table.bordered-table th {
     padding: 0 6px;
     line-height: 23px;
     margin: 7px 0 0 0;
+}
+
+.sonata-bc .container-fluid >.sidebar{
+    position:absolute;
+    float: none;
+}
+
+.container-fluid > .content {
+    float: none;
 }

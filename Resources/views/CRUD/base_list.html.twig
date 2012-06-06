@@ -147,9 +147,6 @@ file that was distributed with this source code.
                                 });
                             </script>
 
-                            {% if admin.spreadsheetFields is defined and admin.spreadsheetFields|length > 0 %}
-                                <a style="margin-right: 25px;" href="{{ admin.generateUrl('list', admin.modelmanager.datagridparameters(admin.datagrid, {'downloadListSpreadsheet' : true}) ) }}" class="success btn small spreadsheet-download">Download Spreadsheet</a>
-                            {% endif %}
 
                             <select name="action">
                                 {% for action, options in batchactions %}
@@ -159,15 +156,11 @@ file that was distributed with this source code.
                             <input class="btn" type="submit" value="{% trans from 'SonataAdminBundle' %}btn_batch{% endtrans %}" />
                         {% endif %}
 
-                        {% if admin.getExportFormats()|length > 0 %}
+                        {% if admin.spreadsheetFields is defined and admin.spreadsheetFields|length > 0 %}
                             <div style="color: gray; margin-top: 15px;">
-                                {{ "label_export_download"|trans({}, "SonataAdminBundle") }}
-                                {% for format in admin.getExportFormats() %}
-                                    <a href="{{ admin.generateUrl('export', admin.modelmanager.paginationparameters(admin.datagrid, 0) + {'format' : format}) }}">{{ format }}</a>{% if not loop.last%},{% endif %}
-                                {% endfor %}
+                                Download: <a href="{{ admin.generateUrl('list', admin.modelmanager.datagridparameters(admin.datagrid, {'downloadListSpreadsheet' : true}) ) }}" class="">xls</a>
                             </div>
                         {% endif %}
-                            
                     </div>
                     <div style="clear: both;">&nbsp;</div>
                 </form>
@@ -265,8 +258,8 @@ file that was distributed with this source code.
                             <tr class="filter-container {{ filter.isActive ? 'active' : ''}}" {{ filter.isInvisible ? 'style="display: none;"' : '' }}>
                                     <td {{ filter.isActive ? 'style="font-weight: bold;"' : ''}}>{{ admin.trans(filter.label) }}</td>
                                 <td>
-                                    <div class="" style="{{ admin.datagrid.showFilterTypes ? "" : "display: none;"}}">{{ form_widget(form.getChild(filter.name).getChild('type'), { 'attr': {'class': 'span3'} }) }}</div>
-                                    <div class="">{{ form_widget(form.getChild(filter.name).getChild('value'), { 'attr': {'class': 'span3'} }) }}</div>
+                                    <div class="" style="{{ admin.datagrid.showFilterTypes ? "" : "display: none;"}}">{{ form_widget(form.getChild(filter.name).getChild('type'), { 'attr': {'class': 'span2'} }) }}</div>
+                                    <div class="">{{ form_widget(form.getChild(filter.name).getChild('value'), { 'attr': {'class': 'span2'} }) }}</div>
                                 </td>
                             </tr>
                         {% endfor %}
