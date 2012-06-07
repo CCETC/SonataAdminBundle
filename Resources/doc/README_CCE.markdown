@@ -18,6 +18,7 @@ It contains many customizations to the sonata-project bundle.
 * custom action buttons (buttons in top right corner) for list/edit/show templates
 * translations check the configured custom domain if nothing is found in the supplied domain
 * option to hide show fields with empty values
+* option to specifiy a service to be saved as the "appHelper" for admin_pool
 
 ### Interface Changes
 * Fewer submit buttons on edit
@@ -133,6 +134,11 @@ Each scope takes a field/value pair that corresponds to a datagrid filter.  If a
         $this->getDatagrid()->addScopeGroup($tabs);
         $this->getDatagrid()->addScopeGroup($pills);
 
+# App Helper
+You can define a service to be attached to the admin_pool for use in all of your templates:
+
+    	sonata_admin:
+            app_helper: myapp.bundle.dir.service
 
 # Summary Reports
 You can include a table of field summary statistics on the list template by defining a few fields to summarize by:
@@ -218,4 +224,4 @@ To always show some fields, regardless of their value, include a black list:
 We have added one additional configuration option that toggles between a dropdown menu and an expanded menu:
 
 	sonata_admin:
-    	expanded_menu: true
+            expanded_menu: true

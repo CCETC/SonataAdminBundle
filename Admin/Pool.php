@@ -31,17 +31,20 @@ class Pool
     
     protected $expandedMenu;
 
+    protected $appHelper;
+    
     /**
      * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
      * @param string $title
      * @param string $logoTitle
      */
-    public function __construct(ContainerInterface $container, $title, $logoTitle, $expandedMenu)
+    public function __construct(ContainerInterface $container, $title, $logoTitle, $expandedMenu, $appHelper = null)
     {
         $this->container  = $container;
         $this->title      = $title;
         $this->titleLogo  = $logoTitle;
         $this->expandedMenu = $expandedMenu;
+        $this->appHelper = $this->container->get($appHelper);
     }
 
     /**
@@ -256,5 +259,10 @@ class Pool
     public function getExpandedMenu()
     {
         return $this->expandedMenu;
+    }    
+    
+    public function getAppHelper()
+    {
+        return $this->appHelper;
     }
 }

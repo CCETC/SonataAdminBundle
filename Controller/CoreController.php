@@ -35,10 +35,20 @@ class CoreController extends Controller
      */
     public function dashboardAction()
     {
+        $appRepository = $this->container->get('doctrine')->getRepository('MyCCEAppBundle:App');
+        $apps = $appRepository->findByEnabled(true);
+        $appLinks = array();
+        
+        foreach($apps as $app) {
+            $appLinks[$app->getName()] = $this->container->get($app->getAdminService())->generateUrl($app->getAdminHomepage());
+        }
+        
         return $this->render($this->container->get('sonata.admin.pool')->getTemplate('dashboard'), array(
             'base_template'   => $this->getBaseTemplate(),
             'admin_pool'      => $this->container->get('sonata.admin.pool'),
-            'blocks'          => $this->container->getParameter('sonata.admin.configuration.dashboard_blocks')
+            'blocks'          => $this->container->getParameter('sonata.admin.configuration.dashboard_blocks'),
+            'apps' => $apps,
+            'appLinks' => $appLinks                
         ));
     }
 }

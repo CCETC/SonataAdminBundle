@@ -64,6 +64,7 @@ class SonataAdminExtension extends Extension
         $pool->replaceArgument(1, $config['title']);
         $pool->replaceArgument(2, $config['title_logo']);
         $pool->replaceArgument(3, $config['expanded_menu']);
+        $pool->replaceArgument(4, $config['app_helper']);
 
         $container->setParameter('sonata.admin.configuration.templates', $config['templates']);
         $container->setParameter('sonata.admin.configuration.admin_services', $config['admin_services']);
