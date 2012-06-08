@@ -289,3 +289,17 @@ table.bordered-table th {
 .container-fluid > .content {
     float: none;
 }
+
+.sonata-action-menu {
+    width: 100%;
+}
+
+.sonata-action-menu .tabs {
+    margin-bottom: 10px;
+}
+
+.pills a {
+    border-radius: 7px;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+}

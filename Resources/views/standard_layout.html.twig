@@ -26,12 +26,13 @@ file that was distributed with this source code.
             <!-- jQuery code -->
             <link rel="stylesheet" href="{{ asset('bundles/sonatajquery/themes/flick/jquery-ui-1.8.16.custom.css') }}" type="text/css" media="all" />
 
-            <link rel="stylesheet" href="{{ asset('bundles/sonataadmin/bootstrap/bootstrap.min.css') }}" type="text/css" media="all" >
+            <link rel="stylesheet" href="{{ asset('bundles/ccetcbootstrap/bootstrap/bootstrap.css') }}" type="text/css" media="all" >
 
             <!-- base application asset -->
             <link rel="stylesheet" href="{{ asset('bundles/sonataadmin/css/layout.css') }}" type="text/css" media="all">
             <link rel="stylesheet" href="{{ asset('bundles/sonataadmin/css/colors.css') }}" type="text/css" media="all">
             <link rel="stylesheet" href="{{ asset('bundles/sonataadmin/css/customization.css') }}" type="text/css" media="all">
+            <link rel="stylesheet" href="{{ asset('bundles/ccetcnotification/css/notification-list.css') }}" type="text/css" media="all">
         {% endblock %}
 
         {% block javascripts %}
@@ -94,9 +95,7 @@ file that was distributed with this source code.
                     <div class="container-fluid">
                         {% if admin_pool is defined %}
                             <a href="{{ url('home') }}" class="brand">
-                                <img src="{{ asset(admin_pool.titlelogo) }}"  alt="{{ admin_pool.title }}" />
-                                {{ admin_pool.title }}
-                            </a>
+                                <img src="{{ asset(admin_pool.titlelogo) }}"  alt="{{ admin_pool.title }}" />{{ admin_pool.title }}</a>
 
                             <ul class="nav">
                                 {% if admin_pool.expandedMenu is defined and admin_pool.expandedMenu %}               
@@ -147,23 +146,56 @@ file that was distributed with this source code.
                                 {% endif %}
                             </ul>
                         {% endif %}
-                        <p class="pull-right" id="headerMenu">
+                        <div class="pull-right" id="headerMenu">
                         {% block user_block %}
                                 {% if is_granted('ROLE_USER') %}
-                                    Logged in as {{ app.user }} <a href="{{ url('fos_user_profile_show') }}">(edit)</a> <a href="{{ url('fos_user_security_logout') }}">Log out</a>
+                                    Logged in as {{ app.user }}, <a href="{{ url('fos_user_security_logout') }}">Log out</a>
                                 {% else %}
                                     <a href="{{ url('fos_user_security_login') }}">Login</a>
                                     <a href="{{ url('fos_user_registration_register') }}">Register</a>
                                 {% endif %}
-                                <a class="last" href="{{ url('adminHelp') }}">Help</a>
+                                <a href="{{ url('fos_user_profile_show') }}"><i class="icon-vcard size16"></i> Profile</a>                                    
+                                <a class="last" href="{{ url('adminHelp') }}"><i class="icon-help-circle size16"></i> Help</a>
                         {% endblock %}
-                        </p>
                     </div>
                 </div>
             </div>
         </div>
+        </div>
 
         <div class="container-fluid">
+            <div class="page-header" style="{{ action is defined ? 'border: none;' : ''}}">
+                <h1>
+                    {% if action is defined %}
+                        {% if admin.parent is defined and admin.parent != "" %}
+                            {% set pageAdmin = admin.parent %}
+                        {% else %}
+                            {% set pageAdmin = admin %}
+                        {% endif %}
+
+                        {% if pageAdmin.entityIconPath is defined and pageAdmin.entityIconPath != "" %}
+                            <i class="{{ pageAdmin.entityIconPath }}"></i>
+                        {% endif %}
+                        {{ pageAdmin.entityHeading }}
+                    {% else %}
+                        {% block page_header %}
+                            Dashboard
+                        {% endblock %}
+                    {% endif %}                            
+                </h1>
+            </div>
+
+            {% if action is defined and admin_pool.getGroupMenu(admin)|length > 1 %}
+                <ul class="pills">
+                {% for item in admin_pool.getGroupMenu(admin) %}
+                    <li {{ item.active ? 'class="active"' : ''}}>
+                        <a href="{{ item.url }}">{{ item.label }}</a>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+                
+                
             {% block notice %}
                 {% for notice_level in ['success','error','info', 'warning'] %}
                     {% set session_var = 'sonata_flash_' ~ notice_level %}
@@ -175,39 +207,25 @@ file that was distributed with this source code.
                 {% endfor %}
             {% endblock %}
                 
-            <div style="float: right">
-                {%block actions %}{% endblock %}
+            {% if action is defined %}
+                {% if object is not defined %}{% set object = null %}{% endif %}
+                {% set actionMenuItems = admin.actionMenuItems(action, object) %}
+                {% if actionMenuItems > 0 %}
+                    <div class="sonata-action-menu">
+                        <ul class="tabs">
+                            {% for actionMenuItem in admin.actionMenuItems(action, object) %}    
+                                <li class="{{ actionMenuItem.class is defined ? actionMenuItem.class : '' }}">
+                                    <a href="{{ actionMenuItem.href }}">
+                                        {% if actionMenuItem.icon is defined %}<i class="{{ actionMenuItem.icon }}"></i> {% endif %}{{ actionMenuItem.label }}</a>
+                                </li>
+                            {% endfor %}    
+
+                            {% block actions %}{% endblock %}
+                        </ul>
+                        &nbsp;
             </div>
-                
-            <div class="page-header">
-                <h1>
-                    {% if action is defined %}
-                        {% for label, uri in admin.breadcrumbs(action) %}
-                            {% if loop.first and not loop.last %}
-                                <small>
                             {% endif %}
-                            {% if not loop.last %}
-                                <a href="{{ uri }}">
-                                    {% if admin.entityIconPath is defined and admin.entityIconPath != "" and admin.entitylabelplural == label %}
-                                        <img src="{{ asset(admin.entityIconPath) }}" />
                                     {% endif %}
-                                    {{ label }}</a> / 
-                            {% elseif loop.last  %}
-                                {% if not loop.first %}</small>{% endif %}
-                                {% if admin.entityIconPath is defined and admin.entityIconPath != "" and admin.entitylabelplural == label %}
-                                    <img src="{{ asset(admin.entityIconPath) }}" />
-                                {% endif %}
-                                {{ label }}
-                                {% if object is defined and object.__toString is defined and object.__toString %}<small>{{ object }}</small>{% endif %}
-                            {% endif %}
-                        {% endfor %}
-                    {% else %}
-                        {% block page_header %}
-                            Dashboard
-                        {% endblock %}
-                    {% endif %}                            
-                </h1>
-            </div>
                 
             {% if _side_menu is not empty %}
                 <div class="sidebar">

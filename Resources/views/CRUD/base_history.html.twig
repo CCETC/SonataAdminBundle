@@ -11,22 +11,6 @@ file that was distributed with this source code.
 
 {% extends base_template %}
 
-{% block actions %}
-    <div class="sonata-actions">
-        <ul>
-            {% if admin.hasroute('edit') and admin.id(object) and admin.isGranted('EDIT', object) and admin.show|length > 0 %}
-                <li class="btn sonata-action-element"><a href="{{ admin.generateObjectUrl('edit', object) }}">{% trans from 'SonataAdminBundle' %}link_action_edit{% endtrans %}</a></li>
-            {% endif %}
-            {% if admin.hasroute('show') and admin.isGranted('VIEW', object)%}
-                <li class="btn sonata-action-element"><a href="{{ admin.generateObjectUrl('show', object) }}">{% trans from 'SonataAdminBundle' %}link_action_show{% endtrans %}</a></li>
-            {% endif %}
-            {% if admin.hasroute('list') and admin.isGranted('LIST')%}
-                <li class="btn sonata-action-element"><a href="{{ admin.generateUrl('list') }}">{% trans from 'SonataAdminBundle' %}link_action_list{% endtrans %}</a></li>
-            {% endif %}
-        </ul>
-    </div>
-{% endblock %}
-
 {% block content %}
     <div class="row">
         <div class="span9">

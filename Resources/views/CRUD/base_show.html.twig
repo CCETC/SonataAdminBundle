@@ -21,34 +21,11 @@ file that was distributed with this source code.
     {% endif %}
 {% endblock%}
 
-{% block actions %}
-    <div class="sonata-actions">
-
-        <ul>
-            {% if admin.hasRoute('edit') and admin.isGranted('EDIT', object)%}
-                <a class="btn" href="{{ admin.generateObjectUrl('edit', object) }}">{% trans from 'SonataAdminBundle' %}link_action_edit{% endtrans %}</a>
-            {% endif %}
-            {% if admin.hasroute('history') and admin.id(object) and admin.isGranted('EDIT', object) %}
-                <a class="btn" href="{{ admin.generateObjectUrl('history', object) }}">{% trans from 'SonataAdminBundle' %}link_action_history{% endtrans %}</a>
-            {% endif %}
-            {% if admin.hasRoute('create') and admin.isGranted('CREATE')%}
-                <a class="btn" href="{{ admin.generateUrl('create') }}">{% trans from 'SonataAdminBundle' %}link_action_create{% endtrans %}</a>
-            {% endif %}
-
-            {% if admin.hasRoute('list') and admin.isGranted('LIST')%}
-                <a class="btn" href="{{ admin.generateUrl('list') }}">{% trans from 'SonataAdminBundle' %}link_action_list{% endtrans %}</a>
-            {% endif %}
-
-            {% for actionButton in admin.showActionButtons %}
-                <a class="btn" href="{{ admin.generateUrl(actionButton.route) }}">{{ actionButton.text }}</a>
-            {% endfor %}                
-        </ul>
-    </div>
-{% endblock %}
-
 {% block side_menu %}{{ knp_menu_render(admin.sidemenu(action), {}, 'list') }}{% endblock %}
 
 {% block show %}
+    {% if admin.id(object) %}<h2>{{ object }}</h2>{% endif %}    
+
     {% if admin.showPreHook is defined and admin.showPreHook != "" %}
         {% if admin.showPreHook.parameters is defined %}
             {% include admin.showPreHook.template with admin.showPreHook.parameters %}

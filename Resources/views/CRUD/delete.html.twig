@@ -21,23 +21,11 @@ file that was distributed with this source code.
     {% endif %}
 {% endblock%}
 
-
-{% block actions %}
-    <div class="sonata-actions">
-            {% if admin.hasRoute('edit') and admin.isGranted('EDIT', object)%}
-                <a class="btn" href="{{ admin.generateObjectUrl('edit', object) }}">{% trans from 'SonataAdminBundle' %}link_action_edit{% endtrans %}</a>
-            {% endif %}
-
-            {% if admin.hasRoute('create') and admin.isGranted('CREATE')%}
-                <a class="btn" href="{{ admin.generateUrl('create') }}">{% trans from 'SonataAdminBundle' %}link_action_create{% endtrans %}</a>
-            {% endif %}
-    </div>
-{% endblock %}
-
 {% block side_menu %}{{ knp_menu_render(admin.sidemenu(action), {}, 'list') }}{% endblock %}
 
 {% block content %}
     <div class="sonata-ba-delete">
+        {% if admin.id(object) %}<h2>Delete "{{ object }}"?</h2>{% endif %}    
 
         Are you sure want to delete the selected item?
         <ul><li>{{ object }}</li></ul>

@@ -19,6 +19,7 @@ It contains many customizations to the sonata-project bundle.
 * translations check the configured custom domain if nothing is found in the supplied domain
 * option to hide show fields with empty values
 * option to specifiy a service to be saved as the "appHelper" for admin_pool
+* improved navigation
 
 ### Interface Changes
 * Fewer submit buttons on edit
@@ -193,17 +194,54 @@ You can include buttons on the List template to download a xls spreadsheet of al
 *relation_repository: if the field is a relation, the repository of the related entity
 *relation_field_name: if the field is a relation, the db field name of the relation field
 
-# Custom Action Buttons
-For the List, Edit, and Show templates, on a entity by entity basis, you can add additional buttons to be included in the top right corner of the page:
+# Navigation
+We've made many changes to the way navigation in the bundle works.
 
-	public $listActionButtons = array(
-        array(
-            'route' => 'createMultiple',
-            'text' => 'Assign to multiple Counties'
-        )
-    );
+* breadcrumbs have been removed
+* page heading is the current admin class's ``adminHeading`` which defaults to ``entityLabelPlural`` which defaults to ``classNameLabel`` w/ an s
+* action buttons (new, list, edit, delete) now appear as tabs, and are configured within the admin class
 
-The same can be done for ``$showActionButtons`` and ``$editActionButtons``.
+## Action Menu
+Each tab has three possible values:
+
+* label
+* icon (class given to i tag)
+* href
+* class (class given to li)
+
+### Customizing Action Menu
+
+    public function getActionMenuItems($action, $object = null)
+    {
+        $items = parent::getActionMenuItems($action, $object);
+        
+        // if just one tab, don't show any
+        if(count($items) == 1) {
+            return array();
+        } else {
+            return $items;
+        }
+    }
+
+    public function getActionMenuItems($action, $object = null)
+    {
+        $items = parent::getActionMenuItems($action, $object);
+        
+        // remove list tab
+        unset($items['list']);
+        
+        // add a tab
+        $items['myNotifications'] = array(
+            'label' => 'My Notifications',
+            'icon' => 'icon-signal',
+            'href' => $this->generateUrl('myNotifications')
+        );
+        if($action == 'myNotifications') $items['myNotifications']['class'] = 'active';
+        
+        return $items;
+    }
+
+
 
 # Hiding Empty Show Fields
 You can optionally have the Show template exclude fields that are null for the object.
@@ -218,7 +256,7 @@ To always show some fields, regardless of their value, include a black list:
         'field2',
         'field3',
     );
-
+    
 
 # Configuration
 We have added one additional configuration option that toggles between a dropdown menu and an expanded menu:

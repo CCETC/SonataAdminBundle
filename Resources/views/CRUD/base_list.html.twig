@@ -11,21 +11,6 @@ file that was distributed with this source code.
 
 {% extends base_template %}
 
-{% block actions %}
-    <div class="sonata-actions">
-            {% if admin.hasRoute('create') and admin.isGranted('CREATE')%}
-                <a class="btn" href="{{ admin.generateUrl('create') }}">{% trans from 'SonataAdminBundle' %}link_action_create{% endtrans %}</a>
-            {% endif %}
-            {% for actionButton in admin.listActionButtons %}
-                {% if actionButton.parameters is defined %}
-                    <a class="btn" href="{{ admin.generateUrl(actionButton.route, actionButton.parameters) }}">{{ actionButton.text }}</a>                
-                {% else %}
-                    <a class="btn" href="{{ admin.generateUrl(actionButton.route) }}">{{ actionButton.text }}</a>
-                {% endif %}
-            {% endfor %}
-    </div>
-{% endblock %}
-
 {% block side_menu %}{{ knp_menu_render(admin.sidemenu(action), {}, 'list') }}{% endblock %}
 
 {% block content %}

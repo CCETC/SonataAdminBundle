@@ -63,6 +63,26 @@ class Pool
         return $groups;
     }
 
+    public function getGroupByAdminCode($adminCode)
+    {
+        $groups = $this->adminGroups;
+
+        foreach ($this->adminGroups as $name => $adminGroup) {
+            foreach ($adminGroup as $id => $options) {
+                if($id == "items") {
+                    foreach($options as $option)
+                    {
+                        if($option == $adminCode) {
+                            return $adminGroup;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return $groups;
+    }
+
     /**
      * @return array
      */
@@ -90,6 +110,8 @@ class Pool
 
         return $groups;
     }
+    
+    
 
     /**
      * return the admin related to the given $class
@@ -264,5 +286,46 @@ class Pool
     public function getAppHelper()
     {
         return $this->appHelper;
+    }
+    
+    public function getGroupMenu($admin)
+    {
+        $adminGroup = $this->getGroupByAdminCode($admin->getCode());
+        
+        $items = array();
+        
+        foreach($adminGroup['items'] as $item)
+        {
+            $itemAdmin = $this->getInstance($item);
+            if($itemAdmin->isGranted('LIST')) {
+                $items[] = array(
+                    'label' => $itemAdmin->getEntityLabelPlural(),
+                    'url' => $itemAdmin->generateUrl('list'),
+                    'active' => $admin->getCode() == $item
+                );
+            }
+        }
+        
+        return $items;
+      /*  {% set adminGroup = admin_pool.getGroupByAdminCode(admin.code) %}
+                <ul class="tabs">
+                {% for groupMember in adminGroup.items %}
+                    {% set groupMemberAdmin = admin_pool.getInstance(groupMember) %}
+                    {% if groupMemberAdmin.isGranted('LIST') %}    
+                    <li {{ admin.code == groupMemberAdmin.code ? 'class="active"' : ''}}>
+                        <a href="{{ groupMemberAdmin.generateUrl('list') }}">{{ groupMemberAdmin.entityLabelPlural }}</a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+                
+                
+                 {% for item in admin_pool.getGroupMenu(admin) %}
+                    <li {{ item.active ? 'class="active"' : ''}}>
+                        <a href="{{ item.url }}">{{ item.label }}</a>
+                    </li>
+                {% endfor %}*/
+                
+                
     }
 }
