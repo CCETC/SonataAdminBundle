@@ -197,11 +197,12 @@ You can include buttons on the List template to download a xls spreadsheet of al
 # Navigation
 We've made many changes to the way navigation in the bundle works.
 
-* breadcrumbs have been removed
-* page heading is the current admin class's ``adminHeading`` which defaults to ``entityLabelPlural`` which defaults to ``classNameLabel`` w/ an s
-* action buttons (new, list, edit, delete) now appear as tabs, and are configured within the admin class
+* the old breadcrumbs have been removed
+* action buttons (new, list, edit, delete) now appear as tabs, and are configured within the admin class through the ``getActionMenuItems`` and ``getObjectActionMenuItems``
 
-## Action Menu
+## Action Menus
+There are two menus - ``getActionMenuItems`` and ``getObjectActionMenuItems``.  The former appears when an object is not defined, and the later when one is.
+
 Each tab has three possible values:
 
 * label
@@ -209,7 +210,7 @@ Each tab has three possible values:
 * href
 * class (class given to li)
 
-### Customizing Action Menu
+### Customizing Action Menus
 
     public function getActionMenuItems($action, $object = null)
     {

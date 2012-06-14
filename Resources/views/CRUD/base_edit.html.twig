@@ -22,8 +22,6 @@ file that was distributed with this source code.
 {% block side_menu %}{{ knp_menu_render(admin.sidemenu(action), {}, 'list') }}{% endblock %}
 
 {% block form %}
-    {% if admin.id(object) %}<h2>Edit "{{ object }}"</h2>{% endif %}    
-        
     {% if admin.formPreHook is defined and admin.formPreHook != "" %}
         {% if admin.formPreHook.parameters is defined %}
             {% include admin.formPreHook.template with admin.formPreHook.parameters %}

@@ -202,6 +202,7 @@ class CRUDController extends Controller
 
                 $summary = new Summary($this->admin, $this->container, key($this->admin->summaryYFields), key($this->admin->summaryXFields), 'count');
                 $allResults = $datagrid->getAllResultsAsArray();
+                
                 $summary->buildSummaryDataFromElementSet($allResults);
             }
         }

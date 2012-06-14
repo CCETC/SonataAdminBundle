@@ -13,6 +13,8 @@ file that was distributed with this source code.
 
 {% block side_menu %}{{ knp_menu_render(admin.sidemenu(action), {}, 'list') }}{% endblock %}
 
+
+
 {% block content %}
     {% if admin.listPreHook is defined and admin.listPreHook != "" %}
         {% if admin.listPreHook.parameters is defined %}
@@ -205,16 +207,6 @@ file that was distributed with this source code.
         </div>
     {% endif %}
 
-    {% if hasSummaryFields and not app.request.isxmlhttprequest %}
-        <div class="pull-left">
-            <ul class="pills">
-                <li style="margin: 10px 10px 10px 0;">View:</li>                
-                <li class=" {{ showSummary ? '' : 'active' }}"><a href="{{ admin.generateUrl('list', admin.modelmanager.datagridparameters(admin.datagrid)) }}">List</a></li>
-                <li class=" {{ showSummary ? 'active' : '' }}"><a href="{{ admin.generateUrl('list', admin.modelmanager.datagridparameters(admin.datagrid, summary.getParameters({'showSummary' : '1' })) ) }}">Summary</a></li>
-            </ul>
-        </div>
-    {% endif %}
-
     {% if admin.listPostHook is defined and admin.listPostHook != "" %}
         {% if admin.listPostHook.parameters is defined %}
             {% include admin.listPostHook.template with admin.listPostHook.parameters %}
@@ -262,7 +254,7 @@ file that was distributed with this source code.
                 <table class="bordered-table">
                     <thead>
                         <tr class="sonata-ba-list-field-header">
-                            <th colspan="2">Summary Options</th>
+                            <th colspan="2">Report Options</th>
                         </tr>
                     </thead>
                     <tbody>

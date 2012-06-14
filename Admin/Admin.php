@@ -55,24 +55,40 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     protected $filterDefaults = array();
     protected $entityLabel;
     protected $entityLabelPlural;
-    protected $entityIconPath;
+    protected $entityIcon;
     protected $entityHeading;
     
-    public function getActionMenuItems($action, $object = null)
+    public function getActionMenuItems($action)
     {
         $items = array();
         
         if($this->hasRoute('list') && $this->isGranted('LIST')) {
             $item = array(
-                'href' => $this->generateUrl('list'),
+                'href' => $this->generateUrl('list', $this->getModelManager()->getDatagridparameters($this->getDatagrid())),
                 'label' => $this->trans('link_list', array(), 'SonataAdminBundle'),
                 'icon' => 'icon-th-list'
             );
             
-            if($action == 'list') $item['class'] = 'active';
+            if($action == 'list' && (!$this->request->get('showSummary') || $this->request->get('showSummary') != "1")) {
+                $item['class'] = 'active';
+            }
             
             $items['list'] = $item;
         }
+        if(isset($this->summaryXFields) && !$this->request->isXmlHttpRequest()) {
+            $item = array(
+                'href' => $this->generateUrl('list', $this->getModelManager()->getDatagridparameters($this->getDatagrid(), array('showSummary' => '1'))),
+                'icon' => 'icon-chart-pie',
+                'label' => 'Report'
+            );
+            
+            if($this->request->get('showSummary') && $this->request->get('showSummary') == "1") {
+                $item['class'] = 'active';
+            }
+            
+            $items[] = $item;
+        }
+        
         if($this->hasRoute('create') && $this->isGranted('CREATE')) {
             $item = array(
                 'href' => $this->generateUrl('create'),
@@ -84,6 +100,15 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
             
             $items['create'] = $item;
         }
+        
+        return $items;
+    }
+
+    
+    public function getObjectActionMenuItems($action, $object)
+    {
+        $items = array();
+        
         if(isset($object) && $action != "create") {
             if($this->hasRoute('edit') && $this->isGranted('EDIT')) {
                 $item = array(
@@ -126,12 +151,19 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
 
                 $items['history'] = $item;
             }
+            if($this->hasRoute('create') && $this->isGranted('CREATE')) {
+            $item = array(
+                'href' => $this->generateUrl('create'),
+                'label' => $this->trans('link_action_create', array(), 'SonataAdminBundle'),
+                'icon' => 'icon-plus-1'
+            );
+                        
+            $items['create'] = $item;
         }
-        
-        return $items;
-        
+        }
+         
+         return $items;
     }
-
     
     public function getEntityHeading()
     {
@@ -139,9 +171,9 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
         else return $this->entityHeading;
     }
     
-    public function getEntityIconPath()
+    public function getEntityIcon()
     {
-        return $this->entityIconPath;
+        return $this->entityIcon;
     }
     
     public function getEntityLabel()

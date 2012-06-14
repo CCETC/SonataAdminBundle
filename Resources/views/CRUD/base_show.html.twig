@@ -24,8 +24,6 @@ file that was distributed with this source code.
 {% block side_menu %}{{ knp_menu_render(admin.sidemenu(action), {}, 'list') }}{% endblock %}
 
 {% block show %}
-    {% if admin.id(object) %}<h2>{{ object }}</h2>{% endif %}    
-
     {% if admin.showPreHook is defined and admin.showPreHook != "" %}
         {% if admin.showPreHook.parameters is defined %}
             {% include admin.showPreHook.template with admin.showPreHook.parameters %}

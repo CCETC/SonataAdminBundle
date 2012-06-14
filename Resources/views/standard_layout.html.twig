@@ -164,36 +164,61 @@ file that was distributed with this source code.
         </div>
 
         <div class="container-fluid">
-            <div class="page-header" style="{{ action is defined ? 'border: none;' : ''}}">
-                <h1>
+            {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
+                <div class="alert-message block-message info">
+                    <i class="icon-eye"></i> Impersonating {{ app.user }}, 
+                    <a href="?_switch_user=_exit">exit</a>
+                </div>
+            {% endif %}
+            
+            <div class="page-header" style="{{ action is defined ? 'border: none;' : ''}}; overflow: auto;">
+                <h1 style="float: left;">
+                    {% block page_header %}
                     {% if action is defined %}
-                        {% if admin.parent is defined and admin.parent != "" %}
-                            {% set pageAdmin = admin.parent %}
-                        {% else %}
-                            {% set pageAdmin = admin %}
+                            {% if admin.groupHeading is defined and admin.groupHeading != "" %}    
+                                {% if admin.groupIcon is defined and admin.groupIcon != "" %}
+                                    <i class="{{ admin.groupIcon }}"></i>
                         {% endif %}
 
-                        {% if pageAdmin.entityIconPath is defined and pageAdmin.entityIconPath != "" %}
-                            <i class="{{ pageAdmin.entityIconPath }}"></i>
+                                {{ admin.groupHeading }} <small> / 
                         {% endif %}
-                        {{ pageAdmin.entityHeading }}
+
+                            {% if admin.entityIcon is defined and admin.entityIcon != "" %}
+                                <i class="{{ admin.entityIcon }}"></i>
+                            {% endif %}
+
+                            {{ admin.entityLabelPlural }}
+                            
+                            {% if admin.groupHeading is defined and admin.groupHeading != "" %}    
+                                </small>
+                            {% endif %}
+                            
+                            {% if object is defined and action != "create" %}
+                                <small>- "{{ object }}"</small>
+                            {% endif %}
                     {% else %}
-                        {% block page_header %}
                             Dashboard
+                        {% endif %}                            
                         {% endblock %}
-                    {% endif %}                            
                 </h1>
+                {% block group_menu %}    
+                    {% if action is defined and admin_pool.getGroupMenu(admin)|length > 1 %}
+                        <ul class="pills" style="float: right; margin-bottom: 0;">
+                        {% for item in admin_pool.getGroupMenu(admin) %}
+                            <li {{ item.active ? 'class="active"' : ''}}>
+                                <a href="{{ item.url }}">
+                                    {% if item.entityIcon is defined and item.entityIcon != "" %}
+                                        <i class="{{ item.entityIcon }}"></i>
+                    {% endif %}                            
+                                    {{ item.label }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endblock %}    
             </div>
 
-            {% if action is defined and admin_pool.getGroupMenu(admin)|length > 1 %}
-                <ul class="pills">
-                {% for item in admin_pool.getGroupMenu(admin) %}
-                    <li {{ item.active ? 'class="active"' : ''}}>
-                        <a href="{{ item.url }}">{{ item.label }}</a>
-                    </li>
-                {% endfor %}
-                </ul>
-            {% endif %}
                 
                 
             {% block notice %}
@@ -209,23 +234,43 @@ file that was distributed with this source code.
                 
             {% if action is defined %}
                 {% if object is not defined %}{% set object = null %}{% endif %}
-                {% set actionMenuItems = admin.actionMenuItems(action, object) %}
-                {% if actionMenuItems > 0 %}
+                {% set actionMenuItems = admin.actionMenuItems(action) %}
+                {% set objectActionMenuItems = admin.objectActionMenuItems(action, object) %}
+                {% if objectActionMenuItems|length < 1 and actionMenuItems|length > 0 %}
+                    {% block action_menu %}
                     <div class="sonata-action-menu">
                         <ul class="tabs">
-                            {% for actionMenuItem in admin.actionMenuItems(action, object) %}    
+                            {% for actionMenuItem in admin.actionMenuItems(action) %}    
+                                <li class="{{ actionMenuItem.class is defined ? actionMenuItem.class : '' }}">
+                                    <a href="{{ actionMenuItem.href }}">
+                                        {% if actionMenuItem.icon is defined %}<i class="{{ actionMenuItem.icon }}"></i> {% endif %}{{ actionMenuItem.label }}</a>
+                                </li>
+                            {% endfor %}    
+                            {% block actions %}{% endblock %}
+                        </ul>
+                        &nbsp;
+                     </div>
+                    {% endblock %}
+                {% endif %}
+                {% if objectActionMenuItems|length > 0 %}
+                    <div class="sonata-action-menu">
+                        <ul class="tabs">
+                            <li>
+                                <a href="{{ admin.generateUrl('list') }}">&larr; Back to List</a>
+                            </li>
+                            {% for actionMenuItem in admin.objectActionMenuItems(action, object) %}    
                                 <li class="{{ actionMenuItem.class is defined ? actionMenuItem.class : '' }}">
                                     <a href="{{ actionMenuItem.href }}">
                                         {% if actionMenuItem.icon is defined %}<i class="{{ actionMenuItem.icon }}"></i> {% endif %}{{ actionMenuItem.label }}</a>
                                 </li>
                             {% endfor %}    
 
-                            {% block actions %}{% endblock %}
+                            {% block object_actions %}{% endblock %}
                         </ul>
                         &nbsp;
-            </div>
-                            {% endif %}
-                                    {% endif %}
+                     </div>
+                {% endif %}                
+            {% endif %}
                 
             {% if _side_menu is not empty %}
                 <div class="sidebar">

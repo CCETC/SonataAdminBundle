@@ -301,31 +301,12 @@ class Pool
                 $items[] = array(
                     'label' => $itemAdmin->getEntityLabelPlural(),
                     'url' => $itemAdmin->generateUrl('list'),
-                    'active' => $admin->getCode() == $item
+                    'active' => $admin->getCode() == $item,
+                    'entityIcon' => $itemAdmin->getEntityIcon()
                 );
             }
         }
         
-        return $items;
-      /*  {% set adminGroup = admin_pool.getGroupByAdminCode(admin.code) %}
-                <ul class="tabs">
-                {% for groupMember in adminGroup.items %}
-                    {% set groupMemberAdmin = admin_pool.getInstance(groupMember) %}
-                    {% if groupMemberAdmin.isGranted('LIST') %}    
-                    <li {{ admin.code == groupMemberAdmin.code ? 'class="active"' : ''}}>
-                        <a href="{{ groupMemberAdmin.generateUrl('list') }}">{{ groupMemberAdmin.entityLabelPlural }}</a>
-                    </li>
-                    {% endif %}
-                {% endfor %}
-                </ul>
-                
-                
-                 {% for item in admin_pool.getGroupMenu(admin) %}
-                    <li {{ item.active ? 'class="active"' : ''}}>
-                        <a href="{{ item.url }}">{{ item.label }}</a>
-                    </li>
-                {% endfor %}*/
-                
-                
+        return $items;                
     }
 }

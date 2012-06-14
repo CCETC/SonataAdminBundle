@@ -1,6 +1,10 @@
 
 
 $(document).ready(function() {
+       $('.expanded_select_all_checkbox').change(function(){
+           console.log($(this).parent().siblings('ul.inputs-list'));
+           $(this).parent().siblings('ul.inputs-list').find("label input[type='checkbox']").attr('checked', $(this).is(':checked'));
+       });
 }); 
 
 tinyMCE.init({
