@@ -263,6 +263,7 @@ table.bordered-table th {
 .ccetc-widget-container .ccetc-widget-heading {
     background-image: -moz-linear-gradient(-90deg, #f8f8f8 , #e2e2e2);
     background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F8F8F8), to(#E2E2E2));
+    background-color: #eee;
     padding: 0 12px;    
 }
 
