@@ -16,12 +16,10 @@ file that was distributed with this source code.
 {% if field_description.options.editable is defined and field_description.options.editable and admin.isGranted('EDIT', object) %}
     {% if value %}
         <a href="{{ url('sonata_admin_set_object_field_value', { 'context': 'list', 'field': field_description.name, 'objectId': admin.id(object), 'value': 0, 'code': admin.code(object) }) }}" class="sonata-ba-action sonata-ba-edit-inline">
-            <i class="icon-ok-circle size16 green"></i> click to change
-        </a>
+            <i class="icon-ok-circle size16 green"></i></a>
     {% else %}
         <a href="{{ url('sonata_admin_set_object_field_value', { 'context': 'list', 'field': field_description.name, 'objectId': admin.id(object), 'value': 1, 'code': admin.code(object) }) }}" class="sonata-ba-action sonata-ba-edit-inline">
-            <i class="icon-cancel-circle size16 red"></i> click to change
-        </a>
+            <i class="icon-cancel-circle size16 red"></i></a>
     {% endif %}
 {% else %}
     {% if value %}
