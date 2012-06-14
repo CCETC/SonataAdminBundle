@@ -1,6 +1,7 @@
 tr.sonata-ba-list-field-header {
     background-image: -moz-linear-gradient(-90deg, #F8F8F8, #E2E2E2);
     background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#F8F8F8), to(#E2E2E2));
+    background-color: #eee;
 }
 
 select[multiple="multiple"] {
