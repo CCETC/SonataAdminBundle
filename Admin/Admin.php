@@ -121,7 +121,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
 
                 $items['edit'] = $item;
             }
-            if($this->hasRoute('show') && $this->isGranted('SHOW')) {
+            if($this->hasRoute('show') && $this->isGranted('VIEW')) {
                 $item = array(
                     'href' => $this->generateObjectUrl('show', $object),
                     'label' => $this->trans('link_action_show', array(), 'SonataAdminBundle'),
@@ -152,14 +152,14 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
                 $items['history'] = $item;
             }
             if($this->hasRoute('create') && $this->isGranted('CREATE')) {
-            $item = array(
-                'href' => $this->generateUrl('create'),
-                'label' => $this->trans('link_action_create', array(), 'SonataAdminBundle'),
-                'icon' => 'icon-plus-1'
-            );
-                        
-            $items['create'] = $item;
-        }
+                $item = array(
+                    'href' => $this->generateUrl('create'),
+                    'label' => $this->trans('link_action_create', array(), 'SonataAdminBundle'),
+                    'icon' => 'icon-plus-1'
+                );
+
+                $items['create'] = $item;
+            }
         }
          
          return $items;
