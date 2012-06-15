@@ -219,6 +219,7 @@ table.bordered-table th {
     margin: 5px;
     float: left;
     text-align: center;
+    width: 66px;
 }
 .ccetc-app-icon-container {
     border-radius: 13px;
