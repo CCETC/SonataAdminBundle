@@ -219,14 +219,14 @@ table.bordered-table th {
     margin: 5px;
     float: left;
     text-align: center;
-    width: 66px;
+    width: 64px;
 }
 .ccetc-app-icon-container {
     border-radius: 13px;
     -moz-border-radius: 13px;
     -webkit-border-radius: 13px;    
     padding: 10px 12px 10px 10px;
-    background: black;
+    background: #263640;
     margin: 0 auto;
     width: 32px;
     height: 32px;
