@@ -121,14 +121,13 @@ td.sonata-ba-list-field-action a.btn img {
     font-size: 14px;
 }
 
-div.filter-container,
-div.summary-field-container
-{
-    margin: 5px 0;
-    padding: 3px 6px;
+tr.filter-container.inactive {
+    display: none;
 }
+
 tr.filter-container.active {
-    background-color: #FCFFC4;
+    display: table-row;
+    background-color: #FDF5D9;
 }
 
 a.action-link {
@@ -173,11 +172,6 @@ i.lightBlue {
     color: #3A87AD !important;
 }
 
-.container-fluid > .sonata-ba-filter.sidebar {
-    right: 20px;
-    left: auto;
-}
-
 .container-fluid > .sonata-ba-list.content {
     margin-right: 240px;
 }
@@ -185,6 +179,10 @@ i.lightBlue {
 table.bordered-table td,
 table.bordered-table th {
     border-left: none !important;
+}
+
+.sonata-filter-form {
+    float: right;
 }
 
 .sonata-bc fieldset.filter_legend table {
@@ -196,17 +194,16 @@ table.bordered-table th {
 }
 
 .ccetc-widget-container {
-    border: 1px solid #ddd;
     border-radius: 4px;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     margin: 0 0 15px 0;
+    background: white;
 }
 
 .ccetc-item-container {
     border-bottom: 1px solid #eee;
-    font-size: 16px;
-    overflow: auto;
+    font-size: 13px;
 }
 .ccetc-item-container.last {
     border-bottom: none;
@@ -244,7 +241,6 @@ table.bordered-table th {
 
 .ccetc-item-container .ccetc-item {
     padding: 8px 6px;
-    overflow: auto;
 }
 
 .ccetc-item-container .ccetc-meta-item {
@@ -256,10 +252,6 @@ table.bordered-table th {
     font-size: 20px;
     color: black;
     padding: 8px 6px;
-}
-
-.ccetc-item-container .ccetc-main-content-container {
-    overflow: auto;
 }
 
 .ccetc-widget-container .ccetc-widget-heading {

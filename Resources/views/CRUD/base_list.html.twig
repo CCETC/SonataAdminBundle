@@ -222,32 +222,35 @@ file that was distributed with this source code.
     <form class="sonata-filter-form form-stacked {{ admin.isChild and 1 == admin.datagrid.filters|length ? 'hide' : '' }}" action="{{ admin.generateUrl('list') }}" method="GET">
         <fieldset class="filter_legend">
             {% if admin.datagrid.hasVisibleFilters %}
-                <div class="filter_container active">
-                    <table class="bordered-table">
-                        <thead>
-                            <tr class="sonata-ba-list-field-header">
-                                <th colspan="2">Filters</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                <table class="bordered-table filter-table" style="{{ admin.datagrid.hasActiveFilters ? "" : "display: none;"}}">
+                    <thead>
+                        <tr class="sonata-ba-list-field-header">
+                            <th colspan="4">Filter Results</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for filter in admin.datagrid.filters %}
+                        <tr class="filter-container {{ filter.isActive ? 'active' : 'inactive' }}" {{ filter.isInvisible ? 'style="display: none;"' : '' }}>
+                            <td>{{ admin.trans(filter.label) }}</td>
+                            <td style="{{ admin.datagrid.showFilterTypes ? "" : "display: none;"}}">{{ form_widget(form.getChild(filter.name).getChild('type')) }}
+                            <td>
+                                {{ form_widget(form.getChild(filter.name).getChild('value')) }}
+                            </td>
+                            <td>
+                                {% if filter.isActive %}
+                                    {% set key = 'filter[' ~ filter.name ~ '][value]' %}
+                                    <a href="{{  admin.generateUrl('list', admin.modelmanager.datagridparameters(admin.datagrid, { (key) : '' })) }}"><i class="icon-cancel-circle red size20"></i></a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
 
-                        {% for filter in admin.datagrid.filters %}
-                            <tr class="filter-container {{ filter.isActive ? 'active' : ''}}" {{ filter.isInvisible ? 'style="display: none;"' : '' }}>
-                                    <td {{ filter.isActive ? 'style="font-weight: bold;"' : ''}}>{{ admin.trans(filter.label) }}</td>
-                                <td>
-                                    <div class="" style="{{ admin.datagrid.showFilterTypes ? "" : "display: none;"}}">{{ form_widget(form.getChild(filter.name).getChild('type'), { 'attr': {'class': 'span2'} }) }}</div>
-                                    <div class="">{{ form_widget(form.getChild(filter.name).getChild('value'), { 'attr': {'class': 'span2'} }) }}</div>
-                                </td>
-                            </tr>
-                        {% endfor %}
+                    <input type="hidden" name="filter[_page]" id="filter__page" value="1" />
 
-                        <input type="hidden" name="filter[_page]" id="filter__page" value="1" />
-
-                        {% set foo = form.getChild('_page').setRendered() %}
-                        {{ form_rest(form) }}
-                        </tbody>                           
-                    </table>
-                </div>
+                    {% set foo = form.getChild('_page').setRendered() %}
+                    {{ form_rest(form) }}
+                    </tbody>                           
+                </table>
             {% endif %}
 
             {% if showSummary %}
@@ -304,10 +307,18 @@ file that was distributed with this source code.
                 </table>
             {% endif %}                    
 
-            <input id="submit-filters" type="submit" class="btn primary" value="{{ admin.datagrid.hasActiveFilters or showSummary ? 'Update' : 'Filter'}}" />
+            {% if not admin.datagrid.hasActiveFilters %}
+                <a href="#" class="btn filter-results-toggle"><i class="icon-search"></i> Filter results</a>
+            {% endif %}
+                
+            <input {{ not admin.datagrid.hasActiveFilters? 'style="display: none;"' : ''}} id="submit-filters" type="submit" class="btn primary" value="{{ admin.datagrid.hasActiveFilters or showSummary ? 'Update' : 'Filter'}}" />
 
-            <a id="reset-filters" class="btn" href="{{ admin.generateUrl('list') }}">reset</a>                    
+            <a style="float: right; line-height: 27px; {{ not admin.datagrid.hasActiveFilters? 'display: none;"' : ''}}" id="reset-filters" href="{{ admin.generateUrl('list') }}">reset</a>                    
 
+            <a {{ not admin.datagrid.hasActiveFilters or not admin.datagrid.hasInactiveFilters ? 'style="display: none;"' : ''}} href="#" class="more-filters-toggle"><i class="icon-plus-circle"></i>more filters</a>
+            <a href="#" class="filter-results-cancel" style="display: none;">cancel</a>
+            <a href="#" class="more-filters-cancel" style="display: none;">cancel</a>
+            
         </fieldset>
     </form>
 {% endif %}
