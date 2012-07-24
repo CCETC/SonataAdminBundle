@@ -222,7 +222,7 @@ file that was distributed with this source code.
     <form class="sonata-filter-form form-stacked {{ admin.isChild and 1 == admin.datagrid.filters|length ? 'hide' : '' }}" action="{{ admin.generateUrl('list') }}" method="GET">
         <fieldset class="filter_legend">
             {% if admin.datagrid.hasVisibleFilters %}
-                <table class="bordered-table filter-table" style="{{ admin.datagrid.hasActiveFilters ? "" : "display: none;"}}">
+                <table class="bordered-table filter-table" style="{{ admin.datagrid.hasActiveFilters or showSummary ? "" : "display: none;"}}">
                     <thead>
                         <tr class="sonata-ba-list-field-header">
                             <th colspan="4">Filter Results</th>
@@ -230,7 +230,7 @@ file that was distributed with this source code.
                     </thead>
                     <tbody>
                     {% for filter in admin.datagrid.filters %}
-                        <tr class="filter-container {{ filter.isActive ? 'active' : 'inactive' }}" {{ filter.isInvisible ? 'style="display: none;"' : '' }}>
+                        <tr class="filter-container {{ filter.isActive ? 'active' : 'inactive' }}" {{ filter.isInvisible or (not filter.isActive and not showSummary) ? 'style="display: none;"' : '' }}>
                             <td>{{ admin.trans(filter.label) }}</td>
                             <td style="{{ admin.datagrid.showFilterTypes ? "" : "display: none;"}}">{{ form_widget(form.getChild(filter.name).getChild('type')) }}
                             <td>
@@ -239,7 +239,7 @@ file that was distributed with this source code.
                             <td>
                                 {% if filter.isActive %}
                                     {% set key = 'filter[' ~ filter.name ~ '][value]' %}
-                                    <a href="{{  admin.generateUrl('list', admin.modelmanager.datagridparameters(admin.datagrid, { (key) : '' })) }}"><i class="icon-cancel-circle red size20"></i></a>
+                                    <a href="{{  admin.generateUrl('list', admin.modelmanager.datagridparameters(admin.datagrid, { (key) : '', 'showSummary' : showSummary })) }}"><i class="icon-cancel-circle red size20"></i></a>
                                 {% endif %}
                             </td>
                         </tr>
@@ -264,7 +264,7 @@ file that was distributed with this source code.
                         <tr>
                             <td>Group by</td>
                             <td>
-                                <select name="yField" class="span3">
+                                <select name="yField">
                                     {% for field, values in admin.summaryYFields %}
                                         <option value="{{ field }}" {% if summary.yField is defined and summary.yField == field %}selected="selected"{% endif %}>
                                             {{ values.label }}
@@ -276,7 +276,7 @@ file that was distributed with this source code.
                         <tr>
                             <td>and by</td>
                             <td>
-                                <select name="xField" class="span3">
+                                <select name="xField">
                                     {% for field, values in admin.summaryXFields %}
                                         <option value="{{ field }}" {% if summary.xField is defined and summary.xField == field %}selected="selected"{% endif %}>
                                             {{ values.label }}
@@ -289,7 +289,7 @@ file that was distributed with this source code.
                             <tr>
                                 <td>Summarize by</td>
                                 <td>
-                                    <select name="sumBy" class="span3">
+                                    <select name="sumBy">
                                         <option value="count" {% if summary.sumBy is defined and summary.sumBy == 'count' %}selected="selected"{% endif %}>total items</option>
                                         {% for field, values in admin.summarySumFields %}
                                             <option value="{{ field }}" {% if summary.sumField is defined and summary.sumField == field %}selected="selected"{% endif %}>
@@ -307,15 +307,15 @@ file that was distributed with this source code.
                 </table>
             {% endif %}                    
 
-            {% if not admin.datagrid.hasActiveFilters %}
+                
+            <input {{ not admin.datagrid.hasActiveFilters and not showSummary? 'style="display: none;"' : ''}} id="submit-filters" type="submit" class="btn primary" value="{{ admin.datagrid.hasActiveFilters or showSummary ? 'Update' : 'Filter'}}" />
+            {% if not admin.datagrid.hasActiveFilters and not showSummary %}
                 <a href="#" class="btn filter-results-toggle"><i class="icon-search"></i> Filter results</a>
             {% endif %}
-                
-            <input {{ not admin.datagrid.hasActiveFilters? 'style="display: none;"' : ''}} id="submit-filters" type="submit" class="btn primary" value="{{ admin.datagrid.hasActiveFilters or showSummary ? 'Update' : 'Filter'}}" />
 
-            <a style="float: right; line-height: 27px; {{ not admin.datagrid.hasActiveFilters? 'display: none;"' : ''}}" id="reset-filters" href="{{ admin.generateUrl('list') }}">reset</a>                    
+            <a style="float: right; line-height: 27px; {{ not admin.datagrid.hasActiveFilters? 'display: none;"' : ''}}" id="reset-filters" href="{{ admin.generateUrl('list', {'showSummary' : showSummary }) }}">reset</a>                    
 
-            <a {{ not admin.datagrid.hasActiveFilters or not admin.datagrid.hasInactiveFilters ? 'style="display: none;"' : ''}} href="#" class="more-filters-toggle"><i class="icon-plus-circle"></i>more filters</a>
+            <a {{ not admin.datagrid.hasActiveFilters or not admin.datagrid.hasInactiveFilters or showSummary ? 'style="display: none;"' : ''}} href="#" class="more-filters-toggle"><i class="icon-plus-circle"></i>more filters</a>
             <a href="#" class="filter-results-cancel" style="display: none;">cancel</a>
             <a href="#" class="more-filters-cancel" style="display: none;">cancel</a>
             
