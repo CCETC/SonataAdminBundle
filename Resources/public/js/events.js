@@ -35,20 +35,7 @@ $(document).ready(function() {
            $('.more-filters-toggle').show();
        });
 
-       $('#team-selector').live('click', function(e) {
-           e.preventDefault();
-           $(this).addClass('active');
-           $('#individual-selector').removeClass('active');
-           $('[id$="users"][id^="sonata-ba-field-container"]').hide();
-           $('[id$="groups"][id^="sonata-ba-field-container"]').show();
-       });
-       $('#individual-selector').live('click', function(e) {
-           e.preventDefault();
-           $(this).addClass('active');
-           $('#team-selector').removeClass('active');
-           $('[id$="groups"][id^="sonata-ba-field-container"]').hide();
-           $('[id$="users"][id^="sonata-ba-field-container"]').show();
-       });       
+        
 
 
 }); 
