@@ -198,6 +198,9 @@ table.bordered-table th {
     -moz-border-radius: 4px;
     margin: 0 0 15px 0;
     background: white;
+    box-shadow: #888 0px 3px 5px;
+    -moz-box-shadow: #888 0px 3px 5px;
+    -webkit-box-shadow: #888 0px 3px 5px;
 }
 
 .ccetc-item-container {
@@ -226,6 +229,9 @@ table.bordered-table th {
     margin: 0 auto;
     width: 32px;
     height: 32px;
+    box-shadow: #888 0px 3px 5px;
+    -moz-box-shadow: #888 0px 3px 5px;
+    -webkit-box-shadow: #888 0px 3px 5px;    
 }
 
 .ccetc-app-container i {
