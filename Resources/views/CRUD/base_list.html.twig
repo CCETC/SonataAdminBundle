@@ -230,7 +230,7 @@ file that was distributed with this source code.
                     </thead>
                     <tbody>
                     {% for filter in admin.datagrid.filters %}
-                        <tr class="filter-container {{ filter.isActive ? 'active' : 'inactive' }}" {{ filter.isInvisible or (not filter.isActive and not showSummary) ? 'style="display: none;"' : '' }}>
+                        <tr class="filter-container {{ filter.isActive ? 'active' : 'inactive' }} {{ filter.isInvisible ? 'invisible' : '' }}" {{ not filter.isActive and not showSummary ? 'style="display: none;"' : '' }}>
                             <td>{{ admin.trans(filter.label) }}</td>
                             <td style="{{ admin.datagrid.showFilterTypes ? "" : "display: none;"}}">{{ form_widget(form.getChild(filter.name).getChild('type')) }}
                             <td>

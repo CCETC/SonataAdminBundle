@@ -129,6 +129,10 @@ tr.filter-container.active {
     background-color: #FDF5D9;
 }
 
+tr.filter-container.invisible {
+    display: none !important;
+}
+
 a.action-link {
     padding: 2px 0 0 2px;
     margin-right: 8px;
