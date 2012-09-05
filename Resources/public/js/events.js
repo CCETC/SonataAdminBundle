@@ -1,9 +1,9 @@
-
-
 $(document).ready(function() {
        $('.expanded_select_all_checkbox').change(function(){
-           console.log($(this).parent().siblings('ul.inputs-list'));
            $(this).parent().siblings('ul.inputs-list').find("label input[type='checkbox']").attr('checked', $(this).is(':checked'));
+       });
+       $('.expanded_select_all_checkbox_no_ul').change(function(){
+           $(this).parent().siblings().last().find("input[type='checkbox']").attr('checked', $(this).is(':checked'));
        });
 
        $('.filter-results-toggle').live('click', function(e) {
@@ -34,9 +34,4 @@ $(document).ready(function() {
            $('tr.filter-container.inactive').hide();
            $('.more-filters-toggle').show();
        });
-
-        
-
-
 }); 
-

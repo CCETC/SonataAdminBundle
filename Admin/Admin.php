@@ -110,17 +110,6 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
         $items = array();
         
         if(isset($object) && $action != "create") {
-            if($this->hasRoute('edit') && $this->isGranted('EDIT')) {
-                $item = array(
-                    'href' => $this->generateObjectUrl('edit', $object),
-                    'label' => $this->trans('link_action_edit', array(), 'SonataAdminBundle'),
-                    'icon' => 'icon-pencil-1'
-                );
-
-                if($action == 'edit') $item['class'] = 'active';
-
-                $items['edit'] = $item;
-            }
             if($this->hasRoute('show') && $this->isGranted('VIEW')) {
                 $item = array(
                     'href' => $this->generateObjectUrl('show', $object),
@@ -131,6 +120,17 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
                 if($action == 'show') $item['class'] = 'active';
 
                 $items['show'] = $item;
+            }
+            if($this->hasRoute('edit') && $this->isGranted('EDIT')) {
+                $item = array(
+                    'href' => $this->generateObjectUrl('edit', $object),
+                    'label' => $this->trans('link_action_edit', array(), 'SonataAdminBundle'),
+                    'icon' => 'icon-pencil-1'
+                );
+
+                if($action == 'edit') $item['class'] = 'active';
+
+                $items['edit'] = $item;
             }
             if($this->hasRoute('delete') && $this->isGranted('DELETE')) {
                 $item = array(
@@ -162,7 +162,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
             }
         }
          
-         return $items;
+        return $items;
     }
     
     public function getEntityHeading()
