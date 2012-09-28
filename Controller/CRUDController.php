@@ -158,7 +158,7 @@ class CRUDController extends Controller
         $showHiddenFilters = false;
 
         foreach($this->admin->getHiddenFilters() as $filterName => $method) {
-            if(array_key_exists($filterName, $filterValues) && $this->hiddenFilterIsset($filterValues[$filterName]['value'])) {
+            if(array_key_exists($filterName, $filterValues) && isset($filterValues[$filterName]['value']) && $this->hiddenFilterIsset($filterValues[$filterName]['value'])) {
                 $showHiddenFilters = true;
             }
         }
