@@ -109,47 +109,54 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     {
         $items = array();
         
-        if(isset($object) && $action != "create") {
-            if($this->hasRoute('show') && $this->isGranted('VIEW')) {
-                $item = array(
-                    'href' => $this->generateObjectUrl('show', $object),
-                    'label' => $this->trans('link_action_show', array(), 'SonataAdminBundle'),
-                    'icon' => 'icon-search-alt'
-                );
+        if(isset($object)) {
+            $items['backToList'] = array(
+                'href' => $this->generateUrl('list'),
+                'label' => '&larr; Back to List'
+            );
+            
+            if($action != "create") {
+                if($this->hasRoute('show') && $this->isGranted('VIEW')) {
+                    $item = array(
+                        'href' => $this->generateObjectUrl('show', $object),
+                        'label' => $this->trans('link_action_show', array(), 'SonataAdminBundle'),
+                        'icon' => 'icon-search-alt'
+                    );
 
-                if($action == 'show') $item['class'] = 'active';
+                    if($action == 'show') $item['class'] = 'active';
 
-                $items['show'] = $item;
-            }
-            if($this->hasRoute('edit') && $this->isGranted('EDIT')) {
-                $item = array(
-                    'href' => $this->generateObjectUrl('edit', $object),
-                    'label' => $this->trans('link_action_edit', array(), 'SonataAdminBundle'),
-                    'icon' => 'icon-pencil-1'
-                );
+                    $items['show'] = $item;
+                }
+                if($this->hasRoute('edit') && $this->isGranted('EDIT')) {
+                    $item = array(
+                        'href' => $this->generateObjectUrl('edit', $object),
+                        'label' => $this->trans('link_action_edit', array(), 'SonataAdminBundle'),
+                        'icon' => 'icon-pencil-1'
+                    );
 
-                if($action == 'edit') $item['class'] = 'active';
+                    if($action == 'edit') $item['class'] = 'active';
 
-                $items['edit'] = $item;
-            }
-            if($this->hasRoute('delete') && $this->isGranted('DELETE')) {
-                $item = array(
-                    'href' => $this->generateObjectUrl('delete', $object),
-                    'label' => $this->trans('link_delete', array(), 'SonataAdminBundle'),
-                    'icon' => 'icon-trash'
-                );
+                    $items['edit'] = $item;
+                }
+                if($this->hasRoute('delete') && $this->isGranted('DELETE')) {
+                    $item = array(
+                        'href' => $this->generateObjectUrl('delete', $object),
+                        'label' => $this->trans('link_delete', array(), 'SonataAdminBundle'),
+                        'icon' => 'icon-trash'
+                    );
 
-                if($action == 'delete') $item['class'] = 'active';
+                    if($action == 'delete') $item['class'] = 'active';
 
-                $items['delete'] = $item;
-            }
-            if($this->hasRoute('history') && $this->isGranted('HISTORY')) {
-                $item = array(
-                    'href' => $this->generateObjectUrl('create', $object),
-                    'label' => $this->trans('link_action_create', array(), 'SonataAdminBundle'),
-                );
+                    $items['delete'] = $item;
+                }
+                if($this->hasRoute('history') && $this->isGranted('HISTORY')) {
+                    $item = array(
+                        'href' => $this->generateObjectUrl('create', $object),
+                        'label' => $this->trans('link_action_create', array(), 'SonataAdminBundle'),
+                    );
 
-                $items['history'] = $item;
+                    $items['history'] = $item;
+                }
             }
             if($this->hasRoute('create') && $this->isGranted('CREATE')) {
                 $item = array(
@@ -157,6 +164,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
                     'label' => $this->trans('link_action_create', array(), 'SonataAdminBundle'),
                     'icon' => 'icon-plus-1'
                 );
+                if($action == 'create') $item['class'] = 'active';
 
                 $items['create'] = $item;
             }

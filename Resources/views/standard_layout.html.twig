@@ -243,7 +243,7 @@ file that was distributed with this source code.
                             {% for actionMenuItem in admin.actionMenuItems(action) %}    
                                 <li class="{{ actionMenuItem.class is defined ? actionMenuItem.class : '' }}">
                                     <a href="{{ actionMenuItem.href }}">
-                                        {% if actionMenuItem.icon is defined %}<i class="{{ actionMenuItem.icon }}"></i> {% endif %}{{ actionMenuItem.label }}</a>
+                                        {% if actionMenuItem.icon is defined %}<i class="{{ actionMenuItem.icon }}"></i> {% endif %}{{ actionMenuItem.label|raw }}</a>
                                 </li>
                             {% endfor %}    
                             {% block actions %}{% endblock %}
@@ -255,13 +255,10 @@ file that was distributed with this source code.
                 {% if objectActionMenuItems|length > 0 %}
                     <div class="sonata-action-menu">
                         <ul class="tabs">
-                            <li>
-                                <a href="{{ admin.generateUrl('list') }}">&larr; Back to List</a>
-                            </li>
                             {% for actionMenuItem in admin.objectActionMenuItems(action, object) %}    
                                 <li class="{{ actionMenuItem.class is defined ? actionMenuItem.class : '' }}">
                                     <a href="{{ actionMenuItem.href }}">
-                                        {% if actionMenuItem.icon is defined %}<i class="{{ actionMenuItem.icon }}"></i> {% endif %}{{ actionMenuItem.label }}</a>
+                                        {% if actionMenuItem.icon is defined %}<i class="{{ actionMenuItem.icon }}"></i> {% endif %}{{ actionMenuItem.label|raw }}</a>
                                 </li>
                             {% endfor %}    
 
