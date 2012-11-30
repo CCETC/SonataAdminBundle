@@ -1008,7 +1008,7 @@ abstract class Admin implements AdminInterface, DomainObjectInterface
     {
         return $this->class;
     }
-
+    
     /**
      * Returns the list of batchs actions
      *
