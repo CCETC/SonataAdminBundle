@@ -1,5 +1,7 @@
 # CCETC/SonataAdminBundle - README
 
+**NOTE: this bundle is not actively tested or maintained**
+
 This bundle is a forked version of the [SonataAdminBundle](https://github.com/sonata-project/SonataAdminBundle).
 It contains many customizations to the sonata-project bundle.
 
