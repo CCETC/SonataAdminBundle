@@ -234,7 +234,7 @@ file that was distributed with this source code.
                         {% if admin.hiddenFilters[filter.name] is not defined %}
                             <div class="clearfix filter-input-container">
                                 {{ admin.trans(filter.label) }}
-                                <div class="filter-type input">{{ form_widget(form.getChild(filter.name).getChild('type')) }}</div>
+                                <div class="filter-type">{{ form_widget(form.getChild(filter.name).getChild('type')) }}</div>
                                 <div class="input">
                                    {{ form_widget(form.getChild(filter.name).getChild('value')) }}
                                 </div>
