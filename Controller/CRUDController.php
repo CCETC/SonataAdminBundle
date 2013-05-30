@@ -149,11 +149,15 @@ class CRUDController extends Controller
 
         $filterValues = $this->admin->getDatagrid()->getValues();
 
-        foreach($this->admin->getFilterDefaults() as $field => $default) {
-            if(!isset($filterValues[$field]['value'])) {
-                $this->admin->getDatagrid()->setValue($field, "", $default);
+        // set default filters if not searching on filters
+        if(!$this->getRequest()->get('filter')) {
+            foreach($this->admin->getFilterDefaults() as $field => $default) {
+                if(!isset($filterValues[$field]['value'])) {
+                    $this->admin->getDatagrid()->setValue($field, "", $default);
+                }
             }
         }
+        
         // check each hidden filter to see if it was requested, so we can show the hidden filters in the template
         $showHiddenFilters = false;
 
