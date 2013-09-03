@@ -223,9 +223,12 @@ class CRUDController extends Controller
             }
                 
             $spreadsheet = new Spreadsheet($this->admin, $this->container);
-            $filename = $spreadsheet->buildAndSaveListSpreadsheet($allResults);
+            $csv = $spreadsheet->generateListCSV($allResults);
 
-            return $this->redirect($this->getRequest()->getBasePath() . '/' . $filename);
+            $response = new Response($csv);
+            $response->headers->set('Content-Type', 'text/csv');
+            
+            return $response;
         } else if($this->getRequest()->get('downloadSummarySpreadsheet')) {
             if(!isset($summary)) {
                 break;

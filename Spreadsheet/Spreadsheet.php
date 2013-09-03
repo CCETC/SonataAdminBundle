@@ -20,59 +20,54 @@ class Spreadsheet
         $this->container = $container;
     }
 
+    public function returnCSV($array)
+    {
+        ob_start(); // buffer the output ...
+        $fp = fopen('php://output', 'w'); // this file actual writes to php output
+
+        foreach($array as $subArray) {
+            fputcsv($fp, $subArray);
+        }
+
+        fclose($fp);
+        return ob_get_clean(); // ... then return it as a string!
+    }
+     
     /**
-     * Use PHP Excel to build and save a spreadsheet of data from a list of objects.
+     * Generate and display CSV data from a list of objects.
      * Only save the fields specified by the spreadsheetFields array in the Admin class.
      * 
      * @param type $objects
      * @return string 
      */
-    public function buildAndSaveListSpreadsheet($objects)
+    public function generateListCSV($objects)
     {
-        ini_set('memory_limit', '1024M');
+        ini_set('memory_limit', '2048M');
         set_time_limit ( 0 );
         
-        // cache the spreadsheet, because they get big fast and cause fatal memory errors
-        // the cache_to_discISAM method is slowest but most effective, and the only we could get to work
-        $cacheMethod = \PHPExcel_CachedObjectStorageFactory::cache_to_discISAM;
-        \PHPExcel_Settings::setCacheStorageMethod($cacheMethod);
-
-        $objPHPExcel = new \PHPExcel();
-        $objPHPExcel->getProperties()->setCreator($this->admin->getEntityLabelPlural());
-        $objPHPExcel->getProperties()->setLastModifiedBy($this->admin->getEntityLabelPlural());
-        $objPHPExcel->getProperties()->setTitle($this->admin->getEntityLabelPlural());
-        $objPHPExcel->getProperties()->setSubject($this->admin->getEntityLabelPlural());
-        $objPHPExcel->getProperties()->setDescription($this->admin->getEntityLabelPlural());
-
-        $objPHPExcel->setActiveSheetIndex(0);
+        $csv = array();
 
         // add headings
-        $col = 0;
+        $headings = array();
         foreach($this->admin->spreadsheetFields as $f => $values) {
-            $objPHPExcel->getActiveSheet()->SetCellValue($this::num2alpha($col) . '1', $values['label']);
-            $col++;
+            $headings[] = $values['label'];
         }
+
+        $csv[] = $headings;
 
         // add a row for each object
-        $i = 2;
         foreach($objects as $o) {
-            $col = 0;
+            $row = array();
+
             foreach($this->admin->spreadsheetFields as $f => $values) {
                 $value = $this->getFieldValue($o, $values, $f);
-
-                $objPHPExcel->getActiveSheet()->SetCellValue($this::num2alpha($col) . $i, $value);
-                $col++;
+                $row[] = $value;
             }
 
-            $i++;
+            $csv[] = $row;
         }
 
-
-        $objWriter = new \PHPExcel_Writer_Excel5($objPHPExcel);
-        $filename = 'downloads/' . str_replace(' ', '_', $this->admin->getEntityLabelPlural()) . '_List_' . rand(500, 999) . '.xls';
-        $objWriter->save($filename);
-
-        return $filename;
+        return $this->returnCSV($csv);
     }
 
     /**
