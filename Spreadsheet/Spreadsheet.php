@@ -42,7 +42,7 @@ class Spreadsheet
      */
     public function generateListCSV($objects)
     {
-        ini_set('memory_limit', '4000M');
+        ini_set('memory_limit', '512M');
         set_time_limit ( 0 );
         
         $csv = array();
@@ -81,7 +81,7 @@ class Spreadsheet
      */
     protected function getFieldValue($element, $keys, $fieldName)
     {
-        ini_set('memory_limit', '4000M');
+        ini_set('memory_limit', '512M');
         set_time_limit ( 0 );
 
         if($keys['type'] == 'date') {
@@ -116,7 +116,7 @@ class Spreadsheet
      */
     public function buildAndSaveSummarySpreadsheet($summary)
     {
-        ini_set('memory_limit', '4000M');
+        ini_set('memory_limit', '512M');
         set_time_limit ( 0 );
         
         // cache the spreadsheet, because they get big fast and cause fatal memory errors
