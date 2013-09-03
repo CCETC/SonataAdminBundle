@@ -218,6 +218,10 @@ class CRUDController extends Controller
         }
             
         if($this->getRequest()->get('downloadListSpreadsheet')) {
+            ini_set('memory_limit', '4000M');
+            set_time_limit ( 0 );
+
+            
             if(!isset($allResults)) {
                 $allResults = $datagrid->getAllResultsAsArray();
             }
@@ -227,7 +231,7 @@ class CRUDController extends Controller
 
             $response = new Response($csv);
             $response->headers->set('Content-Type', 'text/csv');
-            
+
             return $response;
         } else if($this->getRequest()->get('downloadSummarySpreadsheet')) {
             if(!isset($summary)) {
