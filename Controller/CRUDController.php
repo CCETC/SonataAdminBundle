@@ -231,6 +231,10 @@ class CRUDController extends Controller
 
             $response = new Response($csv);
             $response->headers->set('Content-Type', 'text/csv');
+            $response->headers->set('Content-Disposition', 'attachment; filename=list.csv');
+            $response->headers->set('Content-Type', 'text/csv');
+            $response->headers->set('Pragma', 'no-cache');
+            $response->headers->set('Expires', '0');
 
             return $response;
         } else if($this->getRequest()->get('downloadSummarySpreadsheet')) {
