@@ -94,6 +94,12 @@ class Spreadsheet
                 return 'yes';
             else
                 return 'no';
+        } else if($keys['type'] == 'array') {
+            $string = "";
+            foreach($element[$fieldName] as $val) {
+                $string .= $val.", ";
+            }    
+            return rtrim($string, ", ");
         } else if($keys['type'] == 'relation') {
             $repository = $this->container->get('doctrine')->getRepository($keys['relation_repository']);
             
