@@ -125,12 +125,11 @@ file that was distributed with this source code.
                         <p class="pull-right" id="headerMenu">
                         {% block user_block %}
                                 {% if is_granted('ROLE_USER') %}
-                                    Logged in as {{ app.user }} <a href="{{ url('fos_user_profile_show') }}">(edit)</a> <a href="{{ url('fos_user_security_logout') }}">Log out</a>
+                                    Logged in as {{ app.user }} <a href="{{ url('fos_user_profile_show') }}">(edit)</a> <a class="last" href="{{ url('fos_user_security_logout') }}">Log out</a>
                                 {% else %}
                                     <a href="{{ url('fos_user_security_login') }}">Login</a>
-                                    <a href="{{ url('fos_user_registration_register') }}">Register</a>
+                                    <a class="last" href="{{ url('fos_user_registration_register') }}">Register</a>
                                 {% endif %}
-                                <a class="last" href="{{ url('adminHelp') }}">Help</a>
                         {% endblock %}
                         </p>
                     </div>
