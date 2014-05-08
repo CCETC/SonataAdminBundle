@@ -141,3 +141,12 @@ a.sonata-ba-collapsed small {
     float: left;
     width: 200px;
 }
+
+.form-stacked .inputs-list.stacked-options li {
+    float: none;
+    width: auto;
+}
+
+.solarUpgradeStatus-select-all {
+    display: none !important;
+}

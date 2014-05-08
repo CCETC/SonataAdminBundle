@@ -52,7 +52,7 @@ file that was distributed with this source code.
 {% block choice_widget %}
 {% spaceless %}
     {% if expanded %}
-        <label><input type="checkbox" id="list_batch_checkbox"><span> Select All </span></label>
+        <label class="{{ sonata_admin.field_description.name }}-select-all"><input type="checkbox" id="list_batch_checkbox"><span> Select All </span></label>
         
         <script type="text/javascript">
             jQuery(document).ready(function($){
